@@ -79,8 +79,38 @@ const getForm = async (req, res) => {
   }
 };
 
+// Función para guardar las respuestas del cuestionario en la base de datos
+const saveResponses = async (req, res) => {
+  const { userId, respuestas } = req.body;
+
+  // Validación de la entrada
+  if (!userId || !respuestas || !Array.isArray(respuestas)) {
+    return res.status(400).send('Datos de entrada inválidos'); // Enviar error si los datos de entrada son inválidos
+  }
+
+  try {
+    // Referencia al documento del cuestionario en la colección 'usuarios/{userId}/cuestionario/onboarding'
+    const questionnaireRef = db.collection(`usuarios/${userId}/cuestionario`).doc('onboarding');
+
+    // Guardar las respuestas en el documento del cuestionario
+    await questionnaireRef.set({
+      respuestas: respuestas,
+      completado: true // Marca el formulario como completado
+    }, { merge: true }); // Usar merge: true para no sobrescribir otros campos en el documento
+
+    // Enviar una respuesta de éxito al cliente
+    res.status(200).send('Respuestas del cuestionario guardadas con éxito!');
+  } catch (error) {
+    console.error('Error guardando respuestas del cuestionario:', error); // Registrar el error en la consola
+
+    // Enviar un mensaje de error detallado al cliente
+    res.status(500).send(`Error al guardar respuestas del cuestionario: ${error.message}`);
+  }
+};
+
 module.exports = {
   saveForm,
   getForm,
+  saveResponses,
 };
 

@@ -1,7 +1,7 @@
 const messageService = require('../services/messageService');
 
 exports.handleIncomingMessage = async (req, res) => {
-  console.log("Mensaje entrante del webhook:", JSON.stringify(req.body, null, 2));
+  // console.log("Mensaje entrante del webhook:", JSON.stringify(req.body, null, 2));
   res.sendStatus(200); // Enviar respuesta HTTP 200 inmediatamente
   await messageService.processMessage(req.body);
 };
