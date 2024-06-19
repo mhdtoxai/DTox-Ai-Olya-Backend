@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 
 app.use('/api/user', userRoutes);
 app.use('/api', formRoutes);
-app.use('/webhook', webhookRoutes);
+app.use('/api/webhook', webhookRoutes);
 
 
 module.exports = app;

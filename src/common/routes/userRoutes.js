@@ -5,7 +5,7 @@ const { updateUser } = require('../controllers/userupdateController');
 
 
 // Ruta para obtener información del usuario por ID usando POST
-router.post('/', getUserInfo);
+router.post('/get', getUserInfo);
 
 
 // Ruta para actualizar información del usuario por ID
