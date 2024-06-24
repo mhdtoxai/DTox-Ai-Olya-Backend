@@ -1,33 +1,34 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+
 const formRoutes = require('./routes/formRoutes');
 const webhookRoutes = require('./routes/webhookRoutes');
 const userRoutes = require('./routes/userRoutes');
+const webhookStripe  = require('./routes/webhookStripe');
+const cuestionarioRoutes  = require('./routes/cuestionarioRoutes');
 
 const cors = require('cors');
+const path = require('path'); // Importar el módulo path
 
 const app = express();
-
-// Configurar CORS para permitir solicitudes solo desde http://localhost:5173
-// app.use(cors({
-//   origin: 'http://localhost:5173'
-// }));
 
 
 // Configurar CORS para permitir solicitudes desde cualquier origen
 app.use(cors());
 
+
+app.use('/api/webhook', webhookStripe);
+
 // Middleware para manejar datos JSON y URL codificada
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-app.use(bodyParser.json());
-
+// Servir archivos estáticos desde la carpeta 'public'
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/user', userRoutes);
 app.use('/api', formRoutes);
 app.use('/api/webhook', webhookRoutes);
+app.use('/api/user', cuestionarioRoutes);
 
 
 module.exports = app;

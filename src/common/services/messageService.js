@@ -6,7 +6,10 @@ const handleConsentResponse = require('../handlers/handleConsentResponse');
 const handleConsentAccepted = require('../handlers/handleConsentAccepted');
 const handleQuestionnaireCompleted = require('../handlers/handleQuestionnaireCompleted');
 const handlePlanSent = require('../handlers/handlePlanSent');
-const handleFirstDayChallenge = require('../handlers/handleFirstDayChallenge');
+const handleFirstDayChallenge = require('../handlers/Primerdia/handleFirstDayChallenge');
+const handlePaymentCompleted = require('../handlers/handlePaymentCompleted');
+const handleFirstNightChallenge = require('../handlers/Primerdia/handleFirstNightChallenge');
+
 
 exports.processMessage = async (body) => {
   const message = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
@@ -45,9 +48,19 @@ exports.processMessage = async (body) => {
         case 'planenviado':
           await handlePlanSent(senderId);
           break;
+          case 'pagado':
+          await handlePaymentCompleted(senderId);
+          break;
         case 'primerdia':
           await handleFirstDayChallenge(senderId);
           break;
+        case 'primerdianoche':
+            await handleFirstNightChallenge(senderId);
+            break;
+        default:
+  console.log(`Estado no reconocido: ${estado}. No se realizará ninguna acción adicional.`);
+  break;
+
       }
     }
   }

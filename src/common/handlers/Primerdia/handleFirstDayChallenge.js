@@ -1,9 +1,10 @@
-const userService = require('../services/userService');
-const sendMessage = require('../services/Wp-Envio-Msj/sendMessage');
-const sendImageMessage = require('../services/Wp-Envio-Msj/sendImageMessage');
-const getUserInfo = require('../services/getUserInfo');
-const userContext = require('../services/userContext');
-const sendTextWithPreview = require('../services/Wp-Envio-Msj/sendTextWithPreview');
+const userService = require('../../services/userService');
+const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
+const sendImageMessage = require('../../services/Wp-Envio-Msj/sendImageMessage');
+const getUserInfo = require('../../services/getUserInfo');
+const userContext = require('../../services/userContext');
+const sendTextWithPreview = require('../../services/Wp-Envio-Msj/sendTextWithPreview');
+const handleFirstNightChallenge  = require('./handleFirstNightChallenge');
 
 const handleFirstDayChallenge = async (senderId) => {
   try {
@@ -52,9 +53,13 @@ const handleFirstDayChallenge = async (senderId) => {
     await sendMessage(senderId, finalMessage);
 
     // Actualizar el estado después de enviar el mensaje del reto
-    await userService.updateUser(senderId, { estado: 'primerdia' });
-    userContext[senderId].estado = 'primerdia';
+    await userService.updateUser(senderId, { estado: 'primerdianoche' });
+    userContext[senderId].estado = 'primerdianoche';
     console.log(`Estado en contexto actualizado a ${userContext[senderId].estado}`);
+
+
+    // Programar el reto de la noche del primer día
+    await handleFirstNightChallenge(senderId);
 
   } catch (error) {
     console.error('Error al manejar el nuevo reto:', error);
