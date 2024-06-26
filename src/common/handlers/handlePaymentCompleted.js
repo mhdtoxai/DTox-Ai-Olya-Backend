@@ -41,11 +41,11 @@ const handlePaymentCompleted = async (senderId) => {
 
 
     // Actualizar el estado del usuario
-    await userService.updateUser(senderId, { estado: 'confirmacionprimerdia', membresia: 'activa' });
-    userContext[senderId].estado = 'confirmacionprimerdia';
+    await userService.updateUser(senderId, { estado: 'primerdia', membresia: 'activa' });
+    userContext[senderId].estado = 'primerdia';
     userContext[senderId].membresia = 'activa';
 
-    console.log(`Estado actualizado a confirmacionprimerdia para ${senderId}`);
+    console.log(`Estado actualizado a primerdia para ${senderId}`);
     console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
 
     // Llamar a la función handleFirstDayChallenge
