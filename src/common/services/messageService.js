@@ -6,10 +6,9 @@ const handleConsentResponse = require('../handlers/handleConsentResponse');
 const handleConsentAccepted = require('../handlers/handleConsentAccepted');
 const handleQuestionnaireCompleted = require('../handlers/handleQuestionnaireCompleted');
 const handlePlanSent = require('../handlers/handlePlanSent');
-const handleFirstDayChallenge = require('../handlers/Primerdia/handleFirstDayChallenge');
 const handlePaymentCompleted = require('../handlers/handlePaymentCompleted');
+const handleFirstDayChallenge = require('../handlers/Primerdia/handleFirstDayChallenge');
 const handleFirstNightChallenge = require('../handlers/Primerdia/handleFirstNightChallenge');
-
 
 exports.processMessage = async (body) => {
   const message = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
@@ -21,7 +20,7 @@ exports.processMessage = async (body) => {
 
     if (!userDoc.exists) {
       await userService.createUser(senderId);
-      await sendMessage(senderId, 'Hello!/Hola!. Por favor selecciona tu idioma. English/Español');
+      await sendMessage(senderId, 'Hola/Hello!. Por favor indica tu idioma / please select your language  Español/Ingles ');
     } else {
       const userData = userDoc.data();
       const estado = userData.estado;

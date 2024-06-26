@@ -1,8 +1,9 @@
 const userService = require('../services/userService');
 const sendMessage = require('../services/Wp-Envio-Msj/sendMessage');
 const getUserInfo = require('../services/getUserInfo');
-const userContext = require('../services/userContext'); 
-const handleFirstDayChallenge = require('./Primerdia/handleFirstDayChallenge'); // Importar la función
+const userContext = require('../services/userContext');
+const sendImageMessage = require('../services/Wp-Envio-Msj/sendImageMessage');
+const handleFirstDayChallenge = require('./Primerdia/handleFirstDayChallenge');
 
 const handlePaymentCompleted = async (senderId) => {
   try {
@@ -11,18 +12,40 @@ const handlePaymentCompleted = async (senderId) => {
     console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
 
     // Enviar mensaje de confirmación
-    const message = idioma === 'ingles'
-      ? `Payment completed! You are officially wonderful!`
-      : `¡Pago completado! ¡Eres oficialmente maravillosx! Como dicen en mi pueblo, ¡A darle que es mole de olla!`;
+    const message1 = idioma === 'ingles'
+      ? `Congratulations, you're officially crack! Your future self is immensely grateful to you.!`
+      : `Felicidades, eres oficialmente crack! Tu yo del futuro esta inmensamente agradecido contigo.`;
 
-    await sendMessage(senderId, message);
+    // Enviar mensaje de confirmación
+    const message2 = idioma === 'ingles'
+      ? `As they say in my town, Let's give it, it's pot mole!`
+      : `Como dicen en mi pueblo, ¡A darle que es mole de olla!`;
+
+    await sendMessage(senderId, message1);
+    await delay(5000);  // Espera 5 segundos
+    await sendMessage(senderId, message2);
+
+
+
+    // Enviar la imagen inicial
+    await sendImageMessage(senderId, 'https://img.freepik.com/vector-premium/copa-ganador-felicidades-premio-triunfo-icono-victoria-ilustracion_100456-1422.jpg');
+    await delay(5000);
+
+    // Mensaje del primer reto
+    const firstChallengeMessage = idioma === 'ingles'
+      ? "Your first challenge begins tomorrow."
+      : "Tu primer reto comienza mañana.";
+    await sendMessage(senderId, firstChallengeMessage);
+    await delay(5000);
+
+
 
     // Actualizar el estado del usuario
-    await userService.updateUser(senderId, { estado: 'primerdia', membresia: 'activa' });
-    userContext[senderId].estado = 'primerdia';
+    await userService.updateUser(senderId, { estado: 'confirmacionprimerdia', membresia: 'activa' });
+    userContext[senderId].estado = 'confirmacionprimerdia';
     userContext[senderId].membresia = 'activa';
 
-    console.log(`Estado actualizado a primerdia para ${senderId}`);
+    console.log(`Estado actualizado a confirmacionprimerdia para ${senderId}`);
     console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
 
     // Llamar a la función handleFirstDayChallenge
@@ -33,5 +56,8 @@ const handlePaymentCompleted = async (senderId) => {
     throw error; // Propagar el error para manejarlo en el controlador o en la lógica superior
   }
 };
+
+// Función de retraso
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 module.exports = handlePaymentCompleted;

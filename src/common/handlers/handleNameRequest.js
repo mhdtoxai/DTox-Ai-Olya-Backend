@@ -26,8 +26,9 @@ const handleNameRequest = async (senderId, receivedMessage) => {
     userContext[senderId].nombre = userName;
 
     await sendMessage(senderId, idioma === 'ingles'
-      ? `We will start by creating a special plan for you. Answer a few questions (takes only 3 minutes). Esta bien?`
-      : `Comenzaremos creando un plan especial para ti. Responde unas cuantas preguntitas (toma sólo 3 mins). Esta bien?`);
+      ? `${userName} . I will be working on a personal plan for you, first we need your help with a few questions (It will only take 2 Minutes).`
+      : `${userName} . Estaré trabajando en un plan personal para ti, primero necesitamos tuu ayuda con unas pocas preguntas (Te tomará solo 2 Minutos).`);
+    
 
     await sendMessage(senderId, idioma === 'ingles'
       ? `Okey?`

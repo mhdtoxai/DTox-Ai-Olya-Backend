@@ -21,14 +21,23 @@ const handleLanguageSelection = async (senderId, receivedMessage) => {
     console.log(`Contexto del usuario actualizado:`, userContext[senderId]);
 
     const welcomeMessage = idioma === 'ingles'
-      ? 'Hello! I am Olya, the smartest virtual assistant that will help you quit vaping'
-      : '¡Hola! Soy Olya, el asistente virtual más inteligente que te ayudará a dejar de vapear';
+      ? 'I am Olya, your virtual assistant (by the way, the smartest one) who will help you stop vaping.'
+      : 'Yo soy Olya, tu asistente virtual (por cierto, la mas inteligente) que te ayudará a dejar de vapear.';
     const congratulationsMessage = idioma === 'ingles'
-      ? 'You have taken the first step towards a healthier life, so Congratulations!'
-      : 'Has dado el primer paso hacia una vida más saludable, así que ¡Felicidades!';
+      ? 'First of all, I congratulate you! You\'ve taken the most important step towards a healthier life, so pat yourself on the back, you deserve it. :)'
+      : 'Primero que todo, te felicito! Has dado el paso más importante para una vida más saludable, así que date una palmada en la espalda que bien que te lo mereces. :)';
 
+    const creatingProfileMessage = idioma === 'ingles'
+      ? 'Give me a moment please… I am creating your personal monitoring file.'
+      : 'Dame un momento por favor… estoy creando tu ficha personal de monitoreo.';
+
+   
     await sendMessage(senderId, welcomeMessage);
+    await delay(2000);  // Espera 2 segundos
     await sendMessage(senderId, congratulationsMessage);
+    await delay(1000);  // Espera 2 segundos
+    await sendMessage(senderId, creatingProfileMessage);
+    await delay(3000);  // Espera 3 segundos
 
     // Actualizar el estado en la BD
     await userService.updateUser(senderId, { estado: 'solicitudnombre' });
@@ -37,14 +46,19 @@ const handleLanguageSelection = async (senderId, receivedMessage) => {
     console.log(`Estado actualizado a 'solicitudnombre':`, userContext[senderId]);
 
     await sendMessage(senderId, idioma === 'ingles'
-      ? "First of all, what is your name?"
-      : "Primero que todo, ¿Cómo te llamas?");
+      ? "That's it... Let's start with, What's your name or what do you want me to call you?"
+      : "Ya está… Iniciemos con, ¿Cómo te llamas o cómo quieres que te diga?");
   } else {
-    await sendMessage(senderId, 'Por favor selecciona tu idioma. English/Español');
+    // Si el idioma no es válido, pide al usuario que seleccione su idioma.
+    await sendMessage(senderId, 'Por favor selecciona uno de los idiomas. English/Español');
   }
 
   // Imprimir todo el contexto del usuario en la consola
   console.log(`Contexto completo del usuario ${senderId}:`, userContext[senderId]);
 };
 
+// Función de retraso
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 module.exports = handleLanguageSelection;
+

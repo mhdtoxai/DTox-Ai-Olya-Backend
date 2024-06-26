@@ -11,11 +11,11 @@ const handleConsentAccepted = async (senderId) => {
     const { idioma, estado, nombre } = await getUserInfo(senderId);
     console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
 
-     // Generar la URL única con senderId y nombre
-     const uniqueUrl = `https://jjhvjvui.top?id=${senderId}&name=${encodeURIComponent(nombre)}`;
+     // Generar la URL única con senderId solamente
+     const uniqueUrl = `https://jjhvjvui.top/Bienvenida?id=${senderId}`;
      console.log('URL única generada:', uniqueUrl);
- 
 
+    
     // Enviar el mensaje con el enlace único
     await sendMessage(senderId, idioma === 'ingles'
       ? `Click here: ${uniqueUrl}`

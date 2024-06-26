@@ -4,6 +4,7 @@ const userService = require('../services/userService');
 const sendMessage = require('../services/Wp-Envio-Msj/sendMessage');
 const getUserInfo = require('../services/getUserInfo');
 const userContext = require('../services/userContext');
+const shortenUrl = require('../api/shortenUrl'); // Ruta a tu función de acortar URL con TinyURL
 
 const handlePlanSent = async (senderId) => {
   try {
@@ -13,15 +14,11 @@ const handlePlanSent = async (senderId) => {
 
     // Mensajes según el idioma del usuario
     const message1 = idioma === 'ingles'
-      ? `This plan has been specially created for you. Most importantly, you can quit vaping in just 10 days!`
-      : `Este plan ha sido creado especialmente para ti. ¡Lo más importante es que puedes dejar de vapear en sólo 10 días!`;
-    const message2 = idioma === 'ingles'
-      ? `The full plan costs only $199.00 MXN, less than what you spend on a vape!`
-      : `El plan completo cuesta únicamente $199.00 MXN, ¡Menos de lo que te cuesta un vape!`;
+      ? `Stopping Vaping with me costs you less than a vape costs you! The cost is 199.99 MXN for 10 days.`
+      : `Dejar de Vapear conmigo te cuesta menos de lo que te cuesta un vape! El costo es de 199.99 MXN por los 10 días.`;
 
     // Enviar los mensajes iniciales al usuario
     await sendMessage(senderId, message1);
-    await sendMessage(senderId, message2);
 
     // Generar el enlace de pago seguro utilizando Stripe
     const session = await stripe.checkout.sessions.create({
@@ -32,8 +29,7 @@ const handlePlanSent = async (senderId) => {
             currency: 'mxn',
             product_data: {
               name: 'Plan para dejar de vapear', // Nombre del producto
-              images: ['https://jjhvjvui.top/img/logo.jpg'], // URL pública de la imagen del producto
-
+              images: ['https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/logo.jpg?alt=media&token=558453f9-cab7-4d80-ba5d-2610059726e5'], // URL pública de la imagen del producto
             },
             unit_amount: 19900, // Monto en centavos (199.00 MXN)
           },
@@ -48,12 +44,15 @@ const handlePlanSent = async (senderId) => {
       cancel_url: 'https://wa.me/5214871956877', // URL para redirigir después de un pago cancelado
     });
 
-    // Mensaje con el enlace de pago
-    const message3 = idioma === 'ingles'
-      ? `Here is the secure link to complete the payment and continue. For security, you have only 2 minutes to process the payment. Secure payment: ${session.url}`
-      : `Te dejo la liga segura para que puedas completar el pago y continuemos. Por seguridad tienes únicamente 2 minutos para procesar el pago. Pago seguro: ${session.url}`;
+    // Acortar la URL de sesión con TinyURL
+    const shortenedUrl = await shortenUrl(session.url);
 
-    // Enviar el mensaje con el enlace de pago al usuario
+    // Mensaje con el enlace de pago acortado
+    const message3 = idioma === 'ingles'
+      ? `Here is the secure link for payments: ${shortenedUrl}`
+      : `Aquí te dejo la liga segura para pagos: ${shortenedUrl}`;
+
+    // Enviar el mensaje con el enlace de pago acortado al usuario
     await sendMessage(senderId, message3);
 
     // Actualizar el estado del usuario y el estado de membresía

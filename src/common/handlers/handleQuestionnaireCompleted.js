@@ -14,12 +14,10 @@ const handleQuestionnaireCompleted = async (senderId) => {
     
     await sendMessage(senderId, idioma === 'ingles'
       ? `Questionnaire completed! Great job! Give me a few seconds, I'm putting the final touches on your plan.`
-      : `¡Cuestionario completado! ¡Buen trabajo! Dame unos segundos, estoy dando unos últimos toques a tu plan.`);
+      : `¡Cuestionrio completado! Ya tengo tu plan personalizado para los siguientes 10 días. Vas con todo!`);
 
 
-    // Simular una espera para asegurar que el mensaje se envíe antes de continuar
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Esperar 2 segundos (ajustar según sea necesario)
-
+      await delay(2000);  // Espera 2 segundos
 
   // Enviar PDF al usuario
   const filePath = 'https://drive.google.com/uc?id=1SeK1f-XgN889rAyt42A4Lw55DhV573nb'; // Ruta al archivo PDF
@@ -47,5 +45,7 @@ const handleQuestionnaireCompleted = async (senderId) => {
  console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
 };
 
+// Función de retraso
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 module.exports = handleQuestionnaireCompleted;

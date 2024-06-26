@@ -1,5 +1,5 @@
 const db = require('../database/firebaseConfig');
-
+const  handleQuestionnaireCompleted  = require('../handlers/handleQuestionnaireCompleted');
 // Función para guardar el formulario en la base de datos
 const saveForm = async (req, res) => {
   const { formId, idioma, preguntas } = req.body;
@@ -97,6 +97,10 @@ const saveResponses = async (req, res) => {
       respuestas: respuestas,
       completado: true // Marca el formulario como completado
     }, { merge: true }); // Usar merge: true para no sobrescribir otros campos en el documento
+
+
+    // Llamar a la función handleQuestionnaireCompleted después de guardar las respuestas
+    await handleQuestionnaireCompleted(userId);
 
     // Enviar una respuesta de éxito al cliente
     res.status(200).send('Respuestas del cuestionario guardadas con éxito!');
