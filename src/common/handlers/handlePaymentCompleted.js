@@ -2,7 +2,7 @@ const userService = require('../services/userService');
 const sendMessage = require('../services/Wp-Envio-Msj/sendMessage');
 const getUserInfo = require('../services/getUserInfo');
 const userContext = require('../services/userContext');
-const sendImageMessage = require('../services/Wp-Envio-Msj/sendImageMessage');
+const sendStickerMessage = require('../services/Wp-Envio-Msj/sendStickerMessage');
 const handleFirstDayChallenge = require('./Primerdia/handleFirstDayChallenge');
 
 const handlePaymentCompleted = async (senderId) => {
@@ -28,9 +28,8 @@ const handlePaymentCompleted = async (senderId) => {
 
 
     // Enviar la imagen inicial
-    await sendImageMessage(senderId, 'https://img.freepik.com/vector-premium/copa-ganador-felicidades-premio-triunfo-icono-victoria-ilustracion_100456-1422.jpg');
+    await sendStickerMessage(senderId, '7911898695500174');
     await delay(5000);
-
     // Mensaje del primer reto
     const firstChallengeMessage = idioma === 'ingles'
       ? "Your first challenge begins tomorrow."
@@ -38,15 +37,11 @@ const handlePaymentCompleted = async (senderId) => {
     await sendMessage(senderId, firstChallengeMessage);
     await delay(5000);
 
-
-
     // Actualizar el estado del usuario
     await userService.updateUser(senderId, { estado: 'primerdia', membresia: 'activa' });
     userContext[senderId].estado = 'primerdia';
     userContext[senderId].membresia = 'activa';
 
-    console.log(`Estado actualizado a primerdia para ${senderId}`);
-    console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
 
     // Llamar a la función handleFirstDayChallenge
     await handleFirstDayChallenge(senderId);
@@ -55,6 +50,9 @@ const handlePaymentCompleted = async (senderId) => {
     console.error('Error al manejar pago completado:', error);
     throw error; // Propagar el error para manejarlo en el controlador o en la lógica superior
   }
+
+  console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
+
 };
 
 // Función de retraso

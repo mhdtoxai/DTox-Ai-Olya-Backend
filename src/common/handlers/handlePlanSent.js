@@ -15,7 +15,7 @@ const handlePlanSent = async (senderId) => {
     // Mensajes según el idioma del usuario
     const message1 = idioma === 'ingles'
       ? `Stopping Vaping with me costs you less than a vape costs you! The cost is 199.99 MXN for 10 days.`
-      : `Dejar de Vapear conmigo te cuesta menos de lo que te cuesta un vape! El costo es de 199.99 MXN por los 10 días.`;
+      : `Dejar de vapear está mas cerca de lo que crees y cuesta ¡menos que un vape! Unicamente 199 MXN por todo el seguimiento de 10 días`;
 
     // Enviar los mensajes iniciales al usuario
     await sendMessage(senderId, message1);
@@ -48,13 +48,18 @@ const handlePlanSent = async (senderId) => {
     const shortenedUrl = await shortenUrl(session.url);
 
     // Mensaje con el enlace de pago acortado
+    const message2 = idioma === 'ingles'
+      ? `Here is the secure link for payments: `
+      : `Aquí te dejo la liga segura para pagos: `;
+ // Enviar el mensaje con el enlace de pago acortado al usuario
+ await sendMessage(senderId, message2);
+        // Mensaje con el enlace de pago acortado
     const message3 = idioma === 'ingles'
-      ? `Here is the secure link for payments: ${shortenedUrl}`
-      : `Aquí te dejo la liga segura para pagos: ${shortenedUrl}`;
-
-    // Enviar el mensaje con el enlace de pago acortado al usuario
+    ? ` ${shortenedUrl}`
+    : ` ${shortenedUrl}`;
     await sendMessage(senderId, message3);
 
+  
     // Actualizar el estado del usuario y el estado de membresía
     await userService.updateUser(senderId, { estado: 'pagopendiente', membresia: 'inactiva' });
 
@@ -62,12 +67,12 @@ const handlePlanSent = async (senderId) => {
     userContext[senderId].estado = 'pagopendiente';
     userContext[senderId].membresia = 'inactiva';
 
-    // Imprimir el contexto del usuario en la consola
-    console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
 
   } catch (error) {
     console.error('Error al manejar plan enviado:', error);
   }
+  console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
+
 };
 
 module.exports = handlePlanSent;

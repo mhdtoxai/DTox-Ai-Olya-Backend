@@ -7,7 +7,6 @@ const webhookStripe  = require('./routes/webhookStripe');
 const cuestionarioRoutes  = require('./routes/cuestionarioRoutes');
 
 const cors = require('cors');
-const path = require('path'); // Importar el módulo path
 
 const app = express();
 
@@ -16,14 +15,12 @@ const app = express();
 app.use(cors());
 
 
-app.use('/api/webhook', webhookStripe);
+app.use('/backend/webhook', webhookStripe);
 
 // Middleware para manejar datos JSON y URL codificada
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir archivos estáticos desde la carpeta 'public'
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/user', userRoutes);
 app.use('/api', formRoutes);

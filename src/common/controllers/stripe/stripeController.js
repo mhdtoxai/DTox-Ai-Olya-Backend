@@ -6,48 +6,48 @@ const handlePaymentCompleted = require('../../handlers/handlePaymentCompleted');
 
 
 exports.handleStripeWebhook = async (req, res) => {
-  const sig = req.headers['stripe-signature'];
+  const sig = req.headers["stripe-signature"];
   let event;
-
   try {
-    // Verificar la firma del webhook de Stripe
-    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-  } catch (error) {
-    console.error('⚠️  Fallo en la verificación de la firma del webhook.', error.message);
-    return res.status(400).json({ error: `Error de Webhook: ${error.message}` });
+      event = await stripe.webhooks.constructEvent(
+          req.body,
+          sig,
+          endpointSecret
+      );
+      res.send(event);
+  } catch (err) {
+      console.log(err);
+      res.status(400).send(`Webhook Error: ${err.message}`);
+      return;
   }
-
-  // Manejar el evento
   switch (event.type) {
-    case 'checkout.session.completed':
-      const checkoutSessionCompleted = event.data.object;
-      const userId = checkoutSessionCompleted.metadata.userId; // Obtener userId desde la metadata
-      const productId = checkoutSessionCompleted.metadata.productId; // Obtener productId desde la metadata
+    case "checkout.session.completed":
+        const checkoutSessionCompleted = event.data.object;
 
-      try {
-        // Verificar el pago y actualizar estado en Firebase Firestore
-        await verifyAndUpdatePayment(userId, checkoutSessionCompleted.id);
+        // Obtener userId y sessionId del evento
+        const userId = checkoutSessionCompleted.metadata.userId;
+        const sessionId = checkoutSessionCompleted.id;
 
+        console.log(checkoutSessionCompleted);
 
-        // Llamar a la función handlePaymentCompleted
-        await handlePaymentCompleted(userId);
+        try {
+            await verifyAndUpdatePayment(userId, sessionId);
+            console.log(`Pago verificado para el usuario ${userId}`);
+        } catch (error) {
+            console.error(`Error al verificar el pago del usuario${userId}:`, error);
+            res.status(500).send(`Error verificando y actualizando pago ${error.message}`);
+            return;
+        }
 
-        // Mostrar en consola detalles del evento
-        console.log('Compra completada para el producto con ID:', userId);
-        console.log({ checkoutSessionCompleted });
-
-
-        res.status(200).end();
-      } catch (error) {
-        console.error('Error al verificar y actualizar el pago:', error);
-        res.status(500).json({ error: 'Error interno al procesar el pago.' });
-      }
-      break;
+        break;
+  
     default:
-      console.log(`Evento no manejado: ${event.type}`);
-      res.status(200).end();
-  }
-};
+        console.log(`Unhandled event type ${event.type}`);
+}
+  res.send();
+}
+
+
 
 // Función para verificar y actualizar el estado de pago en Firebase Firestore
 async function verifyAndUpdatePayment(userId, sessionId) {
@@ -69,6 +69,8 @@ async function verifyAndUpdatePayment(userId, sessionId) {
     });
 
     console.log(`Estado de pago y membresía actualizados para el usuario ${userId}.`);
+        // Llamar a la función handlePaymentCompleted
+        await handlePaymentCompleted(userId);
   } catch (error) {
     console.error('Error al actualizar el estado de pago:', error);
     throw error; // Re-lanzar el error para que sea manejado en el manejador del webhook

@@ -1,5 +1,5 @@
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
-const sendImageMessage = require('../../services/Wp-Envio-Msj/sendImageMessage');
+const sendStickerMessage = require('../../services/Wp-Envio-Msj/sendStickerMessage');
 const getUserInfo = require('../../services/getUserInfo');
 const userContext = require('../../services/userContext');
 
@@ -10,7 +10,7 @@ const handleFirstNightChallenge = async (senderId) => {
    console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
 
     // Enviar el GIF de YAWN
-    await sendImageMessage(senderId, 'https://t2.ea.ltmcdn.com/es/posts/8/3/7/por_que_a_los_gatos_les_gusta_dormir_en_lugares_altos_23738_orig.jpg');
+    await sendStickerMessage(senderId, '482161877680974');
     await delay(2000); 
     // Enviar primer mensaje
     const firstMessage = idioma === 'ingles' ?

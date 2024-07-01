@@ -9,9 +9,13 @@ const handleConsentResponse = async (senderId, receivedMessage) => {
   console.log(`Usuario ${senderId} tiene idioma: ${idioma} y estado: ${estado}`);
 
   // Definimos algunas respuestas afirmativas que pueden indicar consentimiento
-  const affirmativeResponses = ['yes', 'ok', 'okey', 'yeah', 'sure', 'of course', 'okay', 'si', 'claro', 'por supuesto', 'si esta bien'];
+  const affirmativeResponses = [
+  'yes', 'si ok', 'yuju', 'clarines', 'ya estás','está bien', 'ok', 'okey', 'yeah', 'sure', 'of course', 'okay', 'si', 'claro', 'por supuesto', 'si esta bien'];
 
-  if (affirmativeResponses.includes(receivedMessage.toLowerCase())) {
+    // Normalizar el mensaje recibido y la comparación
+    const normalizedMessage = receivedMessage.trim().toLowerCase();
+
+  if (affirmativeResponses.some(response => normalizedMessage.includes(response))) {
 
     // Actualizar el estado en el contexto del usuario
     userContext[senderId].estado = 'consentimientoaceptado';

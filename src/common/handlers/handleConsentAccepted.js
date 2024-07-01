@@ -12,20 +12,19 @@ const handleConsentAccepted = async (senderId) => {
     console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
 
      // Generar la URL única con senderId y nombre
-     const uniqueUrl = `https://jjhvjvui.top/Bienvenida?id=${senderId}&name=${encodeURIComponent(nombre)}`;
+     const uniqueUrl = `https://jjhvjvui.top/Onboarding?id=${senderId}&name=${encodeURIComponent(nombre)}`;
      console.log('URL única generada:', uniqueUrl);
  
-
     // Enviar el mensaje con el enlace único
-    await sendMessage(senderId, idioma === 'ingles'
+    const url = idioma === 'ingles'
       ? `Click here: ${uniqueUrl}`
-      : `Da clic aquí: ${uniqueUrl}`);
+      : `¡Perfecto! da clic aquí: ${uniqueUrl}`;
+    await sendMessage(senderId, url);
 
+  
     // Actualizar el estado después de enviar el enlace del cuestionario
     await userService.updateUser(senderId, { estado: 'cuestionariopendiente' });
     userContext[senderId].estado = 'cuestionariopendiente';
-    console.log(`Estado en contexto actualizado  a ${userContext[senderId].estado}`);
-    console.log(`Estado actualizado a cuestionariopendiente para ${senderId}`);
   } catch (error) {
     console.error('Error al manejar consentimiento aceptado:', error);
   }

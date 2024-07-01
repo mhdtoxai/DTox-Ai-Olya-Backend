@@ -1,7 +1,7 @@
 const userService = require('../services/userService');
 const sendMessage = require('../services/Wp-Envio-Msj/sendMessage');
 const getUserInfo = require('../services/getUserInfo');
-const userContext = require('../services/userContext'); 
+const userContext = require('../services/userContext');
 
 
 const handleNameRequest = async (senderId, receivedMessage) => {
@@ -16,23 +16,24 @@ const handleNameRequest = async (senderId, receivedMessage) => {
   const { idioma, estado } = await getUserInfo(senderId);
   console.log(`Usuario ${senderId} tiene idioma: ${idioma} y estado: ${estado}`);
 
-
-
-
   if (nameParts.length === 1) {
     // Actualizar nombre elegido en la BD
     await userService.updateUser(senderId, { nombre: userName });
     // Actualizar nombre en el contexto de usuario (userContext)
     userContext[senderId].nombre = userName;
 
-    await sendMessage(senderId, idioma === 'ingles'
-      ? `${userName} . I will be working on a personal plan for you, first we need your help with a few questions (It will only take 2 Minutes).`
-      : `${userName} . Estaré trabajando en un plan personal para ti, primero necesitamos tuu ayuda con unas pocas preguntas (Te tomará solo 2 Minutos).`);
-    
 
-    await sendMessage(senderId, idioma === 'ingles'
-      ? `Okey?`
-      : `Esta bien?`);
+    const PlanSent = idioma === 'ingles'
+      ? `${userName}, I will be working on a personal plan for you, first we need your help with a few questions (It will only take 2 Minutes).`
+      : `${userName}, Estaré trabajando en un plan personal para ti, primero necesitamos tu ayuda con unas pocas preguntas (Te tomará solo 2 minutos).)`;
+
+    await sendMessage(senderId, PlanSent);
+
+    const Confirmation = idioma === 'ingles'
+      ? 'Okey?'
+      : 'Esta bien?';
+    await sendMessage(senderId, Confirmation);
+
 
     // Actualizar el estado en la BD
     await userService.updateUser(senderId, { estado: 'consentimientocuestionario' });
@@ -50,7 +51,7 @@ const handleNameRequest = async (senderId, receivedMessage) => {
     const message = nextState === 'pregunta_secundaria'
       ? (idioma === 'ingles' ? "Okay... What would you like me to call you?" : "Ok… ¿Cómo prefieres que te diga?")
       : (idioma === 'ingles' ? "Oops! I didn't catch that. What do you want me to call you?" : "Opps! No entendí eso. ¿Cómo quieres que te llame?");
-    
+
     await sendMessage(senderId, message);
     console.log(`Mensaje enviado a ${senderId}: ${message}`);
   }

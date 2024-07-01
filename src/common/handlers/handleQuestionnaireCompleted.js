@@ -2,7 +2,7 @@ const userService = require('../services/userService');
 const sendMessage = require('../services/Wp-Envio-Msj/sendMessage');
 const sendDocument = require('../services/Wp-Envio-Msj/sendDocument');
 const getUserInfo = require('../services/getUserInfo');
-const userContext = require('../services/userContext'); 
+const userContext = require('../services/userContext');
 const handlePlanSent = require('./handlePlanSent');
 
 const handleQuestionnaireCompleted = async (senderId) => {
@@ -11,19 +11,24 @@ const handleQuestionnaireCompleted = async (senderId) => {
     const { idioma, estado, nombre } = await getUserInfo(senderId);
     console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
 
-    
-    await sendMessage(senderId, idioma === 'ingles'
-      ? `Questionnaire completed! Great job! Give me a few seconds, I'm putting the final touches on your plan.`
-      : `¡Cuestionrio completado! Ya tengo tu plan personalizado para los siguientes 10 días. Vas con todo!`);
 
+    const QuestComplete = idioma === 'ingles'
+      ? 'Well done! You have completed the questionnaire. Give me a few seconds to prepare your personalized plan.'
+      : '¡Bien hecho! Has completado el cuestionario. Dame unos segundos para preparar tu plan personalizado.';
 
-      await delay(2000);  // Espera 2 segundos
+    const PlanSent = idioma === 'ingles'
+      ? 'Here is your plan, please review it.'
+      : 'Aquí está tu plan, revísalo por favor';
 
-  // Enviar PDF al usuario
-  const filePath = 'https://drive.google.com/uc?id=1SeK1f-XgN889rAyt42A4Lw55DhV573nb'; // Ruta al archivo PDF
-  const fileName = 'demo.pdf';
-  await sendDocument(senderId, filePath, fileName);
-  
+    // Enviar PDF al usuario
+    const filePath = 'https://drive.google.com/uc?id=1SeK1f-XgN889rAyt42A4Lw55DhV573nb'; 
+    const fileName = 'demo.pdf';
+
+    await sendMessage(senderId, QuestComplete);
+    await delay(2000);  // Espera 2 segundos
+    await sendMessage(senderId, PlanSent);
+    await delay(2000);  // Espera 2 segundos
+    await sendDocument(senderId, filePath, fileName);
 
     // Actualizar el estado del usuario
     await userService.updateUser(senderId, { estado: 'planenviado' });
@@ -31,18 +36,17 @@ const handleQuestionnaireCompleted = async (senderId) => {
 
     console.log(`Estado actualizado a planenviado para ${senderId}`);
 
-    // Esperar un tiempo suficiente antes de enviar el PDF
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 3 segundos (ajustar según sea necesario)
 
-//  // Llamar a la función para manejar el estado 'planenviado'
- await handlePlanSent(senderId);
+    await delay(2000);  // Espera 2 segundos
+    //  // Llamar a la función para manejar el estado 'planenviado'
+    await handlePlanSent(senderId);
 
   } catch (error) {
     console.error('Error al manejar cuestionario completado:', error);
     throw error; // Propagar el error para manejarlo en el controlador o en la lógica superior
   }
- // Imprimir todo el contexto del usuario en la consola
- console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
+  // Imprimir todo el contexto del usuario en la consola
+  console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
 };
 
 // Función de retraso
