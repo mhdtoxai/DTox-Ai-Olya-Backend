@@ -34,7 +34,7 @@ const handleSecondDayChallenge = async (senderId) => {
     await sendMessage(senderId, fourthMessage);
 
     // Enviar quinto mensaje con la URL específica
-    const specificURL = 'https://url.com';
+    const specificURL = '#';
     const fifthMessage = idioma === 'ingles' ?
       `Psst! Sorry for the time, can you take 2 minutes to answer the following questions? ${specificURL}` :
       `¡Psst! Perdón la hora, ¿puedes tomarte 2 minutos para responder por favor a las siguientes preguntas? ${specificURL}`;
