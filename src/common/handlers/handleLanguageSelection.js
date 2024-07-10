@@ -21,11 +21,11 @@ const handleLanguageSelection = async (senderId, receivedMessage) => {
     console.log(`Contexto del usuario actualizado:`, userContext[senderId]);
 
     const welcomeMessage = idioma === 'ingles'
-      ? 'I am Olya, your virtual assistant (by the way, the smartest one) who will help you stop vaping.'
-      : 'Yo soy Olya, tu asistente virtual (por cierto, la mas inteligente) que te ayudará a dejar de vapear.';
+      ? 'I am Olya, your virtual assistant who will help you stop vaping.'
+      : 'Yo soy Olya, tu asistente virtual que te ayudará a dejar de vapear.';
     const congratulationsMessage = idioma === 'ingles'
-      ? 'First of all, I congratulate you! You\'ve taken the most important step towards a healthier life, so pat yourself on the back, you deserve it. :)'
-      : 'Primero que todo, te felicito! Has dado el paso más importante para una vida más saludable, así que date una palmada en la espalda que bien que te lo mereces. :)';
+      ? 'First of all, congratulations! You have taken the first step towards a healthier life. '
+      : 'Antes que todo ¡Felicidades!, Has dado el primer paso hacia una vida más saludable.';
     const creatingProfileMessage = idioma === 'ingles'
       ? 'Give me a moment please… I am creating your personal monitoring file.'
       : 'Dame un momento por favor… estoy creando tu ficha personal de monitoreo.';
@@ -46,8 +46,8 @@ const handleLanguageSelection = async (senderId, receivedMessage) => {
 
  
     const QuestionName = idioma === 'ingles'
-      ? 'That´s it... Let´s start wi´th, What+s your name or what do you want me to call you?'
-      : 'Ya está… Iniciemos con, ¿Cómo te llamas o cómo quieres que te diga?';
+      ? 'Ready, let"s start... What is your name or what do you prefer me to call you?'
+      : 'Listo, iniciemos... ¿Cómo te llamas o cómo prefieres que te llame?';
         await sendMessage(senderId, QuestionName);
 
   } else {

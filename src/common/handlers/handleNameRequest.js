@@ -24,8 +24,8 @@ const handleNameRequest = async (senderId, receivedMessage) => {
 
 
     const PlanSent = idioma === 'ingles'
-      ? `${userName}, I will be working on a personal plan for you, first we need your help with a few questions (It will only take 2 Minutes).`
-      : `${userName}, Estaré trabajando en un plan personal para ti, primero necesitamos tu ayuda con unas pocas preguntas (Te tomará solo 2 minutos).)`;
+      ? `Welcome${userName}, I will be working on a personal plan for you, so I need your help with a few questions (It will only take 2 minutes).`
+      : `Bienvenido ${userName}, Estaré trabajando en un plan personal para ti, por lo cual necesito tu ayuda con unas pocas preguntas (Te tomará solo 2 minutos).`;
 
     await sendMessage(senderId, PlanSent);
 

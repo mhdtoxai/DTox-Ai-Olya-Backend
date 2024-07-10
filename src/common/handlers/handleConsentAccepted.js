@@ -17,8 +17,8 @@ const handleConsentAccepted = async (senderId) => {
  
     // Enviar el mensaje con el enlace único
     const url = idioma === 'ingles'
-      ? `Click here: ${uniqueUrl}`
-      : `¡Perfecto! da clic aquí: ${uniqueUrl}`;
+      ? `¡Perfect! Click here: ${uniqueUrl}`
+      : `¡Perfecto! Da clic aquí: ${uniqueUrl}`;
     await sendMessage(senderId, url);
 
   

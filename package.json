@@ -20,6 +20,7 @@
     "express": "^4.19.2",
     "express-handlebars": "^7.1.2",
     "firebase-admin": "^12.1.0",
+    "fuzzball": "^2.1.2",
     "libphonenumber-js": "^1.11.2",
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",

@@ -14,8 +14,9 @@ const handleFirstNightChallenge = async (senderId) => {
     await delay(2000); 
     // Enviar primer mensaje
     const firstMessage = idioma === 'ingles' ?
-      "It's almost time to sleep. Just stopped by to say good night :)" :
-      "Ya casi es hora de dormir. Sólo pasé por aquí para decirte buenas noches :)";
+      `${nombre}, It's almost time to sleep. Just stopped by to say good night :)`:
+      `${nombre}, ya casi es hora de dormir. Sólo pasé por aquí para desearte las buenas noches : )`;
+
     await sendMessage(senderId, firstMessage);
     await delay(2000); 
     // Enviar segundo mensaje
@@ -23,13 +24,7 @@ const handleFirstNightChallenge = async (senderId) => {
       "Good luck tomorrow with your first challenge. If you have any questions, let me know ;)" :
       "Mucha suerte mañana en tu primer reto. Si tienes alguna duda, avísame ;)";
     await sendMessage(senderId, secondMessage);
-    await delay(2000); 
-    // Enviar tercer mensaje
-    const thirdMessage = idioma === 'ingles' ?
-      "Bye!" :
-      "¡Bye!";
-    await sendMessage(senderId, thirdMessage);
-
+ 
   } catch (error) {
     console.error('Error al manejar el reto de la noche:', error);
   }

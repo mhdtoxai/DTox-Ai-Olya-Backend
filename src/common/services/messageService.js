@@ -9,6 +9,8 @@ const handlePlanSent = require('../handlers/handlePlanSent');
 const handlePaymentCompleted = require('../handlers/handlePaymentCompleted');
 const handleFirstDayChallenge = require('../handlers/Primerdia/handleFirstDayChallenge');
 const handleFirstNightChallenge = require('../handlers/Primerdia/handleFirstNightChallenge');
+const handleFaq = require('../handlers/Preguntas/faqHandler');
+
 
 exports.processMessage = async (body) => {
   const message = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
@@ -16,6 +18,12 @@ exports.processMessage = async (body) => {
 
   if (message?.type === "text") {
     const receivedMessage = message.text.body.toLowerCase();
+
+ // Primero manejar las preguntas frecuentes
+ const faqHandled = await handleFaq(senderId, receivedMessage);
+ if (faqHandled) return; // Si se manejó una pregunta frecuente, salir de la función
+
+
     const userDoc = await userService.getUser(senderId);
 
     if (!userDoc.exists) {
