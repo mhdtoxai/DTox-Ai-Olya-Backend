@@ -123,25 +123,28 @@ const faqs = {
     "what if I have a health emergency during the program?": "In case of a health emergency, contact a healthcare professional or local emergency services immediately."
 };
 
-
 const handleFaq = async (senderId, question) => {
-    const lowerQuestion = question.toLowerCase();
-    const questions = Object.keys(faqs);
-  
-    // Opciones para la búsqueda con fuzzball
-    const options = {
-      scorer: fuzz.token_set_ratio,
-      limit: 3 // Ajustar el límite para manejar posibles respuestas cercanas
-    };
-  
-    const matches = fuzz.extract(lowerQuestion, questions, options);
-  
-    // Filtrar las mejores coincidencias por umbral
-    const bestMatches = matches.filter(match => match[1] > 70); // Ajustar el umbral según sea necesario
-  
-    if (bestMatches.length > 0) {
-      const bestMatch = bestMatches[0]; // Tomar la mejor coincidencia
-  
+  const lowerQuestion = question.toLowerCase();
+  const questions = Object.keys(faqs);
+
+  // Opciones para la búsqueda con fuzzball
+  const options = {
+    scorer: fuzz.token_set_ratio,
+    limit: 3 // Ajustar el límite para manejar posibles respuestas cercanas
+  };
+
+  const matches = fuzz.extract(lowerQuestion, questions, options);
+
+  // Filtrar las mejores coincidencias por umbral
+  const bestMatches = matches.filter(match => match[1] > 70); // Ajustar el umbral según sea necesario
+
+  if (bestMatches.length > 0) {
+    const bestMatch = bestMatches[0]; // Tomar la mejor coincidencia
+
+    // Verificar si la pregunta contiene más de una palabra para evitar falsos positivos
+    const wordCount = lowerQuestion.split(' ').length;
+
+    if (wordCount > 2) { // Ajustar el número mínimo de palabras según sea necesario
       // Verificar si hay coincidencia exacta
       if (bestMatch[1] === 100) {
         const answer = faqs[bestMatch[0]];
@@ -152,16 +155,16 @@ const handleFaq = async (senderId, question) => {
         const clarification = `¿Te refieres a "${possibleQuestions[0]}"? Si es así, la respuesta es: ${faqs[possibleQuestions[0]]}`;
         await sendMessage(senderId, clarification);
       }
-  
       return true;
     }
-  
-    // Manejar el caso de no encontrar coincidencias claras
-    await sendMessage(senderId, "Lo siento, no encontré una respuesta para tu pregunta.");
-    return false;
-  };
-  
-  module.exports = handleFaq;
+  }
+
+
+  return false;
+};
+
+module.exports = handleFaq;
+
   
 
 // // Función para manejar preguntas frecuentes
