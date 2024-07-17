@@ -9,6 +9,8 @@ const handlePlanSent = require('../handlers/handlePlanSent');
 const handlePaymentCompleted = require('../handlers/handlePaymentCompleted');
 const handleFirstDayChallenge = require('../handlers/Primerdia/handleFirstDayChallenge');
 const handleFirstNightChallenge = require('../handlers/Primerdia/handleFirstNightChallenge');
+const handleSecondDayChallenge = require('../handlers/Segundodia/handleSecondDayChallenge');
+
 const handleFaq = require('../handlers/Preguntas/faqHandler');
 
 
@@ -63,6 +65,9 @@ exports.processMessage = async (body) => {
           break;
         case 'primerdianoche':
             await handleFirstNightChallenge(senderId);
+            break;
+        case 'segundodia':
+            await handleSecondDayChallenge(senderId);
             break;
         default:
   console.log(`Estado no reconocido: ${estado}. No se realizará ninguna acción adicional.`);
