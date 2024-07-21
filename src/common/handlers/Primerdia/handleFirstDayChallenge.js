@@ -50,6 +50,7 @@ const handleFirstDayChallenge = async (senderId) => {
     await delay(2000)
 
 
+
     // Actualizar el estado después de enviar el mensaje del reto
     await userService.updateUser(senderId, { estado: 'primerdianoche' });
     userContext[senderId].estado = 'primerdianoche';

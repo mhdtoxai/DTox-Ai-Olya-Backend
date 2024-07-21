@@ -5,9 +5,12 @@ const schedule = require('node-schedule');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const sendStickerMessage = require('../../services/Wp-Envio-Msj/sendStickerMessage');
 const axios = require('axios');
+const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
 
 const scheduleNightMessage = async (senderId) => {
   try {
+    console.log(`Iniciando programación de mensaje nocturno para el usuario ${senderId}`);
+
     // Hacer la solicitud POST a la API para obtener los datos de onboarding
     const response = await axios.post('https://jjhvjvui.top/api/user/onboarding', {
       senderId: senderId
@@ -26,18 +29,27 @@ const scheduleNightMessage = async (senderId) => {
     if (!horaDeDormir) {
       throw new Error('No se encontró la respuesta para la hora de dormir');
     }
+    console.log(`Hora de dormir obtenida: ${horaDeDormir}`);
 
-    // Obtener la información del usuario incluyendo el nombre
-    const { idioma, estado, nombre } = await getUserInfo(senderId);
-    console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
+    // Obtener la información del usuario incluyendo el nombre y la zona horaria
+    const { idioma, estado, nombre, timezone } = await getUserInfo(senderId);
+    console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado}, nombre: ${nombre}, timezone: ${timezone}`);
 
     // Convertir la hora de dormir en horas y minutos
     const [hour, minute] = horaDeDormir.split(':');
-    const jobTime = new Date();
-    jobTime.setHours(parseInt(hour), parseInt(minute), 0);
 
-    // Cancelar cualquier trabajo anterior
-    const jobName = `nightMessage_${senderId}`;
+    // Crear un objeto de fecha y hora en la zona horaria del usuario
+    const userTime = moment.tz(`${hour}:${minute}`, 'HH:mm', timezone);
+    console.log(`Hora del usuario convertida a objeto de momento: ${userTime.format()}`);
+
+    // Convertir la hora del usuario a la hora del servidor
+    const serverTime = userTime.clone().tz(moment.tz.guess());
+    console.log(`Hora convertida a la zona horaria del servidor: ${serverTime.format()}`);
+
+    // Nombre del trabajo programado
+    const jobName = `MensajeNochePrimerDia ${senderId}`;
+
+    // Verificar si ya existe un trabajo programado y cancelarlo si es necesario
     const existingJob = schedule.scheduledJobs[jobName];
     if (existingJob) {
       existingJob.cancel();
@@ -45,7 +57,9 @@ const scheduleNightMessage = async (senderId) => {
     }
 
     // Programar el mensaje nocturno usando node-schedule
-    const job = schedule.scheduleJob({ hour: jobTime.getHours(), minute: jobTime.getMinutes() }, async () => {
+    const job = schedule.scheduleJob(jobName, { hour: serverTime.hours(), minute: serverTime.minutes() }, async () => {
+      console.log(`Iniciando trabajo programado para el usuario ${senderId} a las ${serverTime.format()}`);
+
       // Enviar el GIF de YAWN
       await sendStickerMessage(senderId, '482161877680974');
       await delay(2000);
@@ -75,8 +89,7 @@ const scheduleNightMessage = async (senderId) => {
       console.log(`Mensaje nocturno enviado y trabajo cancelado para el usuario ${senderId}`);
     });
 
-    job.name = jobName; // Asignar nombre al trabajo
-    console.log(`Mensaje nocturno programado para el usuario ${senderId} a las ${horaDeDormir}`);
+    console.log(`Mensaje nocturno programado para el usuario ${senderId} a las ${horaDeDormir} en su zona horaria`);
 
     // Mostrar en consola los eventos programados
     console.log(`Eventos programados para el usuario ${senderId}:`);
