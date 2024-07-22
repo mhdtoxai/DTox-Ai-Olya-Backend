@@ -5,8 +5,8 @@ const schenduleSecondDay = require('./schenduleSecondDay');
 const handleSecondDayChallenge = async (senderId) => {
   try {
     // Obtener la información del usuario incluyendo el nombre
-    const { idioma, estado, nombre } = await getUserInfo(senderId);
-    console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
+    const { idioma, estado, nombre ,timezone } = await getUserInfo(senderId);
+    console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} nombre: ${nombre}  timezone: ${timezone}`);
     // Programar mensaje para el segundo dia
     await schenduleSecondDay(senderId);
 

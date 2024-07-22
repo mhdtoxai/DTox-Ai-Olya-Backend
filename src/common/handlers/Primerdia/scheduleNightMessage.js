@@ -6,6 +6,7 @@ const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const sendStickerMessage = require('../../services/Wp-Envio-Msj/sendStickerMessage');
 const axios = require('axios');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
+const handleSecondDayChallenge = require('../Segundodia/handleSecondDayChallenge'); // Importa tu función
 
 const scheduleNightMessage = async (senderId) => {
   try {
@@ -40,12 +41,11 @@ const scheduleNightMessage = async (senderId) => {
 
     // Crear un objeto de fecha y hora en la zona horaria del usuario
     const userTime = moment.tz(`${hour}:${minute}`, 'HH:mm', timezone);
-    console.log(`Hora del usuario convertida a objeto de momento: ${userTime.format()}`);
+    console.log(`Hora del usuario convertida a objeto de momento: ${userTime.format('YYYY-MM-DD HH:mm:ss')}`);
 
     // Convertir la hora del usuario a la hora del servidor
     const serverTime = userTime.clone().tz(moment.tz.guess());
-    console.log(`Hora convertida a la zona horaria del servidor: ${serverTime.format()}`);
-
+    console.log(`Hora convertida a la zona horaria del servidor: ${serverTime.format('YYYY-MM-DD HH:mm:ss')}`);
     // Nombre del trabajo programado
     const jobName = `MensajeNochePrimerDia ${senderId}`;
 
@@ -87,6 +87,9 @@ const scheduleNightMessage = async (senderId) => {
       // Cancelar el trabajo después de enviar los mensajes
       job.cancel();
       console.log(`Mensaje nocturno enviado y trabajo cancelado para el usuario ${senderId}`);
+      // Llamar a la función handleSecondDayChallenge después de actualizar el estado
+      await handleSecondDayChallenge(senderId);
+      console.log(`Ejecutada la función handleSecondDayChallenge para el usuario ${senderId}`);
     });
 
     console.log(`Mensaje nocturno programado para el usuario ${senderId} a las ${horaDeDormir} en su zona horaria`);
