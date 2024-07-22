@@ -4,6 +4,7 @@ const getUserInfo = require('../../services/getUserInfo');
 const schedule = require('node-schedule');
 const axios = require('axios');
 const moment = require('moment-timezone');
+const userContext = require('../../services/userContext');
 
 const scheduleMessages = async (senderId) => {
   try {
@@ -80,7 +81,7 @@ const scheduleMessages = async (senderId) => {
     }
 
     // Programar mensaje de motivación a las 12 PM
-    const motivacionTime = moment.tz('23:03', 'HH:mm', timezone).tz(moment.tz.guess());
+    const motivacionTime = moment.tz('23:15', 'HH:mm', timezone).tz(moment.tz.guess());
     const motivacionMessage = idioma === 'ingles' ?
       `Remember, doing this to "${motivo}" is a great motivation. Keep this in mind in your fight for habit freedom. We are with you! And remember, do you have cravings? TELL ME` :
       `Recuerda, hacer esto por "${motivo}", es un gran motor. Tenlo muy en cuenta en tu lucha por la libertad de hábitos. ¡Estamos contigo! Y recuerda, ¿tienes antojo? DIMELO`;
@@ -117,7 +118,7 @@ const scheduleMessages = async (senderId) => {
     }
 
     // Programar mensaje de apoyo a las 6 PM
-    const supportTime = moment.tz('23:04', 'HH:mm', timezone).tz(moment.tz.guess());
+    const supportTime = moment.tz('23:16', 'HH:mm', timezone).tz(moment.tz.guess());
     const supportMessage = idioma === 'ingles' ?
       `Woohoo! I'm still here for anything. Let me know when you want to vape so we can eliminate the craving together :)` :
       `¡Yuhu! Sigo por aquí para cualquier cosa. Avísame cuando quieras vapear para lograr eliminar el antojo juntxs :)`;
@@ -126,7 +127,7 @@ const scheduleMessages = async (senderId) => {
     console.log(`*Mensaje de apoyo programado para las 6:00 PM en hora del servidor*`);
 
     // Programar mensaje de solicitud a las 9 PM
-    const requestTime = moment.tz('23:04', 'HH:mm', timezone).tz(moment.tz.guess());
+    const requestTime = moment.tz('23:17', 'HH:mm', timezone).tz(moment.tz.guess());
     const requestMessage = idioma === 'ingles' ?
       `Psst! Sorry for the hour, can you take 2 minutes to answer the following questions?` :
       `¡Psst! Perdón la hora, ¿puedes tomarte 2 minutos para responder por favor a las siguientes preguntas?`;
