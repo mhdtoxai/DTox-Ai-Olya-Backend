@@ -31,7 +31,7 @@ const scheduleMessages = async (senderId) => {
     const comienzaVapear = respuestasUsuario['pregunta_id04'];
     const horaComida = respuestasUsuario['pregunta_id07'];
 
-    const scheduleJobWithCancellation = (jobName, scheduleTime, message) => {
+    const scheduleJobWithCancellation = (jobName, scheduleTime, message, callback) => {
       const existingJob = schedule.scheduledJobs[jobName];
       if (existingJob) {
         existingJob.cancel();
@@ -42,6 +42,10 @@ const scheduleMessages = async (senderId) => {
         await sendMessage(senderId, message);
         job.cancel();  // Cancelar el trabajo después de que se haya ejecutado
         console.log(`Mensaje enviado y job cancelado para el usuario ${senderId}: ${jobName}`);
+
+        if (callback) {
+          await callback();  // Ejecutar el callback si se proporciona
+        }
       });
     };
 
@@ -50,7 +54,6 @@ const scheduleMessages = async (senderId) => {
       const [hour, minute] = horaDespertar.split(':');
       const userWakeTime = moment.tz(`${hour}:${minute}`, 'HH:mm', timezone).subtract(10, 'minutes');
       const serverWakeTime = userWakeTime.clone().tz(moment.tz.guess());
-
 
       const morningMessage1 = idioma === 'ingles' ?
         `Good morning ${nombre}! Remember your first challenge is not to touch your vape for just one hour. If you can hold out until later that would be great but to respect the method one hour will be enough.` :
@@ -63,11 +66,10 @@ const scheduleMessages = async (senderId) => {
     }
 
     // Programar el mensaje de buenos días adicional si no comienza a vapear en cuanto despierta
-    if (comienzaVapear !== 'En cuanto despierto') {
+    if (comienzaVapear !== 'En cuanto despierta') {
       const [hour, minute] = horaDespertar.split(':');
       const userWakeTime = moment.tz(`${hour}:${minute}`, 'HH:mm', timezone);
       const serverWakeTime = userWakeTime.clone().tz(moment.tz.guess());
-
 
       const morningMessage2 = idioma === 'ingles' ?
         `Good morning ${nombre}, and welcome to the first day of your Dtox. Today is a great day for you, so make sure to share it with your partner, family, friends, let everyone know that you have decided to quit vaping! Enjoy your day!` :
@@ -77,11 +79,10 @@ const scheduleMessages = async (senderId) => {
       console.log(`*Mensaje de buenos días 2 programado para las* ${serverWakeTime.format('HH:mm')}`);
       console.log(`Hora de despertar ajustada del usuario (zona ${timezone}): ${userWakeTime.format('YYYY-MM-DD HH:mm:ss')}`);
       console.log(`Hora de despertar ajustada en la zona del servidor: ${serverWakeTime.format('YYYY-MM-DD HH:mm:ss')}`);
-
     }
 
     // Programar mensaje de motivación a las 12 PM
-    const motivacionTime = moment.tz('23:15', 'HH:mm', timezone).tz(moment.tz.guess());
+    const motivacionTime = moment.tz('12:00', 'HH:mm', timezone).tz(moment.tz.guess());
     const motivacionMessage = idioma === 'ingles' ?
       `Remember, doing this to "${motivo}" is a great motivation. Keep this in mind in your fight for habit freedom. We are with you! And remember, do you have cravings? TELL ME` :
       `Recuerda, hacer esto por "${motivo}", es un gran motor. Tenlo muy en cuenta en tu lucha por la libertad de hábitos. ¡Estamos contigo! Y recuerda, ¿tienes antojo? DIMELO`;
@@ -118,7 +119,7 @@ const scheduleMessages = async (senderId) => {
     }
 
     // Programar mensaje de apoyo a las 6 PM
-    const supportTime = moment.tz('23:16', 'HH:mm', timezone).tz(moment.tz.guess());
+    const supportTime = moment.tz('18:00', 'HH:mm', timezone).tz(moment.tz.guess());
     const supportMessage = idioma === 'ingles' ?
       `Woohoo! I'm still here for anything. Let me know when you want to vape so we can eliminate the craving together :)` :
       `¡Yuhu! Sigo por aquí para cualquier cosa. Avísame cuando quieras vapear para lograr eliminar el antojo juntxs :)`;
@@ -127,23 +128,19 @@ const scheduleMessages = async (senderId) => {
     console.log(`*Mensaje de apoyo programado para las 6:00 PM en hora del servidor*`);
 
     // Programar mensaje de solicitud a las 9 PM
-    const requestTime = moment.tz('23:17', 'HH:mm', timezone).tz(moment.tz.guess());
+    const requestTime = moment.tz('21:00', 'HH:mm', timezone).tz(moment.tz.guess());
     const requestMessage = idioma === 'ingles' ?
       `Psst! Sorry for the hour, can you take 2 minutes to answer the following questions?` :
       `¡Psst! Perdón la hora, ¿puedes tomarte 2 minutos para responder por favor a las siguientes preguntas?`;
 
-    scheduleJobWithCancellation(`requestMessage_${senderId}`, { hour: requestTime.hours(), minute: requestTime.minutes() }, requestMessage);
+    scheduleJobWithCancellation(`requestMessage_${senderId}`, { hour: requestTime.hours(), minute: requestTime.minutes() }, requestMessage, async () => {
+      // Actualizar estado del usuario y el contexto después de enviar el mensaje de solicitud a las 9 PM
+      await userService.updateUser(senderId, { estado: 'tercerdia' });
+      userContext[senderId] = { estado: 'tercerdia' };
+      console.log(`Estado del usuario ${senderId} actualizado a 'tercerdia'`);
+      console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
+    });
     console.log(`*Mensaje de solicitud programado para las 9:00 PM en hora del servidor*`);
-
-
-    // Actualizar estado del usuario al finalizar todos los mensajes
-    await userService.updateUser(senderId, { estado: 'tercerdia' });
-    userContext[senderId].estado = 'tercerdia';
-    console.log(`Estado en contexto actualizado a ${userContext[senderId].estado}`);
-
-    // Imprimir todo el contexto del usuario en la consola
-    console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
-
 
   } catch (error) {
     console.error('Error al programar los mensajes:', error);
