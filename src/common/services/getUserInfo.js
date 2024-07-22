@@ -16,7 +16,7 @@ const getUserInfo = async (senderId) => {
       const nombre = userDataFields.nombre?.stringValue || '';
       const timezone = userDataFields.timezone?.stringValue || '';
 
-      userContext[senderId] = { idioma, estado, nombre,timezone };
+      userContext[senderId] = { idioma, estado, nombre, timezone };
       user = userContext[senderId];
     } catch (error) {
       console.error(`Error al obtener información del usuario ${senderId}:`, error);
