@@ -3,7 +3,6 @@ const userService = require('../../services/userService');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const getUserInfo = require('../../services/getUserInfo');
 const userContext = require('../../services/userContext');
-const handleSelectModeLevel = require('./handleSelectModeLevel');
 
 const handleReportVape = async (senderId) => {
   try {
@@ -36,9 +35,6 @@ const handleReportVape = async (senderId) => {
     await sendMessage(senderId, scoreMessage);
     await delay(2000);  // Espera 2 segundos
     await sendMessage(senderId, supportCriteriaMessage);
-
-    await handleSelectModeLevel(senderId);
-
 
     // Actualizar el estado después de enviar mensajes
     await userService.updateUser(senderId, { estado: 'opcionesnivel' });
