@@ -54,7 +54,7 @@
 const axios = require('axios');
 
 const GRAPH_API_TOKEN = process.env.GRAPH_API_TOKEN; // Tu token de la API de WhatsApp
-const vCardUrl = 'https://jjhvjvui.top/contacto/olya.vcf'; // La URL pública del archivo vCard
+const vCardUrl = 'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Olya.vcf?alt=media&token=473426bf-4f3a-4a55-9f8d-b791db3fd794'; // La URL pública del archivo vCard
 
 const sendContactMessage = async (recipientId) => {
   const requestBody = {
