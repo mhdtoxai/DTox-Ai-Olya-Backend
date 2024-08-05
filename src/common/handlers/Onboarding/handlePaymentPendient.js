@@ -1,24 +1,16 @@
 const Stripe = require('stripe');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const userService = require('../services/userService');
-const sendMessage = require('../services/Wp-Envio-Msj/sendMessage');
-const getUserInfo = require('../services/getUserInfo');
-const userContext = require('../services/userContext');
-const shortenUrl = require('../api/shortenUrl'); // Ruta a tu función de acortar URL con TinyURL
+const userService = require('../../services/userService');
+const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
+const getUserInfo = require('../../services/getUserInfo');
+const userContext = require('../../services/userContext');
+const shortenUrl = require('../../api/shortenUrl'); // Ruta a tu función de acortar URL con TinyURL
 
-const handlePlanSent = async (senderId) => {
+const handlePaymentPendient = async (senderId) => {
   try {
     // Obtener la información del usuario incluyendo el nombre
     const { idioma, estado, nombre } = await getUserInfo(senderId);
     console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
-
-    // Mensajes según el idioma del usuario
-    const message1 = idioma === 'ingles'
-      ? `Stopping Vaping with me costs you less than a vape costs you! The cost is 199.99 MXN for 10 days.`
-      : `Dejar de vapear está mas cerca de lo que crees y cuesta ¡menos que un vape! Unicamente 199 MXN por todo el seguimiento de 10 días`;
-
-    // Enviar los mensajes iniciales al usuario
-    await sendMessage(senderId, message1);
 
     // Generar el enlace de pago seguro utilizando Stripe
     const session = await stripe.checkout.sessions.create({
@@ -36,6 +28,8 @@ const handlePlanSent = async (senderId) => {
           quantity: 1,
         },
       ],
+      allow_promotion_codes: true, // Habilitar el ingreso de códigos promocionales
+
       metadata: {
         userId: senderId, // ID del usuario para referencia
       },
@@ -48,23 +42,21 @@ const handlePlanSent = async (senderId) => {
     const shortenedUrl = await shortenUrl(session.url);
 
     // Mensaje con el enlace de pago acortado
-    const message2 = idioma === 'ingles'
-      ? `Here is the secure link for payments: `
-      : `Aquí te dejo la liga segura para pagos: `;
- // Enviar el mensaje con el enlace de pago acortado al usuario
- await sendMessage(senderId, message2);
-        // Mensaje con el enlace de pago acortado
+    const paymentMessage = idioma === 'ingles'
+      ? `💳 🔐 Your unique secure STRIPE link for payments (Expires in 5 minutes): URL`
+      : `💳 🔐 Tu liga única segura STRIPE para pagos (Caduca en 5 minutos): URL`;
+
+    // Enviar el mensaje con el enlace de pago acortado al usuario
+    await sendMessage(senderId, paymentMessage);
+    // Mensaje con el enlace de pago acortado
     const message3 = idioma === 'ingles'
-    ? ` ${shortenedUrl}`
-    : ` ${shortenedUrl}`;
+      ? ` ${shortenedUrl}`
+      : ` ${shortenedUrl}`;
     await sendMessage(senderId, message3);
 
-  
-    // Actualizar el estado del usuario y el estado de membresía
-    await userService.updateUser(senderId, { estado: 'pagopendiente', membresia: 'inactiva' });
 
-    // Actualizar el contexto del usuario
-    userContext[senderId].estado = 'pagopendiente';
+    // Actualizar el estado del usuario y el estado de membresía
+    await userService.updateUser(senderId, { membresia: 'inactiva' });
     userContext[senderId].membresia = 'inactiva';
 
 
@@ -75,4 +67,9 @@ const handlePlanSent = async (senderId) => {
 
 };
 
-module.exports = handlePlanSent;
+
+// Función de retraso
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+
+module.exports = handlePaymentPendient;

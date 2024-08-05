@@ -1,10 +1,10 @@
-const userService = require('../services/userService');
-const sendMessage = require('../services/Wp-Envio-Msj/sendMessage');
-const getUserInfo = require('../services/getUserInfo');
-const userContext = require('../services/userContext'); 
+const userService = require('../../services/userService');
+const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
+const getUserInfo = require('../../services/getUserInfo');
+const userContext = require('../../services/userContext'); 
 
 
-const handleConsentAccepted = async (senderId) => {
+const handleSendQuestionnaire = async (senderId) => {
   try {
 
     // Obtener la información del usuario incluyendo el nombre
@@ -17,8 +17,8 @@ const handleConsentAccepted = async (senderId) => {
  
     // Enviar el mensaje con el enlace único
     const url = idioma === 'ingles'
-      ? `¡Perfect! Click here: ${uniqueUrl}`
-      : `¡Perfecto! Da clic aquí: ${uniqueUrl}`;
+      ? `¡Please! Click here: ${uniqueUrl}`
+      : `Por favor da clic aquí: ${uniqueUrl}`;
     await sendMessage(senderId, url);
 
   
@@ -26,9 +26,9 @@ const handleConsentAccepted = async (senderId) => {
     await userService.updateUser(senderId, { estado: 'cuestionariopendiente' });
     userContext[senderId].estado = 'cuestionariopendiente';
   } catch (error) {
-    console.error('Error al manejar consentimiento aceptado:', error);
+    console.error('Error al manejar consentimiento :', error);
   }
   // Imprimir todo el contexto del usuario en la consola
   console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
 };
-module.exports = handleConsentAccepted;
+module.exports = handleSendQuestionnaire;

@@ -1,7 +1,8 @@
-const userService = require('../services/userService');
-const sendMessage = require('../services/Wp-Envio-Msj/sendMessage');
-const getUserInfo = require('../services/getUserInfo');
-const userContext = require('../services/userContext');
+const userService = require('../../services/userService');
+const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
+const getUserInfo = require('../../services/getUserInfo');
+const userContext = require('../../services/userContext');
+const handleSendQuestionnaire = require('./handleSendQuestionnaire');
 
 
 const handleNameRequest = async (senderId, receivedMessage) => {
@@ -23,22 +24,26 @@ const handleNameRequest = async (senderId, receivedMessage) => {
     userContext[senderId].nombre = userName;
 
 
-    const PlanSent = idioma === 'ingles'
-      ? `Welcome${userName}, I will be working on a personal plan for you, so I need your help with a few questions (It will only take 2 minutes).`
-      : `Bienvenido ${userName}, Estaré trabajando en un plan personal para ti, por lo cual necesito tu ayuda con unas pocas preguntas (Te tomará solo 2 minutos).`;
+    const congratulationsMessage = idioma === 'ingles'
+    ? `Congratulations ${userName}, you have taken the first step towards a healthier life.`
+    : `Felicidades ${userName}, has dado el primer paso hacia una vida más saludable.`;
+    
+      const helpMessage = idioma === 'ingles'
+      ? `I need your help with a few questions (It will only take 2 minutes).`
+      : `Necesito tu ayuda con unas pocas preguntas (Te tomará solo 2 minutos).`;
 
-    await sendMessage(senderId, PlanSent);
+    await sendMessage(senderId, congratulationsMessage);
+    await delay(2000);  // Espera 2 segundos
+    await sendMessage(senderId, helpMessage);
+    await delay(2000);  // Espera 2 segundos
 
-    const Confirmation = idioma === 'ingles'
-      ? 'Okey?'
-      : 'Esta bien?';
-    await sendMessage(senderId, Confirmation);
+    await handleSendQuestionnaire(senderId);
 
 
     // Actualizar el estado en la BD
-    await userService.updateUser(senderId, { estado: 'consentimientocuestionario' });
+    await userService.updateUser(senderId, { estado: 'cuestionariopendiente' });
     // Actualizar el estado en el contexto del usuario
-    userContext[senderId].estado = 'consentimientocuestionario';
+    userContext[senderId].estado = 'cuestionariopendiente';
     console.log(`Estado actualizado a: ${userContext[senderId].estado}`);
 
   } else {
@@ -60,5 +65,7 @@ const handleNameRequest = async (senderId, receivedMessage) => {
   console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
 };
 
+// Función de retraso
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 module.exports = handleNameRequest;

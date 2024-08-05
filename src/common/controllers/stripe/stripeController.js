@@ -2,7 +2,7 @@ const Stripe = require('stripe');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const userService = require('../../services/userService'); // Importar el servicio de usuario
-const handlePaymentCompleted = require('../../handlers/handlePaymentCompleted'); // Importar la función
+const handlePaymentCompleted = require('../../handlers/Onboarding/handlePaymentCompleted'); // Importar la función
 
 
 exports.handleStripeWebhook = async (req, res) => {

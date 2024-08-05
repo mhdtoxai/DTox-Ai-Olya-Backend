@@ -1,15 +1,17 @@
 const userService = require('./userService');
-const sendMessage = require('./Wp-Envio-Msj/sendMessage');
-const handleLanguageSelection = require('../handlers/handleLanguageSelection');
-const handleNameRequest = require('../handlers/handleNameRequest');
-const handleConsentResponse = require('../handlers/handleConsentResponse');
-const handleConsentAccepted = require('../handlers/handleConsentAccepted');
-const handleQuestionnaireCompleted = require('../handlers/handleQuestionnaireCompleted');
-const handlePlanSent = require('../handlers/handlePlanSent');
-const handlePaymentCompleted = require('../handlers/handlePaymentCompleted');
-const handleFirstDayChallenge = require('../handlers/Primerdia/handleFirstDayChallenge');
-const handleFirstNightChallenge = require('../handlers/Primerdia/handleFirstNightChallenge');
-const handleSecondDayChallenge = require('../handlers/Segundodia/handleSecondDayChallenge');
+const sendMessageTarget = require('./Wp-Envio-Msj/sendMessageTarget');
+
+const handleLanguageSelection = require('../handlers/Onboarding/handleLanguageSelection');
+const handleNameRequest = require('../handlers/Onboarding/handleNameRequest');
+const handleSendQuestionnaire = require('../handlers/Onboarding/handleSendQuestionnaire');
+const handleQuestCompleted = require('../handlers/Onboarding/handleQuestCompleted');
+const handlePaymentPendient = require('../handlers/Onboarding/handlePaymentPendient');
+const handlePaymentCompleted = require('../handlers/Onboarding/handlePaymentCompleted');
+const handleTestVape = require('../handlers/Onboarding/handleTestVape');
+const handleSelectModeLevel = require('../handlers/Onboarding/handleSelectModeLevel');
+const handleUserSelectionMode = require('../handlers/Onboarding/handleUserSelectionMode');
+const handleCompromise = require('../handlers/Onboarding/handleCompromise');
+const handleCompromiseConfirmation = require('../handlers/Onboarding/handleCompromiseConfirmation');
 
 const handleFaq = require('../handlers/Preguntas/faqHandler');
 
@@ -18,19 +20,24 @@ exports.processMessage = async (body) => {
   const message = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
   const senderId = message?.from;
 
-  if (message?.type === "text") {
-    const receivedMessage = message.text.body.toLowerCase();
 
- // Primero manejar las preguntas frecuentes
- const faqHandled = await handleFaq(senderId, receivedMessage);
- if (faqHandled) return; // Si se manejó una pregunta frecuente, salir de la función
+  if (message?.type === "text" || message?.type === "interactive") {
+    const receivedMessage = message.text?.body.toLowerCase() || message.interactive?.button_reply?.id;
+
+    // Primero manejar las preguntas frecuentes
+    const faqHandled = await handleFaq(senderId, receivedMessage);
+    if (faqHandled) return; // Si se manejó una pregunta frecuente, salir de la función
 
 
     const userDoc = await userService.getUser(senderId);
 
     if (!userDoc.exists) {
       await userService.createUser(senderId);
-      await sendMessage(senderId, 'Hola/Hello!. Por favor indica tu idioma / please select your language  Español/Ingles ');
+      const buttons = [
+        { id: 'espanol', title: 'Español' },
+        { id: 'ingles', title: 'Inglés' }
+      ];
+      await sendMessageTarget(senderId, 'Hola. Por favor selecciona tu idioma | Please select your language.', buttons);
     } else {
       const userData = userDoc.data();
       const estado = userData.estado;
@@ -44,34 +51,36 @@ exports.processMessage = async (body) => {
         case 'pregunta_terciaria':
           await handleNameRequest(senderId, receivedMessage, estado);
           break;
-        case 'consentimientocuestionario':
-        case 'pregunta_secundaria_cuestionario':
-          await handleConsentResponse(senderId, receivedMessage);
-          break;
-        case 'consentimientoaceptado':
-          await handleConsentAccepted(senderId);
+        case 'cuestionariopendiente':
+          await handleSendQuestionnaire(senderId);
           break;
         case 'cuestionariocompletado':
-          await handleQuestionnaireCompleted(senderId);
+          await handleQuestCompleted(senderId);
           break;
-        case 'planenviado':
-          await handlePlanSent(senderId);
+        case 'pagopendiente':
+          await handlePaymentPendient(senderId);
           break;
-          case 'pagado':
+        case 'pagado':
           await handlePaymentCompleted(senderId);
           break;
-        case 'primerdia':
-          await handleFirstDayChallenge(senderId);
+        case 'primertest':
+          await handleTestVape(senderId);
           break;
-        case 'primerdianoche':
-            await handleFirstNightChallenge(senderId);
-            break;
-        case 'segundodia':
-            await handleSecondDayChallenge(senderId);
-            break;
+        case 'opcionesnivel':
+          await handleSelectModeLevel(senderId);
+          break;
+        case 'seleccionnivel':
+          await handleUserSelectionMode(senderId, receivedMessage);
+          break;
+        case 'confirmarcompromiso':
+          await handleCompromise(senderId);
+          break;
+        case 'compromisopendiente':
+          await handleCompromiseConfirmation(senderId, receivedMessage);
+          break;
         default:
-  console.log(`Estado no reconocido: ${estado}. No se realizará ninguna acción adicional.`);
-  break;
+          console.log(`Estado no reconocido: ${estado}. No se realizará ninguna acción adicional.`);
+          break;
 
       }
     }
