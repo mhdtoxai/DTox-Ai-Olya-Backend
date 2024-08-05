@@ -13,7 +13,7 @@ const handleReportVape = async (senderId) => {
 
    
     // Obtener el score más reciente desde la API
-    const response = await axios.post('https://h83tcbv3-3000.usw3.devtunnels.ms/api/test/testrespiracion/obtenerpruebas', { userId: senderId });
+    const response = await axios.post('https://jjhvjvui.top/api/test/testrespiracion/obtenerpruebas', { userId: senderId });
     const tests = response.data;
     if (tests.length === 0) {
       console.log('No se encontraron tests para el usuario');
