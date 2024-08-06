@@ -1,5 +1,4 @@
 const userService = require('../../services/userService');
-const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const getUserInfo = require('../../services/getUserInfo');
 const userContext = require('../../services/userContext');
 const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
@@ -28,7 +27,7 @@ const handleSelectModeLevel = async (senderId) => {
 
         const message = idioma === 'ingles'
             ? 'Please select the message intensity level according to your needs. You can adjust it later.'
-            : 'Por favor selecciona el nivel de intensidad de mensajes de acuerdo a tus necesidades. Lo puedes ajustar más adelante.';
+            : 'Selecciona el nivel de intensidad de mensajes de acuerdo a tus necesidades. Lo puedes ajustar más adelante.';
 
         await sendMessageTarget(senderId, message, buttons);
 

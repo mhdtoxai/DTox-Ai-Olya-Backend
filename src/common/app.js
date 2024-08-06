@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/user', userRoutes);
 app.use('/api', formRoutes);
-app.use('/api/webhook', webhookRoutes);
+app.use('/api/meta/webhook', webhookRoutes);
 app.use('/api/user', cuestionarioRoutes);
 app.use('/api/test', testrespiracionRoutes);
 

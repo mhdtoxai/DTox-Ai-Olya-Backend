@@ -5,13 +5,15 @@ const getUserInfo = require('../../services/getUserInfo');
 const userContext = require('../../services/userContext');
 const handleSelectModeLevel = require('./handleSelectModeLevel');
 
+// Función de retraso
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 const handleReportVape = async (senderId) => {
   try {
     // Obtener la información del usuario incluyendo el nombre y idioma
     const { idioma, estado, nombre } = await getUserInfo(senderId);
     console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
 
-   
     // Obtener el score más reciente desde la API
     const response = await axios.post('https://jjhvjvui.top/api/test/testrespiracion/obtenerpruebas', { userId: senderId });
     const tests = response.data;
@@ -37,20 +39,19 @@ const handleReportVape = async (senderId) => {
     await delay(2000);  // Espera 2 segundos
     await sendMessage(senderId, supportCriteriaMessage);
 
-    await handleSelectModeLevel(senderId);
-
-
     // Actualizar el estado después de enviar mensajes
     await userService.updateUser(senderId, { estado: 'opcionesnivel' });
     userContext[senderId].estado = 'opcionesnivel';
+
+    // Llamar a la función handleSelectModeLevel después de actualizar el estado
+    await handleSelectModeLevel(senderId);
+
   } catch (error) {
     console.error('Error al manejar opcionesnivel :', error);
   }
+  
   // Imprimir todo el contexto del usuario en la consola
   console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
 };
-
-// Función de retraso
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 module.exports = handleReportVape;
