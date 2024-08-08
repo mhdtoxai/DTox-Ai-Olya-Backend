@@ -3,6 +3,7 @@ const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
 const getUserInfo = require('../../services/getUserInfo');
 const userContext = require('../../services/userContext');
+const handleRemoteUser = require('../../handlers/Onboarding/handleRemoteUser');
 
 
 const handleCompromiseConfirmation = async (senderId, userResponse) => {
@@ -59,7 +60,8 @@ const handleCompromiseConfirmation = async (senderId, userResponse) => {
          : 'Recuerda: aquí estaré para tí. La palabra clave para cuando tengas un antojo de vapear será **ANTOJO**.';
      await sendMessage(senderId, reminderMessage);
 
-     
+     await handleRemoteUser(senderId);
+
 
     } catch (error) {
         console.error('Error al manejar la confirmación del compromiso:', error);
