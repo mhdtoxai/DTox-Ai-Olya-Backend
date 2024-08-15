@@ -1,7 +1,7 @@
-const getUserInfo = require('../../services/getUserInfo');
+const moment = require('moment-timezone');
 const schedule = require('node-schedule');
 const sendTemplateMessage = require('../../services/Wp-Envio-Msj/sendTemplateMessage');
-const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
+const getUserInfo = require('../../services/getUserInfo');
 
 const dia1 = async (senderId) => {
   try {
@@ -13,15 +13,22 @@ const dia1 = async (senderId) => {
 
     // Definir el código de idioma y el nombre de la plantilla
     const languageCode = idioma === 'ingles' ? 'en_US' : 'es_MX';
-    const templateName = 'morning_day1'; // Nombre de la plantilla
+    const templateName = 'morning_day1';
 
     // Crear un objeto de fecha y hora en la zona horaria del usuario
     const userTime = moment.tz('21:05', 'HH:mm', timezone);
     console.log(`Hora del usuario convertida a objeto de momento: ${userTime.format('YYYY-MM-DD HH:mm:ss')}`);
 
-    // Convertir la hora del usuario a la hora UTC del servidor
-    const serverTime = userTime.clone().utc();
-    console.log(`Hora convertida a la zona horaria del servidor: ${serverTime.format('YYYY-MM-DD HH:mm:ss')}`);
+    // Crear un objeto de fecha y hora para el próximo mensaje en la hora local del usuario
+    const now = moment().tz(timezone);
+    let nextMessageTime = userTime;
+    
+    // Si la hora del próximo mensaje ya ha pasado hoy, programar para mañana
+    if (now.isAfter(userTime)) {
+      nextMessageTime = userTime.add(1, 'day');
+    }
+
+    console.log(`Hora del próximo mensaje programada: ${nextMessageTime.format('YYYY-MM-DD HH:mm:ss')} en la zona horaria del usuario`);
 
     // Nombre del trabajo programado
     const jobName = `MensajeBuenosDias ${senderId}`;
@@ -34,8 +41,8 @@ const dia1 = async (senderId) => {
     }
 
     // Programar el mensaje de buenos días usando node-schedule
-    const job = schedule.scheduleJob(jobName, { hour: serverTime.hours(), minute: serverTime.minutes() }, async () => {
-      console.log(`Iniciando trabajo programado para el usuario ${senderId} a las ${serverTime.format()}`);
+    const job = schedule.scheduleJob(jobName, nextMessageTime.toDate(), async () => {
+      console.log(`Iniciando trabajo programado para el usuario ${senderId} a las ${nextMessageTime.format()}`);
 
       // Enviar el mensaje de plantilla
       await sendTemplateMessage(senderId, templateName, languageCode);
@@ -45,13 +52,12 @@ const dia1 = async (senderId) => {
       console.log(`Mensaje de buenos días enviado y trabajo cancelado para el usuario ${senderId}`);
     });
 
-    console.log(`Mensaje de buenos días programado para el usuario ${senderId} a las ${serverTime.format()}`);
+    console.log(`Mensaje de buenos días programado para el usuario ${senderId} a las ${nextMessageTime.format()} en la zona horaria del usuario`);
 
-    // Mostrar en consola los eventos programados con su próxima invocación
+    // Mostrar en consola los eventos programados
     console.log(`Eventos programados actuales:`);
     for (const job in schedule.scheduledJobs) {
-      const scheduledJob = schedule.scheduledJobs[job];
-      console.log(`- ${job} programado para ${scheduledJob.nextInvocation().toString()}`);
+      console.log(`- ${job}`);
     }
 
   } catch (error) {
