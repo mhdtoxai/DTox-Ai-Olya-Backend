@@ -33,15 +33,15 @@ const dia1 = async (senderId) => {
     const templateName = 'morning_day1'; // Nombre de la plantilla
 
     // Crear objetos de fecha y hora en la zona horaria del usuario para cada mensaje
-    const times = {
-      morning: moment.tz('22:40', 'HH:mm', timezone), // 7 AM - Plantilla
-      first: moment.tz('22:41', 'HH:mm', timezone), // 10 AM
-      second: moment.tz('22:42:', 'HH:mm', timezone), // 12 PM
-      third: moment.tz('22:43', 'HH:mm', timezone), // 2 PM
-      fourth: moment.tz('22:44', 'HH:mm', timezone), // 4 PM
-      fifth: moment.tz('22:45', 'HH:mm', timezone), // 6 PM
-      sixth: moment.tz('22:47', 'HH:mm', timezone), // 8 PM
-      seventh: moment.tz('22:48', 'HH:mm', timezone) // 10 PM
+ const times = {
+      morning: moment.tz('07:00', 'HH:mm', timezone), // 7 AM - Plantilla
+      first: moment.tz('10:00', 'HH:mm', timezone), // 10 AM
+      second: moment.tz('12:00:', 'HH:mm', timezone), // 12 PM
+      third: moment.tz('14:00', 'HH:mm', timezone), // 2 PM
+      fourth: moment.tz('16:00', 'HH:mm', timezone), // 4 PM
+      fifth: moment.tz('18:00', 'HH:mm', timezone), // 6 PM
+      sixth: moment.tz('20:00', 'HH:mm', timezone), // 8 PM
+      seventh: moment.tz('22:00', 'HH:mm', timezone) // 10 PM
     };
 
     console.log(`Horas del usuario convertidas a objetos de momento:`);
