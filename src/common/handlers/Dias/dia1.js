@@ -45,12 +45,13 @@ const dia1 = async (senderId) => {
       console.log(`Mensaje de buenos días enviado y trabajo cancelado para el usuario ${senderId}`);
     });
 
-    console.log(`Mensaje de buenos días programado para el usuario ${senderId} a las 7 AM en su zona horaria`);
+    console.log(`Mensaje de buenos días programado para el usuario ${senderId} a las ${serverTime.format()}`);
 
-    // Mostrar en consola los eventos programados
-    console.log(`Eventos programados para el usuario ${senderId}:`);
+    // Mostrar en consola los eventos programados con su próxima invocación
+    console.log(`Eventos programados actuales:`);
     for (const job in schedule.scheduledJobs) {
-      console.log(`- ${job}`);
+      const scheduledJob = schedule.scheduledJobs[job];
+      console.log(`- ${job} programado para ${scheduledJob.nextInvocation().toString()}`);
     }
 
   } catch (error) {
