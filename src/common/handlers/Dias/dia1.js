@@ -19,8 +19,8 @@ const dia1 = async (senderId) => {
     const userTime = moment.tz('21:05', 'HH:mm', timezone);
     console.log(`Hora del usuario convertida a objeto de momento: ${userTime.format('YYYY-MM-DD HH:mm:ss')}`);
 
-    // Convertir la hora del usuario a la hora del servidor
-    const serverTime = userTime.clone().tz(moment.tz.guess());
+    // Convertir la hora del usuario a la hora UTC del servidor
+    const serverTime = userTime.clone().utc();
     console.log(`Hora convertida a la zona horaria del servidor: ${serverTime.format('YYYY-MM-DD HH:mm:ss')}`);
 
     // Nombre del trabajo programado
