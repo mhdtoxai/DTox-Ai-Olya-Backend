@@ -16,12 +16,13 @@ const getUserInfo = async (senderId) => {
     const estado = userDataFields.estado?.stringValue || '';
     const nombre = userDataFields.nombre?.stringValue || '';
     const timezone = userDataFields.timezone?.stringValue || '';
+    const nivel=userDataFields.nivel?.stringValue || '';
 
     // Actualizar el contexto con los datos del usuario y un timestamp
-    userContext[senderId] = { idioma, estado, nombre, timezone, timestamp: Date.now() };
+    userContext[senderId] = { idioma, estado, nombre,nivel,timezone, timestamp: Date.now() };
 
     // Log de cada campo
-    console.log(`Datos del usuario actualizados en el contexto: idioma=${idioma}, estado=${estado}, nombre=${nombre}, timezone=${timezone}`);
+    console.log(`Datos del usuario actualizados en el contexto: idioma=${idioma}, estado=${estado}, nombre=${nombre}, timezone=${timezone},nivel=${nivel}`);
 
     // Retornar la información del usuario
     return userContext[senderId];

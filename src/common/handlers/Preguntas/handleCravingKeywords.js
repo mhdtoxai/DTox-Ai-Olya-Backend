@@ -44,20 +44,20 @@ const handleOptionKeywords = async (senderId, receivedMessage) => {
     // Verificar si el mensaje es la selección de una opción
     switch (receivedMessage) {
       case 'resp-9f7d2b8c':
-        await sendTextWithPreview(senderId, 'Buena elección. Da clic aquí: https://youtu.be/bF_1ZiFta-E?si=rgHVPMe0xQU44N8O');
+        await sendTextWithPreview(senderId, 'Buena elección. Da clic aquí:https://player.vimeo.com/video/998465018?h=197cd80e29&autoplay=1');
         break;
       case 'med-a3c8d9e2':
-        await sendTextWithPreview(senderId, 'Buena elección. Da clic aquí: https://youtu.be/aXItOY0sLRY?si=kmhDt0aHUWk0h35J');
+        await sendTextWithPreview(senderId, 'Buena elección. Da clic aquí: https://vimeo.com/998465098');
         break;
       case 'aud-7f4e1c0d':
-        await sendTextWithPreview(senderId, 'Buena elección. Da clic aquí: https://www.youtube.com/watch?v=iaQed_Xdyvw');
+        await sendTextWithPreview(senderId, 'Buena elección. Da clic aquí: https://player.vimeo.com/video/998465018?h=197cd80e29&autoplay=1');
         break;
       default:
         return false; // No se manejó ninguna selección válida
     }
 
     // Enviar mensaje de seguimiento después de enviar el URL con vista previa
-    const followUpMessage = 'Espero con ese ejercicio te sientas mejor.\n\n🤩 ¡Eres genial!, Aquí estaré pendiente de cualquier antojo. ¡Tu puedes!';
+    const followUpMessage = 'Espero con ese ejercicio te sientas mejor.';
     await sendMessage(senderId, followUpMessage);
 
     // // Llamar a la función correspondiente al estado actual del usuario
