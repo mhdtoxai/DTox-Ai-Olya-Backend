@@ -4,7 +4,7 @@ const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const getUserInfo = require('../../services/getUserInfo');
 const userContext = require('../../services/userContext');
 const userService = require('../../services/userService'); // Asegúrate de importar el servicio de usuario
-const dia1  = require('../Dias/dia1'); // Asegúrate de exportar la función dia1
+const dia1 = require('../Dias/dia1'); // Asegúrate de exportar la función dia1
 
 const handleRemoteUser = async (senderId) => {
     try {
@@ -13,9 +13,10 @@ const handleRemoteUser = async (senderId) => {
         console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado}, nombre: ${nombre}, timezone: ${timezone}`);
 
         // Mensaje de ánimo
+        // Mensaje de ánimo
         const encouragementMessage = idioma === 'ingles'
-            ? `A user has sent you an encouragement message as you start your journey:\n\n"Keep going, you can do it!" - Mario H. México`
-            : `Mira, un usuario te ha enviado un mensaje de ánimo ahora que inicias tu viaje:\n\n"Ánimo, tú puedes. Échale ganas." - Mario H. México`;
+            ? `Hello, I know how difficult it is to make the decision to quit vaping.\n\nI want to congratulate you for taking this important step towards a healthier life.\n\nIt’s not an easy path, but I know you can achieve it too.\n\nEvery day without vaping is a victory, and I want you to know that you are not alone in this struggle.\n\nKeep going, YOU ARE DOING THE RIGHT THING, and Olya will be with you every step of the way.\n\nCongratulations on your courage and determination!" - Lucía Ospina. Colombia`
+            : `Hola, sé lo difícil que es tomar la decisión de dejar de vapear.\n\nQuiero felicitarte por dar este paso tan importante hacia una vida más saludable.\n\nNo es un camino fácil, pero sé que tú también puedes lograrlo.\n\nCada día sin vapeo es una victoria, y quiero que sepas que no estás solo en esta lucha.\n\nSigue adelante, ESTÁS HACIENDO LO CORRECTO, y Olya estará contigo en cada paso del camino.\n\n¡Felicidades por tu valentía y determinación!". - Lucía Ospina. Colombia`;
 
         // Programar el envío del mensaje de ánimo para 30 minutos después
         const sendTime = new Date(Date.now() + 30 * 60 * 1000); // 30 minutos después de la hora actual
@@ -31,14 +32,14 @@ const handleRemoteUser = async (senderId) => {
 
         // Crear objeto de momento para la hora de actualización en la zona horaria del usuario
         const now = moment.tz(timezone);
-        const updateTimeInUserTimezone = now.clone().set({ hour: 22, minute: 30, second: 0, millisecond: 0 });
+        const updateTimeInUserTimezone = now.clone().set({ hour: 23, minute: 58, second: 0, millisecond: 0 });
         console.log(`Hora de actualización en la zona horaria del usuario: ${updateTimeInUserTimezone.format('YYYY-MM-DD HH:mm:ss')}`);
 
         // Convertir la hora de actualización a la hora del servidor
         const updateTimeInServerTimezone = updateTimeInUserTimezone.clone().tz(moment.tz.guess());
         console.log(`Hora de actualización en la zona horaria del servidor: ${updateTimeInServerTimezone.format('YYYY-MM-DD HH:mm:ss')}`);
 
-        // Programar la actualización del estado a las 10:00 PM en la zona horaria del usuario
+        // Programar la actualización del estado a las 11:58 PM en la zona horaria del usuario
         schedule.scheduleJob(updateTimeInServerTimezone.toDate(), async () => {
             try {
                 // Actualizar el estado del usuario en la base de datos y en el contexto

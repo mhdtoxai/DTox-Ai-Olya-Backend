@@ -103,14 +103,13 @@ const dia13 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
             
-                if (nivel === 'medio' || nivel === 'alto') {
                     const thirdMessage = idioma === 'ingles' ?
                         `Before lunch, remember: 'Success is the ability to go from failure to failure without losing enthusiasm.' – Winston Churchill. Don’t give up!` :
                         `"Antes de comer, recuerda: 'El éxito es la capacidad de ir de fracaso en fracaso sin perder el entusiasmo.' – Winston Churchill. ¡No te rindas!"`;
             
                     await sendMessage(senderId, thirdMessage);
                     console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                }
+              
             }),
             
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {

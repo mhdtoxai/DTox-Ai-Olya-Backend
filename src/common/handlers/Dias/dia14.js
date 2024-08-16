@@ -102,14 +102,13 @@ const dia14 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
                     const thirdMessage = idioma === 'ingles' ?
                         `Midday motivation: 'Every great achievement begins with the decision to try.' – Gail Devers. Your effort counts!` :
                         `"A la mitad del día: 'Cada gran logro comienza con la decisión de intentarlo.' – Gail Devers. ¡Tu esfuerzo cuenta!"`;
 
                     await sendMessage(senderId, thirdMessage);
                     console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                }
+                
             }),
 
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {

@@ -102,14 +102,13 @@ const dia17 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
             
-                if (nivel === 'medio' || nivel === 'alto') {
                     const thirdMessage = idioma === 'ingles' ?
                         `Before lunch, remember: 'Success is not final, failure is not fatal: It is the courage to continue that counts.' – Winston Churchill. Keep going with courage!` :
                         `"Antes de comer, recuerda: 'El éxito no es definitivo, el fracaso no es fatal: lo que cuenta es el coraje para continuar.' – Winston Churchill. ¡Sigue con valentía!"`;
             
                     await sendMessage(senderId, thirdMessage);
                     console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                }
+              
             }),
             
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {

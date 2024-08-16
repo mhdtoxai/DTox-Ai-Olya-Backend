@@ -102,14 +102,14 @@ const dia1 = async (senderId) => {
       third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
         console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
       
-        if (nivel === 'medio' || nivel === 'alto') {
+        
           const thirdMessage = idioma === 'ingles' ?
             `Good afternoon ${nombre}, if you’re about to eat, enjoy your meal! \nHere’s a fun fact: did you know that vaping reduces your taste sensitivity? 😵‍💫\nThe good news 🥳 is that it will return completely in 1️⃣ to 3️⃣ months after quitting! \nSo, you're on the right track, and soon everything will taste even better 🤤😋` :
             `Buenas tardes ${nombre}, si a penas vas a comer ¡BUEN PROVECHO! \nAprovecho 😝 para dejarte un dato curioso: ¿Sabías que el vapeo reduce tu sensibilidad de sabor? 😵‍💫\nLa buena noticia🥳 es que de 1️⃣ a 3️⃣ meses de haberlo dejado regresará por completo! \nAsí que vas por buen camino y prepárate que en poco tiempo, todo te sabrá aún más delicioso 🤤😋`;
             
           await sendMessage(senderId, thirdMessage);
           console.log(`Tercer mensaje tardes, enviado a usuario ${senderId}`);
-        }
+      
       }),
       
 

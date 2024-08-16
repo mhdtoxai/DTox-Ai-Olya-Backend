@@ -105,14 +105,13 @@ const dia4 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
                     const thirdMessage = idioma === 'ingles' ?
                         `Hello ${nombre}! 🕑 Did you know that drinking water can help reduce vape cravings? Keep a bottle of water with you and drink throughout the day.\n\nYou can start each meal by drinking 2 glasses of water 💦💦. Do it for 1 month and you’ll see the difference!` :
                         `Hola  ${nombre}! 🕑 ¿Sabías que beber agua puede ayudarte a reducir los antojos de vapeo? Mantén una botella de agua contigo y bebe a lo largo del día.\n\nPuedes comenzar cada comida tomando 2 vasos de agua💦💦. Hazlo 1 mes y no sabes la diferencia!`;
 
                     await sendMessage(senderId, thirdMessage);
                     console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                }
+                
             }),
 
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {

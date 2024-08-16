@@ -1,6 +1,7 @@
 const getUserInfo = require('../../services/getUserInfo');
 const schedule = require('node-schedule');
 const sendTemplateMessage = require('../../services/Wp-Envio-Msj/sendTemplateMessage');
+const sendAudioMessage = require('../../services/Wp-Envio-Msj/sendAudioMessage');
 const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
@@ -102,15 +103,10 @@ const dia2 = async (senderId) => {
 
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
+                const thirdMessage = 'https://drive.google.com/uc?export=download&id=1ONRFS3ofK7UsoB3w_2N4dXFy8N7EEu4w';
+                await sendAudioMessage(senderId, thirdMessage);
+                console.log(`Tercer mensaje tardes, enviado a usuario ${senderId}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
-                    const thirdMessage = idioma === 'ingles' ?
-                        `Nom nom... I’m here enjoying some tacos 🤤\nAnd you? Keep it up, and don’t vape.` :
-                        `Nom nom... Yo aquí comiéndome unos tacos 🤤\n¿Y tú? Vas bien, síguele y no vapees.`;
-
-                    await sendMessage(senderId, thirdMessage);
-                    console.log(`Tercer mensaje tardes, enviado a usuario ${senderId}`);
-                }
             }),
 
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
@@ -131,8 +127,8 @@ const dia2 = async (senderId) => {
 
                 if (nivel === 'alto') {
                     const fifthMessage = idioma === 'ingles' ?
-                    "Hey 👀. If you're vaping, stop it. Don't think about vaping. Go for a 10-minute walk." :
-                    "Hey 👀. Si estás vapeando, déjalo. No estés pensando en vapear. Sal a caminar 10 minutos.";
+                        "Hey 👀. If you're vaping, stop it. Don't think about vaping. Go for a 10-minute walk." :
+                        "Hey 👀. Si estás vapeando, déjalo. No estés pensando en vapear. Sal a caminar 10 minutos.";
                     await sendMessage(senderId, fifthMessage);
                     console.log(`Quinto mensaje enviado a ${senderId}`);
                 }
@@ -142,8 +138,8 @@ const dia2 = async (senderId) => {
                 console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
                 const sixthMessage = idioma === 'ingles' ?
-                `Almost bedtime and time to relax 🧘.\nCongratulations ${nombre} for your effort today.\nRecharge your batteries ⚡️ because tomorrow we cut the vaping window to one hour ⏰.\nTomorrow you’ll only be able to vape from 1PM to 11:59PM.\nNO VAPING IN THE MORNING! I’ll be watching 👀` :
-                `Casi hora de dormir y relajarse 🧘.\nTe felicito ${nombre} por tu esfuerzo de hoy.\nA recargar pilas ⚡️ que mañana cortamos la ventana de vapeo a una hora ⏰.\nMañana solo podrás vapear de 1PM a 11:59PM.\n¡NADA DE VAPEO EN LA MAÑANA! Te estaré observando 👀`;
+                    `Almost bedtime and time to relax 🧘.\nCongratulations ${nombre} for your effort today.\nRecharge your batteries ⚡️ because tomorrow we cut the vaping window to one hour ⏰.\nTomorrow you’ll only be able to vape from 1PM to 11:59PM.\nNO VAPING IN THE MORNING! I’ll be watching 👀` :
+                    `Casi hora de dormir y relajarse 🧘.\nTe felicito ${nombre} por tu esfuerzo de hoy.\nA recargar pilas ⚡️ que mañana cortamos la ventana de vapeo a una hora ⏰.\nMañana solo podrás vapear de 1PM a 11:59PM.\n¡NADA DE VAPEO EN LA MAÑANA! Te estaré observando 👀`;
                 await sendMessage(senderId, sixthMessage);
                 console.log(`Mensaje sexto de buenas noches enviado a usuario ${senderId}`);
             }),

@@ -4,8 +4,11 @@ const sendTemplateMessage = require('../../services/Wp-Envio-Msj/sendTemplateMes
 const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
-
+const axios = require('axios');
 const scheduledJobs = {}; // Objeto para almacenar trabajos programados
+const userContext = require('../../services/userContext');
+const userService = require('../../services/userService');
+
 
 const dia20 = async (senderId) => {
     try {
@@ -36,10 +39,9 @@ const dia20 = async (senderId) => {
             morning: moment.tz('07:00', 'HH:mm', timezone), // 7 AM - Plantilla
             first: moment.tz('10:00', 'HH:mm', timezone), // 10 AM
             second: moment.tz('12:00:', 'HH:mm', timezone), // 12 PM
-            fourth: moment.tz('16:00', 'HH:mm', timezone), // 4 PM
-            fifth: moment.tz('18:00', 'HH:mm', timezone), // 6 PM
-            sixth: moment.tz('20:00', 'HH:mm', timezone), // 8 PM
-            seventh: moment.tz('22:00', 'HH:mm', timezone) // 10 PM
+            testrep: moment.tz('17:00', 'HH:mm', timezone), // 5 PM
+            fifth: moment.tz('22:00', 'HH:mm', timezone), // 6 PM
+
         };
 
 
@@ -71,46 +73,111 @@ const dia20 = async (senderId) => {
                 await sendMessageTarget(senderId, messageText, buttons);
                 console.log(`Mensaje de confirmacion enviado para el usuario ${senderId}`);
             }),
-            
+
             first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
                 console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
-            
+
                 if (nivel === 'medio' || nivel === 'alto') {
                     const firstMessage = idioma === 'ingles' ?
                         `Did you know that vaping exposes users to ultrafine particles that can deeply penetrate the lungs 🌫️🫁?` :
                         `¿Sabías que el vapeo expone a los usuarios a partículas ultrafinas que pueden penetrar profundamente en los pulmones 🌫️🫁?`;
-            
+
                     await sendMessage(senderId, firstMessage);
                     console.log(`Primer mensaje enviado a ${senderId}`);
                 }
             }),
-            
+
             second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
                 console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
-            
+
                 if (nivel === 'alto') {
                     const secondMessage = idioma === 'ingles' ?
                         `🗣️ Vaping can cause dizziness and nausea.` :
                         `🗣️ El vapeo puede provocar mareos y náuseas.`;
-            
+
                     await sendMessage(senderId, secondMessage);
                     console.log(`Mensaje específico enviado para el usuario ${senderId}`);
                 }
             }),
-            
-            sixth: schedule.scheduleJob(`MensajeSexto ${senderId}`, { hour: serverTimes.sixth.hours(), minute: serverTimes.sixth.minutes() }, async () => {
-                console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
-            
-                const sixthMessage = idioma === 'ingles' ?
-                    `Vaping damages your vocal cords 🎤. Your voice may change 😶 and you could lose the ability to speak clearly 🗣️.` :
-                    `El vapeo daña tus cuerdas vocales 🎤. Tu voz puede cambiar 😶 y podrías perder la capacidad de hablar claramente 🗣️.`;
-            
-                await sendMessage(senderId, sixthMessage);
-                console.log(`Sexto mensaje enviado a usuario ${senderId}`);
-   
-                delete scheduledJobs[senderId]; // Eliminar el trabajo después de que se haya completado
+
+            testrep: schedule.scheduleJob(`MensajeTestRep ${senderId}`, { hour: serverTimes.testrep.hours(), minute: serverTimes.testrep.minutes() }, async () => {
+                console.log(`Programado mensaje de retención pulmonar ${senderId} a las ${serverTimes.testrep.format()}`);
+
+                try {
+                    // Realiza la solicitud POST a la API para obtener los resultados
+                    const response = await axios.post('https://jjhvjvui.top/api/test/testrespiracion/obtenerpruebas', {
+                        userId: senderId
+                    });
+
+                    // Extrae los datos recibidos de la API
+                    const results = response.data;
+
+                    // Encuentra los scores de los resultados con id 1 y el primer id disponible desde 5 hacia abajo
+                    const score1 = results.find(result => result.id === "1").score;
+
+                    let score5;
+                    for (let id = 5; id >= 1; id--) {
+                        const result = results.find(result => result.id === id.toString());
+                        if (result) {
+                            score5 = result.score;
+                            break;
+                        }
+                    }
+
+                    if (score5 === undefined) {
+                        throw new Error("No se encontró un resultado válido para el id 5 o menor.");
+                    }
+
+                    // Calcula el porcentaje de cambio respecto al score del primer resultado
+                    const difference = score5 - score1;
+                    const percentageChange = ((difference / score1) * 100).toFixed(2); // Usa .toFixed(2) para limitar a dos decimales
+
+                    // Determina el status y el emoji correspondiente
+                    let status;
+                    let emoji;
+
+                    if (percentageChange > 0) {
+                        status = 'mejoró';
+                        emoji = '💪🤟';
+                    } else if (percentageChange < 0) {
+                        status = 'empeoró';
+                        emoji = '🥺👎';
+                    } else {
+                        status = 'no mejoró ni empeoró';
+                        emoji = '🙏';
+                    }
+
+                    // Construye el mensaje basado en el idioma
+                    const historyMessage = idioma === 'ingles' ?
+                        `Your lung retention test report: ${status} by [${Math.abs(percentageChange)}%] ${emoji}. Quitting vaping will gradually improve this. I recommend continuing these exercises to cleanse your lungs.` :
+                        `Tu informe de pruebas de retención pulmonar: ${status} en [${Math.abs(percentageChange)}%] tu retención. ${emoji}. Dejar de vapear la incrementará paulatinamente. Te recomiendo seguir estos ejercicios para limpiar tus pulmones.`;
+
+                    // Envía el mensaje al usuario
+                    await sendMessage(senderId, historyMessage);
+                    console.log(`Mensaje resultado prueba enviado para el usuario ${senderId} con el informe de retención pulmonar.`);
+                } catch (error) {
+                    console.error(`Error al obtener las pruebas para el usuario ${senderId}:`, error);
+                }
+            }),
+
+
+            fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
+                console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
+
+                if (nivel === 'alto') {
+                    const fifthMessage = idioma === 'ingles' ?
+                        `Vaping damages your vocal cords 🎤. Your voice may change 😶 and you could lose the ability to speak clearly 🗣️.` :
+                        `El vapeo daña tus cuerdas vocales 🎤. Tu voz puede cambiar 😶 y podrías perder la capacidad de hablar claramente 🗣️.`;
+
+                    await sendMessage(senderId, fifthMessage);
+                    console.log(`Quinto mensaje enviado a ${senderId}`);
+                }
             })
+
         };
+        // Actualizar el estado 
+        await userService.updateUser(senderId, { estado: 'programafinalizado' });
+        userContext[senderId].estado = 'programafinalizado';
     } catch (error) {
         console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
     }

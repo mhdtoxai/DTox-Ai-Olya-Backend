@@ -104,14 +104,13 @@ const dia7 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
             
-                if (nivel === 'medio' || nivel === 'alto') {
                     const thirdMessage = idioma === 'ingles' ?
                         `😵‍💫 I heard from the hospital this morning... They said they’d keep the place for you in case you get chronic bronchitis. I told them no because you’re quitting vaping. You’re okay 🤝` :
                         `😵‍💫 Me hablaron del hospital esta mañana... Me dijeron que si te mantienen el lugar por si te da una bronquitis crónica. Les dije que no porque ya estás dejando de vapear. Tú tranqui 🤝`;
             
                     await sendMessage(senderId, thirdMessage);
                     console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                }
+                
             }),
             
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {

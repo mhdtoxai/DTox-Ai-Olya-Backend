@@ -104,14 +104,13 @@ const dia8 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
             
-                if (nivel === 'medio' || nivel === 'alto') {
                     const thirdMessage = idioma === 'ingles' ?
                         `Well... You've decided to quit. You and I both know it doesn't bring anything good. It has no benefit for your health. So... why continue, don’t you think?` :
                         `A ver... Ya decidiste dejarlo. Tú y yo sabemos que no te trae nada bueno. No tiene beneficio alguno para tu salud. Entonces... ¿Para qué seguir, no crees?`;
             
                     await sendMessage(senderId, thirdMessage);
                     console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                }
+              
             }),
             
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {

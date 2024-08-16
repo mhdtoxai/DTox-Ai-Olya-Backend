@@ -39,6 +39,7 @@ const dia15 = async (senderId) => {
             second: moment.tz('12:00:', 'HH:mm', timezone), // 12 PM
             third: moment.tz('14:00', 'HH:mm', timezone), // 2 PM
             fourth: moment.tz('16:00', 'HH:mm', timezone), // 4 PM
+            testUrl: moment.tz('17:00', 'HH:mm', timezone), // 5 PM
             fifth: moment.tz('18:00', 'HH:mm', timezone), // 6 PM
             sixth: moment.tz('20:00', 'HH:mm', timezone), // 8 PM
             seventh: moment.tz('22:00', 'HH:mm', timezone) // 10 PM
@@ -103,14 +104,13 @@ const dia15 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
                     const thirdMessage = idioma === 'ingles' ?
                         `Before lunch: 'It does not matter how slowly you go, as long as you do not stop.' – Confucius. Keep moving forward!` :
                         `Antes del almuerzo: 'No importa cuán despacio vayas, siempre y cuando no te detengas.' – Confucio. ¡Sigue avanzando!`;
 
                     await sendMessage(senderId, thirdMessage);
                     console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                }
+             
             }),
 
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
@@ -124,6 +124,21 @@ const dia15 = async (senderId) => {
                     await sendMessage(senderId, fourthMessage);
                     console.log(`Mensaje sobre salud dental enviado para el usuario ${senderId}`);
                 }
+            }),
+
+            testUrl: schedule.scheduleJob(`MensajeUrlPrueba ${senderId}`, { hour: serverTimes.testUrl.hours(), minute: serverTimes.testUrl.minutes() }, async () => {
+                console.log(`Programado mensaje URL prueba ${senderId} a las ${serverTimes.testUrl.format()}`);
+
+                // Generar la URL única con senderId, nombre y testId
+                const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=4`;
+                console.log('URL única generada:', uniqueUrl);
+
+                // Enviar el mensaje con el enlace único
+                const urlMessage = idioma === 'ingles'
+                    ? `Click here to start your trial: ${uniqueUrl}`
+                    : `💨 Hora de medir tu capacidad pulmonar! Da clic aquí: ${uniqueUrl}`;
+                await sendMessage(senderId, urlMessage);
+                console.log(`Mensaje URL prueba enviado a ${senderId}`);
             }),
 
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {

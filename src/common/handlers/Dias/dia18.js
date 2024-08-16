@@ -103,14 +103,13 @@ const dia18 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
             
-                if (nivel === 'medio' || nivel === 'alto') {
                     const thirdMessage = idioma === 'ingles' ?
                         `Noon motivation: 'It’s not about being the best. It’s about being better than you were yesterday.' – Anonymous. Every day counts!` :
                         `Mediodía motivacional: 'No se trata de ser el mejor. Se trata de ser mejor de lo que eras ayer.' – Anónimo. ¡Cada día cuenta!`;
             
                     await sendMessage(senderId, thirdMessage);
                     console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                }
+               
             }),
             
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {

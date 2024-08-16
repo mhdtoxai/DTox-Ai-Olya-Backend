@@ -104,14 +104,13 @@ const dia9 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
             
-                if (nivel === 'medio' || nivel === 'alto') {
                     const thirdMessage = idioma === 'ingles' ?
                         `"In the middle of the day, remember: 'Success is the sum of small efforts repeated day in and day out.' – Robert Collier. Keep going!"` :
                         `"A mitad del día, recuerda: 'El éxito es la suma de pequeños esfuerzos repetidos día tras día.' – Robert Collier. ¡Sigue adelante!"`;
             
                     await sendMessage(senderId, thirdMessage);
                     console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                }
+                
             }),
             
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {

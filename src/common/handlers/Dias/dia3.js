@@ -107,14 +107,14 @@ const dia3 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
               
-                if (nivel === 'medio' || nivel === 'alto') {
+            
                   const thirdMessage = idioma === 'ingles' ?
                     `I took a nap and dreamt that you quit vaping. I got excited and got hungry, so I came for a 🍕. \n\nI feel like you should also get yourself one to reward your effort. 😋` :
                     `Me tomé una siesta y soñé que dejabas de vapear. Me emocioné y me dio hambre, entonces vine por una 🍕.\n\nSiento que deberías pedirte tú también una para recompensar tu esfuerzo. 😋`;
               
                   await sendMessage(senderId, thirdMessage);
                   console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                }
+              
               }),
               
 

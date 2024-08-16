@@ -105,14 +105,13 @@ const dia6 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
             
-                if (nivel === 'medio' || nivel === 'alto') {
                     const thirdMessage = idioma === 'ingles' ?
                         `Pssst Pssst! They’re giving away fresh waters at the plaza kiosk! They have Lemon, Horchata, Jamaica, Guava, and Watermelon. Yuuuuuuummm 😋\n\nBut they say if you vape, you don’t get any. Oh well... soon.` :
                         `Pssst Pssst! Están regalando aguas frescas en el quiosco de la plaza! Tienen de Limón, Horchata, Jamaica, Guayaba, y Sandía. ¡Yuuuuuuummm 😋\n\nPero dicen que si vapeas no te toca. Ni modo... pronto.`;
             
                     await sendMessage(senderId, thirdMessage);
                     console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                }
+            
             }),
             
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {

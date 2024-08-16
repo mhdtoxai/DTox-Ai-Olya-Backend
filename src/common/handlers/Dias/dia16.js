@@ -102,14 +102,13 @@ const dia16 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
             
-                if (nivel === 'medio' || nivel === 'alto') {
                     const thirdMessage = idioma === 'ingles' ?
                         `At midday, remember: 'Strength does not come from physical capacity, but from an indomitable will.' – Mahatma Gandhi. You are strong!` :
                         `A medio día, ten presente: 'La fuerza no proviene de la capacidad física, sino de una voluntad indomable.' – Mahatma Gandhi. ¡Tú eres fuerte!`;
             
                     await sendMessage(senderId, thirdMessage);
                     console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                }
+            
             }),
             
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {

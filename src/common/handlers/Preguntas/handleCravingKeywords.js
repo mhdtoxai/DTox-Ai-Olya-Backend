@@ -5,6 +5,8 @@ const sendTextWithPreview = require('../../services/Wp-Envio-Msj/sendTextWithPre
 const getUserInfo = require('../../services/getUserInfo');
 const userContext = require('../../services/userContext');
 const handleUserByState = require('../../services/handleUserByState');
+const sendAudioMessage = require('../../services/Wp-Envio-Msj/sendAudioMessage');
+
 
 const getRandomCalmMessage = () => {
   const messages = [
@@ -47,10 +49,11 @@ const handleOptionKeywords = async (senderId, receivedMessage) => {
         await sendTextWithPreview(senderId, 'Buena elección. Da clic aquí:https://player.vimeo.com/video/998465018?h=197cd80e29&autoplay=1');
         break;
       case 'med-a3c8d9e2':
-        await sendTextWithPreview(senderId, 'Buena elección. Da clic aquí: https://vimeo.com/998465098');
+        await sendTextWithPreview(senderId, 'Buena elección. Da clic aquí: https://player.vimeo.com/video/998465098?h=eaff2a2d1d&autoplay=1');
         break;
-      case 'aud-7f4e1c0d':
-        await sendTextWithPreview(senderId, 'Buena elección. Da clic aquí: https://player.vimeo.com/video/998465018?h=197cd80e29&autoplay=1');
+        case 'aud-7f4e1c0d':
+          const audioUrl = 'https://drive.google.com/uc?export=download&id=1WKzHSKqydoy1uAva6jnNGZU51mxjNgq2';
+          await sendAudioMessage(senderId, audioUrl);
         break;
       default:
         return false; // No se manejó ninguna selección válida
