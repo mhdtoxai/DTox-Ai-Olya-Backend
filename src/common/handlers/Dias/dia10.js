@@ -182,7 +182,7 @@ const dia10 = async (senderId) => {
                         await sendMessage(senderId, urlMessage);
                         console.log(`Mensaje URL RecUrl enviado a ${senderId}`);
                     } else {
-                        console.log(`El testId 5 ya está presente para el usuario ${senderId}. No se envía el mensaje.`);
+                        console.log(`El testId 3 ya está presente para el usuario ${senderId}. No se envía el mensaje.`);
                     }
                 } catch (error) {
                     console.error(`Error al obtener las pruebas para el usuario ${senderId}:`, error);
