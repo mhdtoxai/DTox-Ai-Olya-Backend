@@ -5,7 +5,7 @@ const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
 const dia16 = require('./dia16'); // Asegúrate de ajustar la ruta según tu estructura de archivos
-
+const axios = require('axios');
 const scheduledJobs = {}; // Objeto para almacenar trabajos programados
 
 const dia15 = async (senderId) => {
@@ -41,6 +41,7 @@ const dia15 = async (senderId) => {
             fourth: moment.tz('16:00', 'HH:mm', timezone), // 4 PM
             testUrl: moment.tz('17:00', 'HH:mm', timezone), // 5 PM
             fifth: moment.tz('18:00', 'HH:mm', timezone), // 6 PM
+            RecUrl: moment.tz('19:00', 'HH:mm', timezone), // 7 PM
             sixth: moment.tz('20:00', 'HH:mm', timezone), // 8 PM
             seventh: moment.tz('22:00', 'HH:mm', timezone) // 10 PM
         };
@@ -153,6 +154,40 @@ const dia15 = async (senderId) => {
                     console.log(`Quinto mensaje enviado a ${senderId}`);
                 }
             }),
+
+            RecUrl: schedule.scheduleJob(`MensajeRecUrl ${senderId}`, { hour: serverTimes.RecUrl.hours(), minute: serverTimes.RecUrl.minutes() }, async () => {
+                console.log(`Programado mensaje de retención pulmonar ${senderId} a las ${serverTimes.RecUrl.format()}`);
+            
+                try {
+                    // Realiza la solicitud POST a la API para obtener los resultados
+                    const response = await axios.post('https://jjhvjvui.top/api/test/testrespiracion/obtenerpruebas', {
+                        userId: senderId
+                    });
+            
+                    const pruebas = response.data; // Suponiendo que la respuesta contiene los datos de las pruebas
+            
+                    // Verifica si el testId 4 está presente
+                    const testId4Presente = pruebas.some(prueba => prueba.id === '4');
+            
+                    if (!testId4Presente) {
+                        // Genera la URL única con senderId, nombre y testId
+                        const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=4`;
+                        console.log('URL única generada:', uniqueUrl);
+            
+                        // Enviar el mensaje con el enlace único
+                        const urlMessage = idioma === 'ingles'
+                            ? `You still have your lung retention test pending!, Click here to start: ${uniqueUrl}`
+                            : `💨 Aún tienes pendiente tu prueba de retención pulmonar! Da clic aquí : ${uniqueUrl}`;
+                        await sendMessage(senderId, urlMessage);
+                        console.log(`Mensaje URL RecUrl enviado a ${senderId}`);
+                    } else {
+                        console.log(`El testId 5 ya está presente para el usuario ${senderId}. No se envía el mensaje.`);
+                    }
+                } catch (error) {
+                    console.error(`Error al obtener las pruebas para el usuario ${senderId}:`, error);
+                }
+            }),
+
 
             sixth: schedule.scheduleJob(`MensajeSexto ${senderId}`, { hour: serverTimes.sixth.hours(), minute: serverTimes.sixth.minutes() }, async () => {
                 console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
