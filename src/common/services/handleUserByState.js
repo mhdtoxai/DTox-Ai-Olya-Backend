@@ -20,7 +20,7 @@ const handleUserByState = async (senderId, receivedMessage) => {
     await userService.createUser(senderId);
     const buttons = [
       { id: 'espanol', title: 'Español' },
-      { id: 'ingles', title: 'Inglés' }
+      // { id: 'ingles', title: 'Inglés' }
     ];
     await sendMessageTarget(senderId, 'Hola. Por favor selecciona tu idioma | Please select your language.', buttons);
   } else {
