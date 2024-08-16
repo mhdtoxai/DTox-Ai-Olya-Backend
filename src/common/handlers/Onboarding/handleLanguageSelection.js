@@ -73,7 +73,7 @@ const handleLanguageSelection = async (senderId, receivedMessage) => {
     // Si el idioma no es válido, pide al usuario que seleccione su idioma.
     const buttons = [
       { id: 'espanol', title: 'Español' },
-      { id: 'ingles', title: 'Inglés' }
+      // { id: 'ingles', title: 'Inglés' }
     ];
     await sendMessageTarget(senderId, 'Hola. Por favor selecciona tu idioma | Please select your language.', buttons);
   }
