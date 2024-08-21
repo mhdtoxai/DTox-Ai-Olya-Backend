@@ -2,19 +2,16 @@ const userService = require('../../services/userService');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const sendAudioMessage = require('../../services/Wp-Envio-Msj/sendAudioMessage');
 const getUserInfo = require('../../services/getUserInfo');
-const userContext = require('../../services/userContext');
 const handlePaymentPendient = require('./handlePaymentPendient');
 
 const handleQuestCompleted = async (senderId) => {
   try {
     // Obtener la información del usuario incluyendo el nombre
     const { idioma, estado, nombre } = await getUserInfo(senderId);
-    console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
 
     const QuestComplete = idioma === 'ingles'
       ? '✅ Well done! You have completed the questionnaire. '
       : '✅ ¡Bien hecho! Has completado el cuestionario.';
-
 
     // Mensajes según el idioma del usuario
     const plancomplete = idioma === 'ingles'
@@ -25,33 +22,29 @@ const handleQuestCompleted = async (senderId) => {
       ? `If you have any questions, let me know.`
       : `Si tienes alguna duda, déjamelo saber.`;
 
-  const audioUrl = 'https://drive.google.com/uc?export=download&id=1mDnn80GHE2fSISIG1-DuSr34VajeSvZs';
-
+    const audioUrl = 'https://drive.google.com/uc?export=download&id=1mDnn80GHE2fSISIG1-DuSr34VajeSvZs';
 
     await sendMessage(senderId, QuestComplete);
     await delay(2000);  // Espera 2 segundos
     await sendMessage(senderId, plancomplete);
-    await delay(3000);  // Espera 2 segundos
+    await delay(3000);  // Espera 3 segundos
     await sendMessage(senderId, questions);
     await delay(2000);  // Espera 2 segundos
-    sendAudioMessage(senderId, audioUrl);
-    await delay(5000);
+    await sendAudioMessage(senderId, audioUrl);
+    await delay(5000);  // Espera 5 segundos
 
-    // Actualizar el estado del usuario
+    // Actualizar el estado del usuario en la base de datos
     await userService.updateUser(senderId, { estado: 'pagopendiente' });
-    userContext[senderId].estado = 'pagopendiente';
 
-    console.log(`Estado actualizado a pagopendiente para ${senderId}`);
+    console.log(`Estado actualizado a 'pagopendiente' para ${senderId}`);
 
-    //  // Llamar a la función para manejar el estado 'pagopendiente'
+    // Llamar a la función para manejar el estado 'pagopendiente'
     await handlePaymentPendient(senderId);
 
   } catch (error) {
     console.error('Error al manejar cuestionario completado:', error);
     throw error; // Propagar el error para manejarlo en el controlador o en la lógica superior
   }
-  // Imprimir todo el contexto del usuario en la consola
-  console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
 };
 
 // Función de retraso

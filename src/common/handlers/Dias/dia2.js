@@ -27,7 +27,6 @@ const dia2 = async (senderId) => {
 
         // Obtener la información del usuario incluyendo el nivel y la zona horaria
         const { idioma, nombre, nivel, timezone } = await getUserInfo(senderId);
-        console.log(`Usuario ${senderId} tiene idioma: ${idioma}, nombre: ${nombre}, nivel: ${nivel}, timezone: ${timezone}`);
 
         // Definir el código de idioma y el nombre de la plantilla
         const languageCode = idioma === 'ingles' ? 'en_US' : 'es_MX';

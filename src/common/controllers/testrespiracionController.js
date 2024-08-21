@@ -4,11 +4,9 @@ const handleReportVape = require('../handlers/Onboarding/handleReportVape'); // 
 const registerTest = async (req, res) => {
   try {
     const { userId, score, testId } = req.body;  
-    const timestamp = new Date().toISOString();
     const userRef = db.collection('usuarios').doc(userId).collection('testrespiracion').doc(testId);
     await userRef.set({
       score,
-      timestamp,
       completado: true  
     });
 

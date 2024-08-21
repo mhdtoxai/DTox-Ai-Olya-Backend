@@ -2,14 +2,13 @@ const userService = require('../../services/userService');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
 const getUserInfo = require('../../services/getUserInfo');
-const userContext = require('../../services/userContext');
 const handleUserByState = require('../../services/handleUserByState');
 
 const handleLanguageKeywords = async (senderId, receivedMessage) => {
   try {
-    // Obtener la información del usuario incluyendo el nombre
+    // Obtener la información del usuario incluyendo el nombre y el idioma actual
     const { idioma, estado, nombre } = await getUserInfo(senderId);
-    console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
+    // console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
 
     const keywords = ['idioma', 'lengua', 'lenguaje', 'dialecto', 'language', 'idiom', 'dialect'];
     const messageLowerCase = receivedMessage.toLowerCase();
@@ -30,7 +29,6 @@ const handleLanguageKeywords = async (senderId, receivedMessage) => {
     if (receivedMessage === 'espanol-001' || receivedMessage === 'ingles-002') {
       const language = receivedMessage === 'espanol-001' ? 'español' : 'ingles';
       await userService.updateUser(senderId, { idioma: language });
-      userContext[senderId].idioma = language;
 
       // Confirmar la selección de idioma al usuario
       const confirmationMessage = language === 'ingles'
@@ -39,8 +37,8 @@ const handleLanguageKeywords = async (senderId, receivedMessage) => {
 
       await sendMessage(senderId, confirmationMessage);
 
-      // Llamar a la función correspondiente al estado actual del usuario
-      await handleUserByState(senderId, estado, receivedMessage);
+      // // Llamar a la función correspondiente al estado actual del usuario
+      // await handleUserByState(senderId, estado, receivedMessage);
 
       return true; // Indica que se manejó la selección de idioma
     }

@@ -9,7 +9,6 @@ const handleCompromise = async (senderId) => {
     try {
         // Obtener la información del usuario incluyendo el idioma
         const { idioma, estado, nombre } = await getUserInfo(senderId);
-        console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
 
         // Enviar las tarjetas de confirmación
         const confirmButtons = idioma === 'ingles'

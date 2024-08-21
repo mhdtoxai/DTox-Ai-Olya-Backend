@@ -2,16 +2,12 @@ const userService = require('../../services/userService');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
 const getUserInfo = require('../../services/getUserInfo');
-const userContext = require('../../services/userContext');
 const handleCompromise = require('./handleCompromise');
-
 
 const handleUserSelectionMode = async (senderId, selectedLevel) => {
     try {
         // Obtener la información del usuario incluyendo el nombre y idioma
         const { idioma, estado, nombre } = await getUserInfo(senderId);
-        console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
-
 
         // Listas de niveles válidos
         const validLevelsEnglish = ['high', 'medium', 'low'];
@@ -54,8 +50,6 @@ const handleUserSelectionMode = async (senderId, selectedLevel) => {
 
         // Actualizar el nivel seleccionado en la base de datos y el estado del usuario
         await userService.updateUser(senderId, { nivel: lowerCaseLevel, estado: 'confirmarcompromiso' });
-        userContext[senderId].nivel = lowerCaseLevel;
-        userContext[senderId].estado = 'confirmarcompromiso';
 
         // Enviar un mensaje de confirmación al usuario
         const confirmationMessage = idioma === 'ingles'
@@ -88,16 +82,15 @@ const handleUserSelectionMode = async (senderId, selectedLevel) => {
         await delay(2000);
         await sendMessage(senderId, additionalMessage4);
         await delay(2000);
-    // Llamar a la función para manejar el estado 'consentimientoaceptado'
-    await handleCompromise(senderId);
 
+        // Llamar a la función para manejar el estado 'confirmarcompromiso'
+        await handleCompromise(senderId);
 
     } catch (error) {
         console.error('Error al manejar la respuesta del usuario:', error);
     }
-    // Imprimir todo el contexto del usuario en la consola
-    console.log(`Contexto del usuario ${senderId} después de seleccionar nivel:`, userContext[senderId]);
 };
+
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 module.exports = handleUserSelectionMode;

@@ -3,7 +3,6 @@ const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
 const sendTextWithPreview = require('../../services/Wp-Envio-Msj/sendTextWithPreview');
 const getUserInfo = require('../../services/getUserInfo');
-const userContext = require('../../services/userContext');
 const handleUserByState = require('../../services/handleUserByState');
 const sendAudioMessage = require('../../services/Wp-Envio-Msj/sendAudioMessage');
 
@@ -26,7 +25,7 @@ const handleOptionKeywords = async (senderId, receivedMessage) => {
   try {
     // Obtener la información del usuario incluyendo el estado y el idioma
     const { estado, nombre, idioma } = await getUserInfo(senderId);
-    console.log(`Usuario ${senderId} tiene estado: ${estado}, nombre: ${nombre} e idioma: ${idioma}`);
+    // console.log(`Usuario ${senderId} tiene estado: ${estado}, nombre: ${nombre} e idioma: ${idioma}`);
 
     const keywords = idioma === 'ingles' ? ['craving'] : ['antojo'];
     const messageLowerCase = receivedMessage.toLowerCase();
@@ -77,12 +76,10 @@ const handleOptionKeywords = async (senderId, receivedMessage) => {
       
     await sendMessage(senderId, followUpMessage);
 
-    // // Llamar a la función correspondiente al estado actual del usuario
+    // Llamar a la función correspondiente al estado actual del usuario
     // await handleUserByState(senderId, estado, receivedMessage);
     return true; // Indica que se manejó la selección de opción
   } catch (error) {
-    // Imprimir todo el contexto del usuario en la consola
-    console.log(`Contexto del usuario ${senderId} después de seleccionar nivel:`, userContext[senderId]);
     console.error('Error al manejar la selección de opción:', error);
     return false;
   }

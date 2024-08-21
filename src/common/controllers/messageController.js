@@ -12,7 +12,6 @@ exports.handleIncomingMessage = async (req, res) => {
     // No enviar res.sendStatus(400) aquí, ya hemos respondido con 200 OK
   }
 };
-
 exports.verifyWebhook = (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];

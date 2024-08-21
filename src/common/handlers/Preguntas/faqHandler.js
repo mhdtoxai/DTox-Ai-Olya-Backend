@@ -1,7 +1,6 @@
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const getUserInfo = require('../../services/getUserInfo');
 const fuzz = require('fuzzball');
-const userContext = require('../../services/userContext');
 const { faqs, generalDoubtKeywords, synonyms } = require('./faqData'); // Importar los datos
 
 const findBestMatch = (question, faqs) => {
@@ -19,7 +18,6 @@ const handleFaq = async (senderId, question) => {
   try {
     // Obtener la información del usuario incluyendo el idioma
     const { idioma, estado } = await getUserInfo(senderId);
-    console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado}`);
 
     const lowerQuestion = question.toLowerCase();
 
@@ -74,9 +72,6 @@ const handleFaq = async (senderId, question) => {
   } catch (error) {
     console.error('Error al manejar las preguntas frecuentes:', error);
     return false;
-  } finally {
-    // Imprimir todo el contexto del usuario en la consola
-    console.log(`Contexto del usuario ${senderId}:`, userContext[senderId]);
   }
 };
 

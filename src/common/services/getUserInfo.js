@@ -1,6 +1,5 @@
 // getUserInfo.js
 const userService = require('../services/userService');
-const userContext = require('./userContext');
 
 const getUserInfo = async (senderId) => {
   try {
@@ -8,24 +7,23 @@ const getUserInfo = async (senderId) => {
     const userData = await userService.getUser(senderId);
     const userDataFields = userData._fieldsProto;
 
-    // // Log completo de userDataFields para depuración
-    // console.log(`Datos completos del usuario obtenidos de la base de datos:`, userDataFields);
-
     // Verificar que las claves existen antes de acceder a sus valores
     const idioma = userDataFields.idioma?.stringValue || '';
     const estado = userDataFields.estado?.stringValue || '';
     const nombre = userDataFields.nombre?.stringValue || '';
     const timezone = userDataFields.timezone?.stringValue || '';
-    const nivel=userDataFields.nivel?.stringValue || '';
+    const nivel = userDataFields.nivel?.stringValue || '';
 
-    // Actualizar el contexto con los datos del usuario y un timestamp
-    userContext[senderId] = { idioma, estado, nombre,nivel,timezone, timestamp: Date.now() };
-
-    // Log de cada campo
-    console.log(`Datos del usuario actualizados en el contexto: idioma=${idioma}, estado=${estado}, nombre=${nombre}, timezone=${timezone},nivel=${nivel}`);
+    // Mostrar toda la información del usuario en la consola
+    console.log(`Información del usuario ${senderId}:`);
+    console.log(`Idioma: ${idioma}`);
+    console.log(`Estado: ${estado}`);
+    console.log(`Nombre: ${nombre}`);
+    console.log(`Timezone: ${timezone}`);
+    console.log(`Nivel: ${nivel}`);
 
     // Retornar la información del usuario
-    return userContext[senderId];
+    return { idioma, estado, nombre, nivel, timezone };
   } catch (error) {
     console.error(`Error al obtener información del usuario ${senderId}:`, error);
     throw error; // Propagar el error para manejarlo en un nivel superior

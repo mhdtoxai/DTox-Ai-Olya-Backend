@@ -2,15 +2,12 @@ const userService = require('../../services/userService');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
 const getUserInfo = require('../../services/getUserInfo');
-const userContext = require('../../services/userContext');
 const handleRemoteUser = require('../../handlers/Onboarding/handleRemoteUser');
-
 
 const handleCompromiseConfirmation = async (senderId, userResponse) => {
     try {
         // Obtener la información del usuario incluyendo el idioma
         const { idioma, estado, nombre } = await getUserInfo(senderId);
-        console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
 
         // Respuestas válidas
         const validResponses = idioma === 'ingles' ? ['yes'] : ['si'];
@@ -46,7 +43,6 @@ const handleCompromiseConfirmation = async (senderId, userResponse) => {
 
         // Actualizar el estado del usuario
         await userService.updateUser(senderId, { estado: 'compromisoconfirmado' });
-        userContext[senderId].estado = 'compromisoconfirmado';
 
         // Mensaje adicional
         const additionalMessage = idioma === 'ingles'
@@ -57,17 +53,14 @@ const handleCompromiseConfirmation = async (senderId, userResponse) => {
          // Nuevo mensaje con la palabra "antojo" en negritas
          const reminderMessage = idioma === 'ingles'
          ? 'Remember: I will be here for you. The keyword for when you have a craving to vape will be **CRAVING**.'
-         : 'Recuerda: aquí estaré para tí. La palabra clave para cuando tengas un antojo de vapear será **ANTOJO**.';
+         : 'Recuerda: aquí estaré para ti. La palabra clave para cuando tengas un antojo de vapear será **ANTOJO**.';
      await sendMessage(senderId, reminderMessage);
 
      await handleRemoteUser(senderId);
 
-
     } catch (error) {
         console.error('Error al manejar la confirmación del compromiso:', error);
     }
-    // Imprimir todo el contexto del usuario en la consola
-    console.log(`Contexto del usuario ${senderId} después de la confirmación del compromiso:`, userContext[senderId]);
 };
 
 module.exports = handleCompromiseConfirmation;
