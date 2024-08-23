@@ -12,16 +12,25 @@ const dia1 = async (senderId) => {
   try {
     console.log(`Iniciando programación de mensajes para el usuario ${senderId}`);
 
-    // Verificar si ya hay trabajos programados para este usuario
+    // Verificar y cancelar trabajos existentes al inicio
     if (scheduledJobs[senderId]) {
-      console.log(`Ya hay trabajos programados para el usuario ${senderId}`);
+      console.log(`Cancelando trabajos anteriores para el usuario ${senderId}`);
       const userJobs = scheduledJobs[senderId];
       for (const jobName in userJobs) {
         if (userJobs.hasOwnProperty(jobName)) {
-          console.log(`Trabajo programado: ${jobName} a las ${userJobs[jobName].nextInvocation().toString()}`);
+          console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
+          const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
+          if (wasCancelled) {
+            console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
+          } else {
+            console.log(`No se pudo cancelar el trabajo ${jobName}.`);
+          }
         }
       }
-      return; // Salir si ya hay trabajos programados
+      delete scheduledJobs[senderId];
+      console.log(`Todos los trabajos anteriores para el usuario ${senderId} han sido cancelados y eliminados.`);
+    } else {
+      console.log(`No se encontraron trabajos anteriores para el usuario ${senderId}.`);
     }
 
     // Obtener la información del usuario incluyendo el nivel y la zona horaria
@@ -32,7 +41,7 @@ const dia1 = async (senderId) => {
     const templateName = 'morning_day1'; // Nombre de la plantilla
 
     // Crear objetos de fecha y hora en la zona horaria del usuario para cada mensaje
- const times = {
+    const times = {
       morning: moment.tz('07:00', 'HH:mm', timezone), // 7 AM - Plantilla
       first: moment.tz('10:00', 'HH:mm', timezone), // 10 AM
       second: moment.tz('12:00:', 'HH:mm', timezone), // 12 PM
@@ -66,7 +75,7 @@ const dia1 = async (senderId) => {
         // Iniciar el envío del mensaje de consentimiento
         const messageText = "¿Estás de acuerdo?";
         const buttons = [
-          { id: 'yes', title: 'Sí' },  ];
+          { id: 'yes', title: 'Sí' },];
         // Enviar el mensaje interactivo con botones
         await sendMessageTarget(senderId, messageText, buttons);
         console.log(`Mensaje de confirmacion enviado para el usuario ${senderId}`);
@@ -100,17 +109,17 @@ const dia1 = async (senderId) => {
 
       third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
         console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
-      
-        
-          const thirdMessage = idioma === 'ingles' ?
-            `Good afternoon ${nombre}, if you’re about to eat, enjoy your meal! \nHere’s a fun fact: did you know that vaping reduces your taste sensitivity? 😵‍💫\nThe good news 🥳 is that it will return completely in 1️⃣ to 3️⃣ months after quitting! \nSo, you're on the right track, and soon everything will taste even better 🤤😋` :
-            `Buenas tardes ${nombre}, si a penas vas a comer ¡BUEN PROVECHO! \nAprovecho 😝 para dejarte un dato curioso: ¿Sabías que el vapeo reduce tu sensibilidad de sabor? 😵‍💫\nLa buena noticia🥳 es que de 1️⃣ a 3️⃣ meses de haberlo dejado regresará por completo! \nAsí que vas por buen camino y prepárate que en poco tiempo, todo te sabrá aún más delicioso 🤤😋`;
-            
-          await sendMessage(senderId, thirdMessage);
-          console.log(`Tercer mensaje tardes, enviado a usuario ${senderId}`);
-      
+
+
+        const thirdMessage = idioma === 'ingles' ?
+          `Good afternoon ${nombre}, if you’re about to eat, enjoy your meal! \nHere’s a fun fact: did you know that vaping reduces your taste sensitivity? 😵‍💫\nThe good news 🥳 is that it will return completely in 1️⃣ to 3️⃣ months after quitting! \nSo, you're on the right track, and soon everything will taste even better 🤤😋` :
+          `Buenas tardes ${nombre}, si a penas vas a comer ¡BUEN PROVECHO! \nAprovecho 😝 para dejarte un dato curioso: ¿Sabías que el vapeo reduce tu sensibilidad de sabor? 😵‍💫\nLa buena noticia🥳 es que de 1️⃣ a 3️⃣ meses de haberlo dejado regresará por completo! \nAsí que vas por buen camino y prepárate que en poco tiempo, todo te sabrá aún más delicioso 🤤😋`;
+
+        await sendMessage(senderId, thirdMessage);
+        console.log(`Tercer mensaje tardes, enviado a usuario ${senderId}`);
+
       }),
-      
+
 
       fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
         console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
@@ -150,14 +159,35 @@ const dia1 = async (senderId) => {
         console.log(`Programado el séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
 
         if (nivel === 'alto') {
-          const  seventhMessage = idioma === 'ingles' ?
+          const seventhMessage = idioma === 'ingles' ?
             "Remember when you were a kid and just needed a toy (or many lol) to feel happy? Vaping has nothing to do with feeling happy or relaxed. You’re on the right track." :
             "Recuerdas cuando eras niñ@ y sólo necesitabas un juguete (o muchos jaja) para sentirte feliz? El vaping no tiene nada que ver con sentirte feliz o relajad@. Vas por buen camino.";
           await sendMessage(senderId, seventhMessage);
           console.log(`Séptimo mensaje a usuario ${senderId}`);
         }
 
-        delete scheduledJobs[senderId]; // Eliminar el trabajo después de que se haya completado
+        // Esperar a que el mensaje 7 se haya enviado antes de cancelar los trabajos
+        if (scheduledJobs[senderId]) {
+          console.log(`Cancelando todos los trabajos programados al finalizar para el usuario ${senderId}`);
+          const userJobs = scheduledJobs[senderId];
+          for (const jobName in userJobs) {
+            if (userJobs.hasOwnProperty(jobName)) {
+              console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
+              const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
+              if (wasCancelled) {
+                console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
+              } else {
+                console.log(`No se pudo cancelar el trabajo ${jobName}.`);
+              }
+            }
+          }
+          delete scheduledJobs[senderId];
+          console.log(`Todos los trabajos anteriores para el usuario ${senderId} han sido cancelados y eliminados.`);
+        } else {
+          console.log(`No se encontraron trabajos programados para cancelar.`);
+        }
+
+        // Llamar a dia2 después de cancelar todos los trabajos
         await dia2(senderId);
       })
     };

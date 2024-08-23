@@ -3,28 +3,41 @@ const schedule = require('node-schedule');
 const sendTemplateMessage = require('../../services/Wp-Envio-Msj/sendTemplateMessage');
 const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
-const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
+const moment = require('moment-timezone');
 const axios = require('axios');
 const scheduledJobs = {}; // Objeto para almacenar trabajos programados
 const userContext = require('../../services/userContext');
 const userService = require('../../services/userService');
 
+// Función para cancelar trabajos programados
+const cancelScheduledJobs = (senderId) => {
+    if (scheduledJobs[senderId]) {
+        console.log(`Cancelando trabajos para el usuario ${senderId}`);
+        const userJobs = scheduledJobs[senderId];
+        for (const jobName in userJobs) {
+            if (userJobs.hasOwnProperty(jobName)) {
+                console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
+                const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
+                if (wasCancelled) {
+                    console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
+                } else {
+                    console.log(`No se pudo cancelar el trabajo ${jobName}.`);
+                }
+            }
+        }
+        delete scheduledJobs[senderId];
+        console.log(`Todos los trabajos para el usuario ${senderId} han sido cancelados y eliminados.`);
+    } else {
+        console.log(`No se encontraron trabajos para el usuario ${senderId}.`);
+    }
+};
 
 const dia20 = async (senderId) => {
     try {
         console.log(`Iniciando programación de mensajes para el usuario ${senderId}`);
 
-        // Verificar si ya hay trabajos programados para este usuario
-        if (scheduledJobs[senderId]) {
-            console.log(`Ya hay trabajos programados para el usuario ${senderId}`);
-            const userJobs = scheduledJobs[senderId];
-            for (const jobName in userJobs) {
-                if (userJobs.hasOwnProperty(jobName)) {
-                    console.log(`Trabajo programado: ${jobName} a las ${userJobs[jobName].nextInvocation().toString()}`);
-                }
-            }
-            return; // Salir si ya hay trabajos programados
-        }
+        // Verificar y cancelar trabajos existentes al inicio
+        cancelScheduledJobs(senderId);
 
         // Obtener la información del usuario incluyendo el nivel y la zona horaria
         const { idioma, nombre, nivel, timezone } = await getUserInfo(senderId);
@@ -38,12 +51,10 @@ const dia20 = async (senderId) => {
         const times = {
             morning: moment.tz('07:00', 'HH:mm', timezone), // 7 AM - Plantilla
             first: moment.tz('10:00', 'HH:mm', timezone), // 10 AM
-            second: moment.tz('12:00:', 'HH:mm', timezone), // 12 PM
+            second: moment.tz('12:00', 'HH:mm', timezone), // 12 PM
             testrep: moment.tz('17:00', 'HH:mm', timezone), // 5 PM
-            fifth: moment.tz('22:00', 'HH:mm', timezone), // 6 PM
-
+            fifth: moment.tz('22:00', 'HH:mm', timezone), // 10 PM
         };
-
 
         console.log(`Horas del usuario convertidas a objetos de momento:`);
         Object.keys(times).forEach(key => {
@@ -68,7 +79,8 @@ const dia20 = async (senderId) => {
                 // Iniciar el envío del mensaje de consentimiento
                 const messageText = "¿Estás de acuerdo?";
                 const buttons = [
-                    { id: 'yes', title: 'Sí' },];
+                    { id: 'yes', title: 'Sí' },
+                ];
                 // Enviar el mensaje interactivo con botones
                 await sendMessageTarget(senderId, messageText, buttons);
                 console.log(`Mensaje de confirmacion enviado para el usuario ${senderId}`);
@@ -130,7 +142,7 @@ const dia20 = async (senderId) => {
 
                     // Calcula el porcentaje de cambio respecto al score del primer resultado
                     const difference = score5 - score1;
-                    const percentageChange = ((difference / score1) * 100).toFixed(2); // Usa .toFixed(2) para limitar a dos decimales
+                    const percentageChange = ((difference / score1) * 100).toFixed(2);
 
                     // Determina el status y el emoji correspondiente
                     let status;
@@ -160,7 +172,6 @@ const dia20 = async (senderId) => {
                 }
             }),
 
-
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
 
@@ -173,11 +184,15 @@ const dia20 = async (senderId) => {
                     console.log(`Quinto mensaje enviado a ${senderId}`);
                 }
             })
-
         };
-        // Actualizar el estado 
+
+        // Actualizar el estado
         await userService.updateUser(senderId, { estado: 'programafinalizado' });
         userContext[senderId].estado = 'programafinalizado';
+        
+        // Cancelar los trabajos programados al terminar
+        cancelScheduledJobs(senderId);
+
     } catch (error) {
         console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
     }

@@ -12,17 +12,27 @@ const dia15 = async (senderId) => {
     try {
         console.log(`Iniciando programación de mensajes para el usuario ${senderId}`);
 
-        // Verificar si ya hay trabajos programados para este usuario
+        // Verificar y cancelar trabajos existentes al inicio
         if (scheduledJobs[senderId]) {
-            console.log(`Ya hay trabajos programados para el usuario ${senderId}`);
+            console.log(`Cancelando trabajos anteriores para el usuario ${senderId}`);
             const userJobs = scheduledJobs[senderId];
             for (const jobName in userJobs) {
                 if (userJobs.hasOwnProperty(jobName)) {
-                    console.log(`Trabajo programado: ${jobName} a las ${userJobs[jobName].nextInvocation().toString()}`);
+                    console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
+                    const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
+                    if (wasCancelled) {
+                        console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
+                    } else {
+                        console.log(`No se pudo cancelar el trabajo ${jobName}.`);
+                    }
                 }
             }
-            return; // Salir si ya hay trabajos programados
+            delete scheduledJobs[senderId];
+            console.log(`Todos los trabajos anteriores para el usuario ${senderId} han sido cancelados y eliminados.`);
+        } else {
+            console.log(`No se encontraron trabajos anteriores para el usuario ${senderId}.`);
         }
+
 
         // Obtener la información del usuario incluyendo el nivel y la zona horaria
         const { idioma, nombre, nivel, timezone } = await getUserInfo(senderId);
@@ -105,13 +115,13 @@ const dia15 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
-                    const thirdMessage = idioma === 'ingles' ?
-                        `Before lunch: 'It does not matter how slowly you go, as long as you do not stop.' – Confucius. Keep moving forward!` :
-                        `Antes del almuerzo: 'No importa cuán despacio vayas, siempre y cuando no te detengas.' – Confucio. ¡Sigue avanzando!`;
+                const thirdMessage = idioma === 'ingles' ?
+                    `Before lunch: 'It does not matter how slowly you go, as long as you do not stop.' – Confucius. Keep moving forward!` :
+                    `Antes del almuerzo: 'No importa cuán despacio vayas, siempre y cuando no te detengas.' – Confucio. ¡Sigue avanzando!`;
 
-                    await sendMessage(senderId, thirdMessage);
-                    console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-             
+                await sendMessage(senderId, thirdMessage);
+                console.log(`Tercer mensaje enviado a usuario ${senderId}`);
+
             }),
 
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
@@ -157,23 +167,23 @@ const dia15 = async (senderId) => {
 
             RecUrl: schedule.scheduleJob(`MensajeRecUrl ${senderId}`, { hour: serverTimes.RecUrl.hours(), minute: serverTimes.RecUrl.minutes() }, async () => {
                 console.log(`Programado mensaje de retención pulmonar ${senderId} a las ${serverTimes.RecUrl.format()}`);
-            
+
                 try {
                     // Realiza la solicitud POST a la API para obtener los resultados
                     const response = await axios.post('https://jjhvjvui.top/api/test/testrespiracion/obtenerpruebas', {
                         userId: senderId
                     });
-            
+
                     const pruebas = response.data; // Suponiendo que la respuesta contiene los datos de las pruebas
-            
+
                     // Verifica si el testId 4 está presente
                     const testId4Presente = pruebas.some(prueba => prueba.id === '4');
-            
+
                     if (!testId4Presente) {
                         // Genera la URL única con senderId, nombre y testId
                         const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=4`;
                         console.log('URL única generada:', uniqueUrl);
-            
+
                         // Enviar el mensaje con el enlace único
                         const urlMessage = idioma === 'ingles'
                             ? `You still have your lung retention test pending!, Click here to start: ${uniqueUrl}`
@@ -212,7 +222,28 @@ const dia15 = async (senderId) => {
                     console.log(`Séptimo mensaje enviado a usuario ${senderId}`);
                 }
 
-                delete scheduledJobs[senderId]; // Eliminar el trabajo después de que se haya completado
+                // Esperar a que el mensaje 7 se haya enviado antes de cancelar los trabajos
+                if (scheduledJobs[senderId]) {
+                    console.log(`Cancelando todos los trabajos programados al finalizar para el usuario ${senderId}`);
+                    const userJobs = scheduledJobs[senderId];
+                    for (const jobName in userJobs) {
+                        if (userJobs.hasOwnProperty(jobName)) {
+                            console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
+                            const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
+                            if (wasCancelled) {
+                                console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
+                            } else {
+                                console.log(`No se pudo cancelar el trabajo ${jobName}.`);
+                            }
+                        }
+                    }
+                    delete scheduledJobs[senderId];
+                    console.log(`Todos los trabajos anteriores para el usuario ${senderId} han sido cancelados y eliminados.`);
+                } else {
+                    console.log(`No se encontraron trabajos programados para cancelar.`);
+                }
+
+                // Llamar a dia 16 después de cancelar todos los trabajos
                 await dia16(senderId);
             })
         };
@@ -220,5 +251,7 @@ const dia15 = async (senderId) => {
         console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
     }
 };
+
+
 
 module.exports = dia15;

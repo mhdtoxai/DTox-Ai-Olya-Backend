@@ -12,17 +12,28 @@ const dia19 = async (senderId) => {
     try {
         console.log(`Iniciando programación de mensajes para el usuario ${senderId}`);
 
-        // Verificar si ya hay trabajos programados para este usuario
+        // Verificar y cancelar trabajos existentes al inicio
         if (scheduledJobs[senderId]) {
-            console.log(`Ya hay trabajos programados para el usuario ${senderId}`);
+            console.log(`Cancelando trabajos anteriores para el usuario ${senderId}`);
             const userJobs = scheduledJobs[senderId];
             for (const jobName in userJobs) {
                 if (userJobs.hasOwnProperty(jobName)) {
-                    console.log(`Trabajo programado: ${jobName} a las ${userJobs[jobName].nextInvocation().toString()}`);
+                    console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
+                    const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
+                    if (wasCancelled) {
+                        console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
+                    } else {
+                        console.log(`No se pudo cancelar el trabajo ${jobName}.`);
+                    }
                 }
             }
-            return; // Salir si ya hay trabajos programados
+            delete scheduledJobs[senderId];
+            console.log(`Todos los trabajos anteriores para el usuario ${senderId} han sido cancelados y eliminados.`);
+        } else {
+            console.log(`No se encontraron trabajos anteriores para el usuario ${senderId}.`);
         }
+
+
 
         // Obtener la información del usuario incluyendo el nivel y la zona horaria
         const { idioma, nombre, nivel, timezone } = await getUserInfo(senderId);
@@ -146,23 +157,23 @@ const dia19 = async (senderId) => {
 
             RecUrl: schedule.scheduleJob(`MensajeRecUrl ${senderId}`, { hour: serverTimes.RecUrl.hours(), minute: serverTimes.RecUrl.minutes() }, async () => {
                 console.log(`Programado mensaje de retención pulmonar ${senderId} a las ${serverTimes.RecUrl.format()}`);
-            
+
                 try {
                     // Realiza la solicitud POST a la API para obtener los resultados
                     const response = await axios.post('https://jjhvjvui.top/api/test/testrespiracion/obtenerpruebas', {
                         userId: senderId
                     });
-            
+
                     const pruebas = response.data; // Suponiendo que la respuesta contiene los datos de las pruebas
-            
+
                     // Verifica si el testId 5 está presente
                     const testId5Presente = pruebas.some(prueba => prueba.id === '5');
-            
+
                     if (!testId5Presente) {
                         // Genera la URL única con senderId, nombre y testId
                         const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=5`;
                         console.log('URL única generada:', uniqueUrl);
-            
+
                         // Enviar el mensaje con el enlace único
                         const urlMessage = idioma === 'ingles'
                             ? `You still have your lung retention test pending!, Click here to start: ${uniqueUrl}`
@@ -201,7 +212,28 @@ const dia19 = async (senderId) => {
                 }
 
 
-                delete scheduledJobs[senderId]; // Eliminar el trabajo después de que se haya completado
+                // Esperar a que el mensaje 7 se haya enviado antes de cancelar los trabajos
+                if (scheduledJobs[senderId]) {
+                    console.log(`Cancelando todos los trabajos programados al finalizar para el usuario ${senderId}`);
+                    const userJobs = scheduledJobs[senderId];
+                    for (const jobName in userJobs) {
+                        if (userJobs.hasOwnProperty(jobName)) {
+                            console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
+                            const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
+                            if (wasCancelled) {
+                                console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
+                            } else {
+                                console.log(`No se pudo cancelar el trabajo ${jobName}.`);
+                            }
+                        }
+                    }
+                    delete scheduledJobs[senderId];
+                    console.log(`Todos los trabajos anteriores para el usuario ${senderId} han sido cancelados y eliminados.`);
+                } else {
+                    console.log(`No se encontraron trabajos programados para cancelar.`);
+                }
+
+                // Llamar a dia 20 después de cancelar todos los trabajos
                 await dia20(senderId);
             })
         };
@@ -209,5 +241,6 @@ const dia19 = async (senderId) => {
         console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
     }
 };
+
 
 module.exports = dia19;

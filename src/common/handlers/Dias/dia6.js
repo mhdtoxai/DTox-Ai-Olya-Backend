@@ -12,17 +12,27 @@ const dia6 = async (senderId) => {
     try {
         console.log(`Iniciando programación de mensajes para el usuario ${senderId}`);
 
-        // Verificar si ya hay trabajos programados para este usuario
+        // Verificar y cancelar trabajos existentes al inicio
         if (scheduledJobs[senderId]) {
-            console.log(`Ya hay trabajos programados para el usuario ${senderId}`);
+            console.log(`Cancelando trabajos anteriores para el usuario ${senderId}`);
             const userJobs = scheduledJobs[senderId];
             for (const jobName in userJobs) {
                 if (userJobs.hasOwnProperty(jobName)) {
-                    console.log(`Trabajo programado: ${jobName} a las ${userJobs[jobName].nextInvocation().toString()}`);
+                    console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
+                    const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
+                    if (wasCancelled) {
+                        console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
+                    } else {
+                        console.log(`No se pudo cancelar el trabajo ${jobName}.`);
+                    }
                 }
             }
-            return; // Salir si ya hay trabajos programados
+            delete scheduledJobs[senderId];
+            console.log(`Todos los trabajos anteriores para el usuario ${senderId} han sido cancelados y eliminados.`);
+        } else {
+            console.log(`No se encontraron trabajos anteriores para el usuario ${senderId}.`);
         }
+
 
         // Obtener la información del usuario incluyendo el nivel y la zona horaria
         const { idioma, nombre, nivel, timezone } = await getUserInfo(senderId);
@@ -116,14 +126,14 @@ const dia6 = async (senderId) => {
             
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
                 console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
-
+            
                 if (nivel === 'medio' || nivel === 'alto') {
                     const fourthMessage = idioma === 'ingles' ?
-                        `Did you know that using e-cigarettes can alter the central nervous system 🧠 and affect cognitive function 📉?` :
-                        `¿Sabías que el uso de cigarrillos electrónicos puede alterar el sistema nervioso central 🧠 y afectar la función cognitiva 📉?`;
-
+                        `Did you know that e-cigarette vapor can contain volatile organic compounds that are toxic ☠️?` :
+                        `¿Sabías que el vapor de los cigarrillos electrónicos puede contener compuestos orgánicos volátiles que son tóxicos ☠️?`;
+            
                     await sendMessage(senderId, fourthMessage);
-                    console.log(`Mensaje sobre el sistema nervioso enviado para el usuario ${senderId}`);
+                    console.log(`Mensaje sobre compuestos tóxicos enviado para el usuario ${senderId}`);
                 }
             }),
 
@@ -169,13 +179,34 @@ const dia6 = async (senderId) => {
                     console.log(`Séptimo mensaje enviado a usuario ${senderId}`);
                 }
 
-                delete scheduledJobs[senderId]; // Eliminar el trabajo después de que se haya completado
-                await dia7(senderId);
-            })
-        };
-    } catch (error) {
-        console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
-    }
+             // Esperar a que el mensaje 7 se haya enviado antes de cancelar los trabajos
+             if (scheduledJobs[senderId]) {
+                console.log(`Cancelando todos los trabajos programados al finalizar para el usuario ${senderId}`);
+                const userJobs = scheduledJobs[senderId];
+                for (const jobName in userJobs) {
+                    if (userJobs.hasOwnProperty(jobName)) {
+                        console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
+                        const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
+                        if (wasCancelled) {
+                            console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
+                        } else {
+                            console.log(`No se pudo cancelar el trabajo ${jobName}.`);
+                        }
+                    }
+                }
+                delete scheduledJobs[senderId];
+                console.log(`Todos los trabajos anteriores para el usuario ${senderId} han sido cancelados y eliminados.`);
+            } else {
+                console.log(`No se encontraron trabajos programados para cancelar.`);
+            }
+
+            // Llamar a dia 7 después de cancelar todos los trabajos
+            await dia7(senderId);
+        })
+    };
+} catch (error) {
+    console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
+}
 };
 
 module.exports = dia6;
