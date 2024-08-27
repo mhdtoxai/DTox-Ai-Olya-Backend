@@ -5,6 +5,7 @@ const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
 const dia2 = require('./dia2'); // Asegúrate de ajustar la ruta según tu estructura de archivos
+const userService = require('../../services/userService');
 
 const scheduledJobs = {}; // Objeto para almacenar trabajos programados
 
@@ -44,7 +45,7 @@ const dia1 = async (senderId) => {
     const times = {
       morning: moment.tz('07:00', 'HH:mm', timezone), // 7 AM - Plantilla
       first: moment.tz('10:00', 'HH:mm', timezone), // 10 AM
-      second: moment.tz('12:00:', 'HH:mm', timezone), // 12 PM
+      second: moment.tz('12:00', 'HH:mm', timezone), // 12 PM
       third: moment.tz('14:00', 'HH:mm', timezone), // 2 PM
       fourth: moment.tz('16:00', 'HH:mm', timezone), // 4 PM
       fifth: moment.tz('18:00', 'HH:mm', timezone), // 6 PM
@@ -52,16 +53,10 @@ const dia1 = async (senderId) => {
       seventh: moment.tz('22:00', 'HH:mm', timezone) // 10 PM
     };
 
-    console.log(`Horas del usuario convertidas a objetos de momento:`);
-    Object.keys(times).forEach(key => {
-      console.log(`Hora ${key}: ${times[key].format('YYYY-MM-DD HH:mm:ss')}`);
-    });
-
     // Convertir las horas del usuario a la hora del servidor
     const serverTimes = {};
     Object.keys(times).forEach(key => {
       serverTimes[key] = times[key].clone().tz(moment.tz.guess());
-      console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
     });
 
     // Programar cada mensaje
@@ -74,13 +69,11 @@ const dia1 = async (senderId) => {
 
         // Iniciar el envío del mensaje de consentimiento
         const messageText = "¿Estás de acuerdo?";
-        const buttons = [
-          { id: 'yes', title: 'Sí' },];
+        const buttons = [{ id: 'yes', title: 'Sí' }];
         // Enviar el mensaje interactivo con botones
         await sendMessageTarget(senderId, messageText, buttons);
         console.log(`Mensaje de confirmacion enviado para el usuario ${senderId}`);
       }),
-
 
       first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
         console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
@@ -104,12 +97,10 @@ const dia1 = async (senderId) => {
           await sendMessage(senderId, secondMessage);
           console.log(`Segundo mensaje enviado a ${senderId}`);
         }
-
       }),
 
       third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
         console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
-
 
         const thirdMessage = idioma === 'ingles' ?
           `Good afternoon ${nombre}, if you’re about to eat, enjoy your meal! \nHere’s a fun fact: did you know that vaping reduces your taste sensitivity? 😵‍💫\nThe good news 🥳 is that it will return completely in 1️⃣ to 3️⃣ months after quitting! \nSo, you're on the right track, and soon everything will taste even better 🤤😋` :
@@ -117,9 +108,7 @@ const dia1 = async (senderId) => {
 
         await sendMessage(senderId, thirdMessage);
         console.log(`Tercer mensaje tardes, enviado a usuario ${senderId}`);
-
       }),
-
 
       fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
         console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
@@ -187,10 +176,20 @@ const dia1 = async (senderId) => {
           console.log(`No se encontraron trabajos programados para cancelar.`);
         }
 
+        await userService.updateUser(senderId, { estado: 'dia2' });
+
         // Llamar a dia2 después de cancelar todos los trabajos
         await dia2(senderId);
       })
     };
+
+    // Imprimir detalles de los trabajos programados
+    console.log(`Trabajos 1 programados para el usuario ${senderId}:`);
+    Object.keys(scheduledJobs[senderId]).forEach(jobName => {
+      const job = scheduledJobs[senderId][jobName];
+      console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);
+    });
+
   } catch (error) {
     console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
   }

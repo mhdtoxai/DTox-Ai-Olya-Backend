@@ -6,7 +6,6 @@ const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone');
 const axios = require('axios');
 const scheduledJobs = {}; // Objeto para almacenar trabajos programados
-const userContext = require('../../services/userContext');
 const userService = require('../../services/userService');
 
 // Función para cancelar trabajos programados
@@ -56,16 +55,12 @@ const dia20 = async (senderId) => {
             fifth: moment.tz('22:00', 'HH:mm', timezone), // 10 PM
         };
 
-        console.log(`Horas del usuario convertidas a objetos de momento:`);
-        Object.keys(times).forEach(key => {
-            console.log(`Hora ${key}: ${times[key].format('YYYY-MM-DD HH:mm:ss')}`);
-        });
 
         // Convertir las horas del usuario a la hora del servidor
         const serverTimes = {};
         Object.keys(times).forEach(key => {
             serverTimes[key] = times[key].clone().tz(moment.tz.guess());
-            console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
+            // console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
         });
 
         // Programar cada mensaje
@@ -188,11 +183,16 @@ const dia20 = async (senderId) => {
 
         // Actualizar el estado
         await userService.updateUser(senderId, { estado: 'programafinalizado' });
-        userContext[senderId].estado = 'programafinalizado';
-        
+
         // Cancelar los trabajos programados al terminar
         cancelScheduledJobs(senderId);
 
+        // Imprimir detalles de los trabajos programados
+        console.log(`Trabajos 20 programados para el usuario ${senderId}:`);
+        Object.keys(scheduledJobs[senderId]).forEach(jobName => {
+            const job = scheduledJobs[senderId][jobName];
+            console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);
+        });
     } catch (error) {
         console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
     }

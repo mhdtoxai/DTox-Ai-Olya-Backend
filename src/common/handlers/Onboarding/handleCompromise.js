@@ -23,7 +23,6 @@ const handleCompromise = async (senderId) => {
 
         // Actualizar el estado del usuario después de enviar todos los mensajes
         await userService.updateUser(senderId, { estado: 'compromisopendiente' });
-        userContext[senderId].estado = 'compromisopendiente';
 
     } catch (error) {
         console.error('Error al enviar el mensaje de compromiso:', error);

@@ -42,7 +42,7 @@ const handleCompromiseConfirmation = async (senderId, userResponse) => {
         }
 
         // Actualizar el estado del usuario
-        await userService.updateUser(senderId, { estado: 'compromisoconfirmado' });
+        await userService.updateUser(senderId, { estado: 'mensajeremoto' });
 
         // Mensaje adicional
         const additionalMessage = idioma === 'ingles'

@@ -5,7 +5,7 @@ const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
 const dia4 = require('./dia4'); // Asegúrate de ajustar la ruta según tu estructura de archivos
-
+const userService = require('../../services/userService');
 const scheduledJobs = {}; // Objeto para almacenar trabajos programados
 
 const dia3 = async (senderId) => {
@@ -52,16 +52,11 @@ const dia3 = async (senderId) => {
     };
 
 
-    console.log(`Horas del usuario convertidas a objetos de momento:`);
-    Object.keys(times).forEach(key => {
-      console.log(`Hora ${key}: ${times[key].format('YYYY-MM-DD HH:mm:ss')}`);
-    });
-
     // Convertir las horas del usuario a la hora del servidor
     const serverTimes = {};
     Object.keys(times).forEach(key => {
       serverTimes[key] = times[key].clone().tz(moment.tz.guess());
-      console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
+      // console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
     });
 
     // Programar cada mensaje
@@ -84,30 +79,30 @@ const dia3 = async (senderId) => {
 
       first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
         console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
-    
+
         if (nivel === 'medio' || nivel === 'alto') {
           const firstMessage = idioma === 'ingles' ?
             `No excuses, YOU CAN DO IT! If you have cravings, remember to say CRAVING and we'll beat it together.` :
             `¡No hay pretextos, SI PUEDES! Si tienes antojos, recuerda decir ANTOJO y lo vencemos juntos.`;
-    
+
           await sendMessage(senderId, firstMessage);
           console.log(`Primer mensaje enviado a ${senderId}`);
         }
-    }),    
+      }),
 
-    second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
-      console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
-  
-      if (nivel === 'alto') {
-        const secondMessage = idioma === 'ingles' ?
-          `I just want to let you know that vaping can cause digestive problems 🤢🤮.` :
-          `Sólo quiero decirte que el vaping puede causar problemas en el sistema digestivo 🤢🤮.`;
-  
-        await sendMessage(senderId, secondMessage);
-        console.log(`Mensaje específico enviado para el usuario ${senderId}`);
-      }
-  }),
-    
+      second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
+        console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
+
+        if (nivel === 'alto') {
+          const secondMessage = idioma === 'ingles' ?
+            `I just want to let you know that vaping can cause digestive problems 🤢🤮.` :
+            `Sólo quiero decirte que el vaping puede causar problemas en el sistema digestivo 🤢🤮.`;
+
+          await sendMessage(senderId, secondMessage);
+          console.log(`Mensaje específico enviado para el usuario ${senderId}`);
+        }
+      }),
+
       third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
         console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
@@ -152,14 +147,14 @@ const dia3 = async (senderId) => {
 
       sixth: schedule.scheduleJob(`MensajeSexto ${senderId}`, { hour: serverTimes.sixth.hours(), minute: serverTimes.sixth.minutes() }, async () => {
         console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
-    
+
         const sixthMessage = idioma === 'ingles' ?
           `I hope you did well with today's challenge. 95% of your challenge peers reported being able to hold off after 1 PM! 🥳🥳🥳🥳🥳\n\nRemember, if you have a craving to vape, just let me know and I'll help you.\n\nRest well!! 💤😴` :
           `Espero que te haya ido bien en el reto de hoy. El 95% de tus compañeros de reto reportó haber podido aguantar después de la 1! 🥳🥳🥳🥳🥳\n\nRecuerda. ANTOJO cuando tengas ganas de vapear y te ayudo.\n\n¡Que descanses!! 💤😴`;
         await sendMessage(senderId, sixthMessage);
         console.log(`Mensaje sexto de buenas noches enviado a usuario ${senderId}`);
-    }),
-    
+      }),
+
       seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
         console.log(`Programado el séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
 
@@ -194,10 +189,20 @@ const dia3 = async (senderId) => {
           console.log(`No se encontraron trabajos programados para cancelar.`);
         }
 
+          // Actualizar el estado
+          await userService.updateUser(senderId, { estado: 'dia4' });
         // Llamar a dia 4 después de cancelar todos los trabajos
         await dia4(senderId);
       })
     };
+
+    // Imprimir detalles de los trabajos programados
+    console.log(`Trabajos 3 programados para el usuario ${senderId}:`);
+    Object.keys(scheduledJobs[senderId]).forEach(jobName => {
+      const job = scheduledJobs[senderId][jobName];
+      console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);
+    });
+
   } catch (error) {
     console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
   }

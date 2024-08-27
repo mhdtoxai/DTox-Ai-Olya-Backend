@@ -56,16 +56,11 @@ const dia18 = async (senderId) => {
         };
 
 
-        console.log(`Horas del usuario convertidas a objetos de momento:`);
-        Object.keys(times).forEach(key => {
-            console.log(`Hora ${key}: ${times[key].format('YYYY-MM-DD HH:mm:ss')}`);
-        });
-
         // Convertir las horas del usuario a la hora del servidor
         const serverTimes = {};
         Object.keys(times).forEach(key => {
             serverTimes[key] = times[key].clone().tz(moment.tz.guess());
-            console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
+            // console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
         });
 
         // Programar cada mensaje
@@ -198,6 +193,14 @@ const dia18 = async (senderId) => {
                 await dia19(senderId);
             })
         };
+
+        // Imprimir detalles de los trabajos programados
+    console.log(`Trabajos 18 programados para el usuario ${senderId}:`);
+    Object.keys(scheduledJobs[senderId]).forEach(jobName => {
+      const job = scheduledJobs[senderId][jobName];
+      console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);
+    });
+
     } catch (error) {
         console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
     }

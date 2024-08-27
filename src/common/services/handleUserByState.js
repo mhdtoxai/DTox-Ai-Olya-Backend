@@ -12,8 +12,8 @@ const handleSelectModeLevel = require('../handlers/Onboarding/handleSelectModeLe
 const handleUserSelectionMode = require('../handlers/Onboarding/handleUserSelectionMode');
 const handleCompromise = require('../handlers/Onboarding/handleCompromise');
 const handleCompromiseConfirmation = require('../handlers/Onboarding/handleCompromiseConfirmation');
-const dia1 = require('../handlers/Dias/dia1');
-const dia2 = require('../handlers/Dias/dia2');
+// const dia1 = require('../handlers/Dias/dia1');
+// const dia2 = require('../handlers/Dias/dia2');
 
 const handleUserByState = async (senderId, receivedMessage) => {
   const userDoc = await userService.getUser(senderId);
@@ -65,12 +65,12 @@ const handleUserByState = async (senderId, receivedMessage) => {
       case 'compromisopendiente':
         await handleCompromiseConfirmation(senderId, receivedMessage);
         break;
-        case 'dia1':
-          await dia1(senderId);
-          break;
-          case 'dia2':
-            await dia2(senderId);
-            break;
+        // case 'dia1':
+        //   await dia1(senderId);
+        //   break;
+        //   case 'dia2':
+        //     await dia2(senderId);
+        //     break;
       default:
         console.log(`Estado no reconocido: ${estado}. No se realizará ninguna acción adicional.`);
         break;

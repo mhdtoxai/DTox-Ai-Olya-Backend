@@ -5,7 +5,7 @@ const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
 const dia15 = require('./dia15'); // Asegúrate de ajustar la ruta según tu estructura de archivos
-
+const userService = require('../../services/userService');
 const scheduledJobs = {}; // Objeto para almacenar trabajos programados
 
 const dia14 = async (senderId) => {
@@ -54,16 +54,11 @@ const dia14 = async (senderId) => {
         };
 
 
-        console.log(`Horas del usuario convertidas a objetos de momento:`);
-        Object.keys(times).forEach(key => {
-            console.log(`Hora ${key}: ${times[key].format('YYYY-MM-DD HH:mm:ss')}`);
-        });
-
         // Convertir las horas del usuario a la hora del servidor
         const serverTimes = {};
         Object.keys(times).forEach(key => {
             serverTimes[key] = times[key].clone().tz(moment.tz.guess());
-            console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
+            // console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
         });
 
         // Programar cada mensaje
@@ -190,10 +185,18 @@ const dia14 = async (senderId) => {
                     console.log(`No se encontraron trabajos programados para cancelar.`);
                 }
 
+                // Actualizar el estado
+                await userService.updateUser(senderId, { estado: 'dia15' });
                 // Llamar a dia 15 después de cancelar todos los trabajos
                 await dia15(senderId);
             })
         };
+        // Imprimir detalles de los trabajos programados
+        console.log(`Trabajos 14 programados para el usuario ${senderId}:`);
+        Object.keys(scheduledJobs[senderId]).forEach(jobName => {
+            const job = scheduledJobs[senderId][jobName];
+            console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);
+        });
     } catch (error) {
         console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
     }

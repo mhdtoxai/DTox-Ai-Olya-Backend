@@ -5,7 +5,7 @@ const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
 const dia13 = require('./dia13'); // Asegúrate de ajustar la ruta según tu estructura de archivos
-
+const userService = require('../../services/userService');
 const scheduledJobs = {}; // Objeto para almacenar trabajos programados
 
 const dia12 = async (senderId) => {
@@ -53,16 +53,12 @@ const dia12 = async (senderId) => {
         };
 
 
-        console.log(`Horas del usuario convertidas a objetos de momento:`);
-        Object.keys(times).forEach(key => {
-            console.log(`Hora ${key}: ${times[key].format('YYYY-MM-DD HH:mm:ss')}`);
-        });
 
         // Convertir las horas del usuario a la hora del servidor
         const serverTimes = {};
         Object.keys(times).forEach(key => {
             serverTimes[key] = times[key].clone().tz(moment.tz.guess());
-            console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
+            // console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
         });
 
         // Programar cada mensaje
@@ -170,34 +166,43 @@ const dia12 = async (senderId) => {
                     console.log(`Séptimo mensaje enviado a usuario ${senderId}`);
                 }
 
-              // Esperar a que el mensaje 7 se haya enviado antes de cancelar los trabajos
-              if (scheduledJobs[senderId]) {
-                console.log(`Cancelando todos los trabajos programados al finalizar para el usuario ${senderId}`);
-                const userJobs = scheduledJobs[senderId];
-                for (const jobName in userJobs) {
-                    if (userJobs.hasOwnProperty(jobName)) {
-                        console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
-                        const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
-                        if (wasCancelled) {
-                            console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
-                        } else {
-                            console.log(`No se pudo cancelar el trabajo ${jobName}.`);
+                // Esperar a que el mensaje 7 se haya enviado antes de cancelar los trabajos
+                if (scheduledJobs[senderId]) {
+                    console.log(`Cancelando todos los trabajos programados al finalizar para el usuario ${senderId}`);
+                    const userJobs = scheduledJobs[senderId];
+                    for (const jobName in userJobs) {
+                        if (userJobs.hasOwnProperty(jobName)) {
+                            console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
+                            const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
+                            if (wasCancelled) {
+                                console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
+                            } else {
+                                console.log(`No se pudo cancelar el trabajo ${jobName}.`);
+                            }
                         }
                     }
+                    delete scheduledJobs[senderId];
+                    console.log(`Todos los trabajos anteriores para el usuario ${senderId} han sido cancelados y eliminados.`);
+                } else {
+                    console.log(`No se encontraron trabajos programados para cancelar.`);
                 }
-                delete scheduledJobs[senderId];
-                console.log(`Todos los trabajos anteriores para el usuario ${senderId} han sido cancelados y eliminados.`);
-            } else {
-                console.log(`No se encontraron trabajos programados para cancelar.`);
-            }
+                // Actualizar el estado
+                await userService.updateUser(senderId, { estado: 'dia13' });
+                // Llamar a dia 13 después de cancelar todos los trabajos
+                await dia13(senderId);
+            })
+        };
 
-            // Llamar a dia 13 después de cancelar todos los trabajos
-            await dia13(senderId);
-        })
-    };
-} catch (error) {
-    console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
-}
+        // Imprimir detalles de los trabajos programados
+        console.log(`Trabajos 12 programados para el usuario ${senderId}:`);
+        Object.keys(scheduledJobs[senderId]).forEach(jobName => {
+            const job = scheduledJobs[senderId][jobName];
+            console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);
+        });
+
+    } catch (error) {
+        console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
+    }
 };
 
 module.exports = dia12;

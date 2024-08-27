@@ -7,12 +7,12 @@ const moment = require('moment-timezone'); // Asegúrate de tener instalada esta
 const dia6 = require('./dia6'); // Asegúrate de ajustar la ruta según tu estructura de archivos
 const axios = require('axios');
 const scheduledJobs = {}; // Objeto para almacenar trabajos programados
-
+const userService = require('../../services/userService');
 const dia5 = async (senderId) => {
     try {
         console.log(`Iniciando programación de mensajes para el usuario ${senderId}`);
 
-      
+
         // Verificar y cancelar trabajos existentes al inicio
         if (scheduledJobs[senderId]) {
             console.log(`Cancelando trabajos anteriores para el usuario ${senderId}`);
@@ -56,16 +56,13 @@ const dia5 = async (senderId) => {
         };
 
 
-        console.log(`Horas del usuario convertidas a objetos de momento:`);
-        Object.keys(times).forEach(key => {
-            console.log(`Hora ${key}: ${times[key].format('YYYY-MM-DD HH:mm:ss')}`);
-        });
+
 
         // Convertir las horas del usuario a la hora del servidor
         const serverTimes = {};
         Object.keys(times).forEach(key => {
             serverTimes[key] = times[key].clone().tz(moment.tz.guess());
-            console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
+            // console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
         });
 
         // Programar cada mensaje
@@ -115,13 +112,13 @@ const dia5 = async (senderId) => {
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
-                    const thirdMessage = idioma === 'ingles' ?
-                        `🗯️ I may not have mentioned this, but having a hobby can distract you from vaping, and 72% of users report it has helped them. Have you thought about learning something new? Reading, painting, or even short walks in the afternoon can be great options.` :
-                        `🗯️ No sé si te lo había dicho, pero tener un hobby puede distraerte del vapeo y el 72% de los usuarios reconocen que les ha ayudado. ¿Has pensado en aprender algo nuevo? La lectura, la pintura o incluso las caminatas cortas por la tarde pueden ser excelentes opciones.`;
+                const thirdMessage = idioma === 'ingles' ?
+                    `🗯️ I may not have mentioned this, but having a hobby can distract you from vaping, and 72% of users report it has helped them. Have you thought about learning something new? Reading, painting, or even short walks in the afternoon can be great options.` :
+                    `🗯️ No sé si te lo había dicho, pero tener un hobby puede distraerte del vapeo y el 72% de los usuarios reconocen que les ha ayudado. ¿Has pensado en aprender algo nuevo? La lectura, la pintura o incluso las caminatas cortas por la tarde pueden ser excelentes opciones.`;
 
-                    await sendMessage(senderId, thirdMessage);
-                    console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-                
+                await sendMessage(senderId, thirdMessage);
+                console.log(`Tercer mensaje enviado a usuario ${senderId}`);
+
             }),
 
 
@@ -155,7 +152,7 @@ const dia5 = async (senderId) => {
             }),
 
 
-        fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
+            fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
 
                 if (nivel === 'alto') {
@@ -171,23 +168,23 @@ const dia5 = async (senderId) => {
 
             RecUrl: schedule.scheduleJob(`MensajeRecUrl ${senderId}`, { hour: serverTimes.RecUrl.hours(), minute: serverTimes.RecUrl.minutes() }, async () => {
                 console.log(`Programado mensaje de retención pulmonar ${senderId} a las ${serverTimes.RecUrl.format()}`);
-            
+
                 try {
                     // Realiza la solicitud POST a la API para obtener los resultados
                     const response = await axios.post('https://jjhvjvui.top/api/test/testrespiracion/obtenerpruebas', {
                         userId: senderId
                     });
-            
+
                     const pruebas = response.data; // Suponiendo que la respuesta contiene los datos de las pruebas
-            
+
                     // Verifica si el testId 2 está presente
                     const testId2Presente = pruebas.some(prueba => prueba.id === '2');
-            
+
                     if (!testId2Presente) {
                         // Genera la URL única con senderId, nombre y testId
                         const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=2`;
                         console.log('URL única generada:', uniqueUrl);
-            
+
                         // Enviar el mensaje con el enlace único
                         const urlMessage = idioma === 'ingles'
                             ? `You still have your lung retention test pending!, Click here to start: ${uniqueUrl}`
@@ -229,7 +226,7 @@ const dia5 = async (senderId) => {
                     console.log(`Séptimo mensaje enviado a usuario ${senderId}`);
                 }
 
-            
+
                 // Esperar a que el mensaje 7 se haya enviado antes de cancelar los trabajos
                 if (scheduledJobs[senderId]) {
                     console.log(`Cancelando todos los trabajos programados al finalizar para el usuario ${senderId}`);
@@ -250,11 +247,20 @@ const dia5 = async (senderId) => {
                 } else {
                     console.log(`No se encontraron trabajos programados para cancelar.`);
                 }
-
+                // Actualizar el estado
+                await userService.updateUser(senderId, { estado: 'dia6' });
                 // Llamar a dia 6 después de cancelar todos los trabajos
                 await dia6(senderId);
             })
         };
+
+        // Imprimir detalles de los trabajos programados
+        console.log(`Trabajos 5 programados para el usuario ${senderId}:`);
+        Object.keys(scheduledJobs[senderId]).forEach(jobName => {
+            const job = scheduledJobs[senderId][jobName];
+            console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);
+        });
+
     } catch (error) {
         console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
     }
