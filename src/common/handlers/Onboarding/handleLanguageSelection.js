@@ -2,6 +2,7 @@ const userService = require('../../services/userService');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
 const languageAbbreviations = require('../../utils/languageAbr');
+const sendContactMessage = require('../../services/Wp-Envio-Msj/sendContactMessage');
 
 // Función para manejar la selección del idioma
 const handleLanguageSelection = async (senderId, receivedMessage) => {
@@ -43,6 +44,8 @@ const handleLanguageSelection = async (senderId, receivedMessage) => {
 
     await sendMessage(senderId, welcomeMessage);
     await delay(2000);  // Espera 2 segundos
+    await sendContactMessage(senderId);
+    await delay(3000);  // Espera 3 segundos
     await sendMessage(senderId, instructionMessage);
     await delay(2000);  // Espera 2 segundos
     await sendMessage(senderId, consentMessage);
