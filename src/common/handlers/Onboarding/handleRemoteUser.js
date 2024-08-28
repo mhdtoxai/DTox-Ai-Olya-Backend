@@ -40,7 +40,7 @@ const handleRemoteUser = async (senderId) => {
       : `Hola, sé lo difícil que es tomar la decisión de dejar de vapear.\n\nQuiero felicitarte por dar este paso tan importante hacia una vida más saludable.\n\nNo es un camino fácil, pero sé que tú también puedes lograrlo.\n\nCada día sin vapeo es una victoria, y quiero que sepas que no estás solo en esta lucha.\n\nSigue adelante, ESTÁS HACIENDO LO CORRECTO, y Olya estará contigo en cada paso del camino.\n\n¡Felicidades por tu valentía y determinación!". - Lucía Ospina. Colombia`;
 
     // Programar el envío del mensaje de ánimo para 30 minutos después
-    const sendTime = new Date(Date.now() + 1 * 60 * 1000); // 30 minutos después de la hora actual
+    const sendTime = new Date(Date.now() + 30 * 60 * 1000); // 30 minutos después de la hora actual
     const sendJob = schedule.scheduleJob(sendTime, async () => {
       await sendMessage(senderId, encouragementMessage);
       console.log(`Mensaje de ánimo enviado al usuario ${senderId}`);
