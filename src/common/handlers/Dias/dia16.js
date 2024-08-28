@@ -72,13 +72,7 @@ const dia16 = async (senderId) => {
                 // Enviar el mensaje de plantilla de buenos días
                 await sendTemplateMessage(senderId, templateName, languageCode);
 
-                // Iniciar el envío del mensaje de consentimiento
-                const messageText = "¿Estás de acuerdo?";
-                const buttons = [
-                    { id: 'yes', title: 'Sí' },];
-                // Enviar el mensaje interactivo con botones
-                await sendMessageTarget(senderId, messageText, buttons);
-                console.log(`Mensaje de confirmacion enviado para el usuario ${senderId}`);
+               
             }),
             first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
                 console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);

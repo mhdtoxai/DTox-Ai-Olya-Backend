@@ -67,13 +67,6 @@ const dia3 = async (senderId) => {
         // Enviar el mensaje de plantilla de buenos días
         await sendTemplateMessage(senderId, templateName, languageCode);
 
-        // Iniciar el envío del mensaje de consentimiento
-        const messageText = "¿Estás de acuerdo?";
-        const buttons = [
-          { id: 'yes', title: 'Sí' },];
-        // Enviar el mensaje interactivo con botones
-        await sendMessageTarget(senderId, messageText, buttons);
-        console.log(`Mensaje de confirmacion enviado para el usuario ${senderId}`);
       }),
 
 
