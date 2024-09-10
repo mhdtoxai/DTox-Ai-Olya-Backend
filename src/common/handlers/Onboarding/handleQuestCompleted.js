@@ -22,10 +22,7 @@ const handleQuestCompleted = async (senderId) => {
       ? `If you have any questions, let me know.`
       : `Si tienes alguna duda, déjamelo saber.`;
 
-    // URL del audio según el idioma
-    const audioUrl = idioma === 'ingles'
-      ? 'https://drive.google.com/uc?export=download&id=1Fu6zCTGwwmEtvK8hbNZpW2tkSntjuSqW'
-      : 'https://drive.google.com/uc?export=download&id=1mDnn80GHE2fSISIG1-DuSr34VajeSvZs';
+    const audioUrl = 'https://drive.google.com/uc?export=download&id=1mDnn80GHE2fSISIG1-DuSr34VajeSvZs';
 
     await sendMessage(senderId, QuestComplete);
     await delay(2000);  // Espera 2 segundos
