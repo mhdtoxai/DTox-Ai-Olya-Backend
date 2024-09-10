@@ -7,18 +7,8 @@ const shortenUrl = require('../../api/shortenUrl'); // Ruta a tu función de aco
 
 const handlePaymentPendient = async (senderId) => {
   try {
-    // Obtener la información del usuario incluyendo el nombre y el idioma
+    // Obtener la información del usuario incluyendo el nombre
     const { idioma, nombre } = await getUserInfo(senderId);
-
-    // Definir la moneda y el monto según el idioma
-    const currency = idioma === 'ingles' ? 'usd' : 'mxn';
-    const unitAmount = idioma === 'ingles' ? 1000 : 19900; // 1000 centavos = 10 USD, 19900 centavos = 199 MXN
-    const productName = idioma === 'ingles'
-      ? 'Plan to Quit Vaping' // Nombre del producto en inglés
-      : 'Plan para dejar de vapear'; // Nombre del producto en español
-
-    // Configurar el idioma del formulario de Stripe Checkout
-    const locale = idioma === 'ingles' ? 'en' : 'es';
 
     // Generar el enlace de pago seguro utilizando Stripe
     const session = await stripe.checkout.sessions.create({
@@ -26,17 +16,16 @@ const handlePaymentPendient = async (senderId) => {
       line_items: [
         {
           price_data: {
-            currency, // Asignar la moneda basada en el idioma
+            currency: 'mxn',
             product_data: {
-              name: productName, // Nombre del producto dependiendo del idioma
+              name: 'Plan para dejar de vapear', // Nombre del producto
               images: ['https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/logo.jpg?alt=media&token=558453f9-cab7-4d80-ba5d-2610059726e5'], // URL pública de la imagen del producto
             },
-            unit_amount: unitAmount, // Asignar el precio basado en el idioma (10 USD o 199 MXN)
+            unit_amount: 19900, // Monto en centavos (199.00 MXN)
           },
           quantity: 1,
         },
       ],
-      locale, // Asignar el idioma del formulario basado en el idioma del usuario
       allow_promotion_codes: true, // Habilitar el ingreso de códigos promocionales
 
       metadata: {
@@ -52,7 +41,7 @@ const handlePaymentPendient = async (senderId) => {
 
     // Mensaje con el enlace de pago acortado
     const paymentMessage = idioma === 'ingles'
-      ? `💳 🔐 Your secure STRIPE payment link (Expires in 5 minutes): ${shortenedUrl}`
+      ? `💳 🔐 Your unique secure STRIPE link for payments (Expires in 5 minutes): ${shortenedUrl}`
       : `💳 🔐 Tu liga única segura STRIPE para pagos (Caduca en 5 minutos): ${shortenedUrl}`;
 
     // Enviar el mensaje con el enlace de pago acortado al usuario
