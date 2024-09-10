@@ -6,7 +6,7 @@ const handlePaymentPendient = require('./handlePaymentPendient');
 
 const handleQuestCompleted = async (senderId) => {
   try {
-    // Obtener la información del usuario incluyendo el nombre
+    // Obtener la información del usuario incluyendo el nombre y el idioma
     const { idioma, estado, nombre } = await getUserInfo(senderId);
 
     const QuestComplete = idioma === 'ingles'
@@ -22,8 +22,11 @@ const handleQuestCompleted = async (senderId) => {
       ? `If you have any questions, let me know.`
       : `Si tienes alguna duda, déjamelo saber.`;
 
-    const audioUrl = 'https://drive.google.com/uc?export=download&id=1mDnn80GHE2fSISIG1-DuSr34VajeSvZs';
-
+    // URL del audio según el idioma del usuario
+    const audioUrl = idioma === 'ingles'
+      ? 'https://drive.google.com/uc?export=download&id=1Fu6zCTGwwmEtvK8hbNZpW2tkSntjuSqW' // URL del audio en inglés
+      : 'https://drive.google.com/uc?export=download&id=1mDnn80GHE2fSISIG1-DuSr34VajeSvZs'; // URL del audio en español
+    // Enviar mensajes y audio al usuario
     await sendMessage(senderId, QuestComplete);
     await delay(2000);  // Espera 2 segundos
     await sendMessage(senderId, plancomplete);

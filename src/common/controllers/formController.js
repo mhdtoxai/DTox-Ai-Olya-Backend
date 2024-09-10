@@ -95,8 +95,8 @@ const saveResponses = async (req, res) => {
     // Guardar las respuestas en el documento del cuestionario
     await questionnaireRef.set({
       respuestas: respuestas,
-      completado: true // Marca el formulario como completado
-    }, { merge: true }); // Usar merge: true para no sobrescribir otros campos en el documento
+      completado: true },
+      { merge: true }); 
 
 
     // Llamar a la función handleQuestionnaireCompleted después de guardar las respuestas
