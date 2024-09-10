@@ -8,8 +8,8 @@ const handleSendQuestionnaire = async (senderId) => {
     const userInfo = await getUserInfo(senderId);
     const { idioma, estado, nombre } = userInfo;
 
-    // Generar la URL única con senderId y nombre
-    const uniqueUrl = `https://jjhvjvui.top/Onboarding?id=${senderId}&name=${encodeURIComponent(nombre)}`;
+    // Generar la URL única con senderId, nombre e idioma
+    const uniqueUrl = `https://jjhvjvui.top/Onboarding?id=${senderId}&name=${encodeURIComponent(nombre)}&language=${idioma}`;
 
     // Enviar el mensaje con el enlace único
     const url = idioma === 'ingles'
@@ -22,8 +22,6 @@ const handleSendQuestionnaire = async (senderId) => {
   } catch (error) {
     console.error('Error al manejar cuestionario:', error);
   }
-
-
 };
 
 module.exports = handleSendQuestionnaire;

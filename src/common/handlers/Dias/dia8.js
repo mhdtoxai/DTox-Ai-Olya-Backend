@@ -76,7 +76,7 @@ const dia8 = async (senderId) => {
             first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
                 console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const firstMessage = idioma === 'ingles' ?
                         `Did you know that vaping is not fully regulated ⚖️, which means that the exact ingredients in e-liquids are not always known 🧐?` :
                         `¿Sabías que el vapeo no está completamente regulado ⚖️, lo que significa que los ingredientes exactos de los líquidos no siempre se conocen 🧐?`;
@@ -89,7 +89,7 @@ const dia8 = async (senderId) => {
             second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
                 console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const secondMessage = idioma === 'ingles' ?
                         `🗣️ Vaping can damage blood vessels.` :
                         `🗣️ El vapeo puede causar daño a los vasos sanguíneos.`;
@@ -103,7 +103,7 @@ const dia8 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `Well... You've decided to quit. You and I both know it doesn't bring anything good. It has no benefit for your health. So... why continue, don’t you think?` :
+                    `Look... You’ve decided to quit. You and I both know it brings you nothing good. It has no health benefits. So why keep going, right?` :
                     `A ver... Ya decidiste dejarlo. Tú y yo sabemos que no te trae nada bueno. No tiene beneficio alguno para tu salud. Entonces... ¿Para qué seguir, no crees?`;
 
                 await sendMessage(senderId, thirdMessage);
@@ -114,9 +114,9 @@ const dia8 = async (senderId) => {
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
                 console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const fourthMessage = idioma === 'ingles' ?
-                        `Did you know that vaping can cause an increase in blood pressure and heart rate 💓💓?` :
+                        `Did you know that vaping can lead to increased blood pressure and heart rate 💓💓?` :
                         `¿Sabías que el vapeo puede provocar un aumento de la presión arterial y la frecuencia cardíaca 💓💓?`;
 
                     await sendMessage(senderId, fourthMessage);
@@ -127,9 +127,9 @@ const dia8 = async (senderId) => {
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const fifthMessage = idioma === 'ingles' ?
-                        `Did you know that vaping can affect lung function and reduce exercise capacity 🏃‍♂️🏃‍♀️?` :
+                        `Did you know that vaping can affect lung function and reduce your exercise capacity 🏃‍♂️🏃‍♀️?` :
                         `¿Sabías que el vapeo puede afectar la función pulmonar y reducir la capacidad de ejercicio 🏃‍♂️🏃‍♀️?`;
 
                     await sendMessage(senderId, fifthMessage);
@@ -141,7 +141,7 @@ const dia8 = async (senderId) => {
                 console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
                 const sixthMessage = idioma === 'ingles' ?
-                    `Good night! Congratulations on making it through another day without vaping. Tomorrow is a new opportunity to keep moving forward.` :
+                    `"Good night. Today, you’ve taken another important step toward a vape-free life. Rest well, you deserve it!".` :
                     `¡Buenas noches! Felicidades por superar otro día sin vapear. Mañana es una nueva oportunidad para seguir adelante.`;
 
                 await sendMessage(senderId, sixthMessage);
@@ -151,7 +151,7 @@ const dia8 = async (senderId) => {
             seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
                 console.log(`Programado el séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const seventhMessage = idioma === 'ingles' ?
                         `Vaping can cause brain damage 🧠. You will experience cognitive difficulties 📉 and memory problems 📚.` :
                         `El vapeo puede causar daño cerebral 🧠. Experimentarás dificultades cognitivas 📉 y problemas de memoria 📚.`;
@@ -189,7 +189,7 @@ const dia8 = async (senderId) => {
         };
 
         // Imprimir detalles de los trabajos programados
-        console.log(`Trabajos programados 8 para el usuario ${senderId}:`);
+        console.log(`Trabajos dia 8 programados  para el usuario ${senderId}:`);
         Object.keys(scheduledJobs[senderId]).forEach(jobName => {
             const job = scheduledJobs[senderId][jobName];
             console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);

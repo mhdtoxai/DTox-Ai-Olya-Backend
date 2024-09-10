@@ -49,6 +49,7 @@ const dia19 = async (senderId) => {
             morning: moment.tz('07:00', 'HH:mm', timezone), // 7 AM - Plantilla
             first: moment.tz('10:00', 'HH:mm', timezone), // 10 AM
             second: moment.tz('12:00:', 'HH:mm', timezone), // 12 PM
+            third: moment.tz('14:00', 'HH:mm', timezone), // 2 PM
             fourth: moment.tz('16:00', 'HH:mm', timezone), // 4 PM
             testUrl: moment.tz('17:00', 'HH:mm', timezone), // 5 PM
             fifth: moment.tz('18:00', 'HH:mm', timezone), // 6 PM
@@ -79,9 +80,9 @@ const dia19 = async (senderId) => {
             first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
                 console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const firstMessage = idioma === 'ingles' ?
-                        `Did you know that vaping can decrease your body's ability to fight respiratory infections 🦠🦠?` :
+                        `Did you know that vaping can decrease the body’s ability to fight respiratory infections 🦠🦠?` :
                         `¿Sabías que el vapeo puede disminuir la capacidad del cuerpo para combatir infecciones respiratorias 🦠🦠?`;
 
                     await sendMessage(senderId, firstMessage);
@@ -92,9 +93,9 @@ const dia19 = async (senderId) => {
             second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
                 console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const secondMessage = idioma === 'ingles' ?
-                        `🗣️ Vaping can decrease the effectiveness of the immune system.` :
+                        `🗣️ Vaping can weaken your immune system` :
                         `🗣️ Vapear puede disminuir la eficacia del sistema inmunológico.`;
 
                     await sendMessage(senderId, secondMessage);
@@ -103,13 +104,24 @@ const dia19 = async (senderId) => {
             }),
 
 
+            third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
+                console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
+            
+                const thirdMessage = idioma === 'ingles' ?
+                    `One more day to go. You got this!` :
+                    `¡Sólo falta un día! ¡Qué emoción! Ánimo que estás a punto de terminar!`;
+            
+                await sendMessage(senderId, thirdMessage);
+                console.log(`Tercer mensaje enviado a usuario ${senderId}`);
+            }),
+            
 
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
                 console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const fourthMessage = idioma === 'ingles' ?
-                        `Vaping can affect your skin 🌟. You might experience acne and premature aging 👵 due to toxins 🧪.` :
+                        `Vaping can affect your skin 🌟. You’ll deal with acne and premature aging 👵 due to the toxins 🧪.` :
                         `El vapeo puede afectar tu piel 🌟. Enfrentarás acné y envejecimiento prematuro 👵 debido a las toxinas 🧪.`;
 
                     await sendMessage(senderId, fourthMessage);
@@ -121,12 +133,12 @@ const dia19 = async (senderId) => {
                 console.log(`Programado mensaje URL prueba ${senderId} a las ${serverTimes.testUrl.format()}`);
 
                 // Generar la URL única con senderId, nombre y testId
-                const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=5`;
+                const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=5&language=${idioma}`;
                 console.log('URL única generada:', uniqueUrl);
 
                 // Enviar el mensaje con el enlace único
                 const urlMessage = idioma === 'ingles'
-                    ? `Click here to start your trial: ${uniqueUrl}`
+                    ? `💨 Time to test your lung capacity! Click here ${uniqueUrl}`
                     : `💨 Hora de medir tu capacidad pulmonar! Da clic aquí: ${uniqueUrl}`;
                 await sendMessage(senderId, urlMessage);
                 console.log(`Mensaje URL prueba enviado a ${senderId}`);
@@ -135,9 +147,9 @@ const dia19 = async (senderId) => {
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const fifthMessage = idioma === 'ingles' ?
-                        `Vaping affects your memory 📚. You may forget important things ❗ and have trouble retaining information 📉.` :
+                        `Vaping affects your memory 📚. You’ll forget important things ❗ and struggle to retain information 📉.` :
                         `Vapear afecta tu memoria 📚. Olvidarás cosas importantes ❗ y te costará retener información 📉.`;
 
                     await sendMessage(senderId, fifthMessage);
@@ -166,7 +178,7 @@ const dia19 = async (senderId) => {
 
                         // Enviar el mensaje con el enlace único
                         const urlMessage = idioma === 'ingles'
-                            ? `You still have your lung retention test pending!, Click here to start: ${uniqueUrl}`
+                            ? `💨 Your Lung Retention Test is still pending. Clic here to do it: ${uniqueUrl}`
                             : `💨 Aún tienes pendiente tu prueba de retención pulmonar! Da clic aquí : ${uniqueUrl}`;
                         await sendMessage(senderId, urlMessage);
                         console.log(`Mensaje URL RecUrl enviado a ${senderId}`);
@@ -182,7 +194,7 @@ const dia19 = async (senderId) => {
                 console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
                 const sixthMessage = idioma === 'ingles' ?
-                    `Vaping can lead to chronic lung diseases 🫁. You’ll live with constant pain 😣 and need prolonged medical treatment 💊.` :
+                    `Vaping can lead to chronic lung diseases 🫁. You’ll live with constant pain 😣 and need long-term medical treatment 💊.` :
                     `Vapear puede provocar enfermedades pulmonares crónicas 🫁. Vivirás con dolor constante 😣 y necesitarás tratamiento médico prolongado 💊.`;
 
                 await sendMessage(senderId, sixthMessage);
@@ -192,9 +204,9 @@ const dia19 = async (senderId) => {
             seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
                 console.log(`Programado séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const seventhMessage = idioma === 'ingles' ?
-                        `Vaping affects your ability to concentrate 📉. It will be difficult to focus 📚 and perform in your daily activities 🗓️.` :
+                        `Vaping affects your ability to concentrate 📉. You’ll find it difficult to focus 📚 and perform in your daily activities 🗓️.` :
                         `El vapeo afecta tu capacidad de concentración 📉. Te resultará difícil enfocarte 📚 y rendir en tus actividades diarias 🗓️.`;
 
                     await sendMessage(senderId, seventhMessage);
@@ -230,7 +242,7 @@ const dia19 = async (senderId) => {
         };
 
         // Imprimir detalles de los trabajos programados
-        console.log(`Trabajos 19 programados para el usuario ${senderId}:`);
+        console.log(`Trabajos dia 19 programados para el usuario ${senderId}:`);
         Object.keys(scheduledJobs[senderId]).forEach(jobName => {
             const job = scheduledJobs[senderId][jobName];
             console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);

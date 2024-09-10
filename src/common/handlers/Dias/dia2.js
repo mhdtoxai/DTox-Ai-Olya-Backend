@@ -75,10 +75,10 @@ const dia2 = async (senderId) => {
                 console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
 
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const firstMessage = idioma === 'ingles' ?
-                        "Repeat after me: HAKUNA MATATA 🦁 ... 😝\nBetter yet, repeat: No vape no vape NO vape NO VAPE" :
-                        "Repite conmigo: HAKUNA MATATA 🦁 ... 😝\nBueno, mejor repite: No vape no vape NO vape NO VAPE";
+                        "Repeat after me: HAKUNA MATATA 🦁 ... 😝\n Okay, maybe better to say:: No vape no vape NO vape NO VAPE" :
+                        "Repite conmigo: HAKUNA MATATA 🦁 ... 😝\n Bueno, mejor repite: No vape no vape NO vape NO VAPE";
                     await sendMessage(senderId, firstMessage);
                     console.log(`Primer mensaje enviado a ${senderId}`);
                 }
@@ -87,9 +87,9 @@ const dia2 = async (senderId) => {
             second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
                 console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const secondMessage = idioma === 'ingles' ?
-                        `Vaping can affect kidney function. I don't know about you ${nombre} but if they're going to have to flag me or get me a kidney transplant because of vaping, I'd better quit` :
+                        `Vaping can affect kidney function. I don't know about you ${nombre} but if vaping might lead to dialysis or a kidney transplant, I’d rather quit.` :
                         `El vaping puede afectar la función renal. No se tú ${nombre} pero si por vapear me van a tener que dializar o buscarme un trasplante de riñon mejor lo dejo.`;
                     await sendMessage(senderId, secondMessage);
                     console.log(`Seundo mensaje enviado a  usuario ${senderId}`);
@@ -107,9 +107,9 @@ const dia2 = async (senderId) => {
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
                 console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const fourthMessage = idioma === 'ingles' ?
-                        `Here's a tip: keep a bag of peanuts handy and transfer the habit of grabbing the vape to grabbing a peanut. This is known as reward substitution. It might sound silly, but after 21 days of doing this, you might have forgotten about vaping.` :
+                        `Here’s a tip: keep a bag of peanuts handy and swap the habit of grabbing your vape with grabbing a peanut. This is called reward substitution. It might sound silly, but after 21 days of doing it, you’ll have forgotten all about vaping.` :
                         `Te paso un tip: ten a la mano una bolsa de cacahuates y transfiere el hábito de agarrar el vape por agarrar un cacahuate. Se conoce como transferencia de recompensa. Igual y te parece ridículo, pero tras 21 días de hacerlo te habrás olvidado del vapeo.`;
                     await sendMessage(senderId, fourthMessage);
                     console.log(`Mensaje sobre la percepción del vapeo enviado para el usuario ${senderId}`);
@@ -120,9 +120,9 @@ const dia2 = async (senderId) => {
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const fifthMessage = idioma === 'ingles' ?
-                        "Don't think about vaping. Go for a 10-minute walk." :
+                        "Don’t think about vaping. Take a 10-minute walk instead." :
                         "No estés pensando en vapear. Sal a caminar 10 minutos.";
                     await sendMessage(senderId, fifthMessage);
                     console.log(`Quinto mensaje enviado a ${senderId}`);
@@ -133,18 +133,19 @@ const dia2 = async (senderId) => {
                 console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
                 const sixthMessage = idioma === 'ingles' ?
-                    `Almost bedtime and time to relax 🧘.\nCongratulations ${nombre} for your effort today.\nRecharge your batteries ⚡️ because tomorrow we cut the vaping window to one hour ⏰.\nTomorrow you’ll only be able to vape from 1PM to 11:59PM.\nNO VAPING IN THE MORNING! I’ll be watching 👀` :
+                    `It's almost time to sleep and relax 🧘. I want to congratulate you, ${nombre}, for your effort today.\nRest up ⚡️ because tomorrow we’re cutting your vaping window by an hour ⏰.\nTomorrow, you can only vape from 1 PM to 11:59 PM.\nNO VAPING IN THE MORNING! I’ll be watching you 👀` :
                     `Casi hora de dormir y relajarse 🧘.\nTe felicito ${nombre} por tu esfuerzo de hoy.\nA recargar pilas ⚡️ que mañana cortamos la ventana de vapeo a una hora ⏰.\nMañana solo podrás vapear de 1PM a 11:59PM.\n¡NADA DE VAPEO EN LA MAÑANA! Te estaré observando 👀`;
                 await sendMessage(senderId, sixthMessage);
                 console.log(`Mensaje sexto de buenas noches enviado a usuario ${senderId}`);
             }),
 
+
             seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
                 console.log(`Programado el séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
             
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const seventhMessage = idioma === 'ingles' ?
-                        "Close your eyes and repeat after me: Tomorrow I won’t vape before 1 PM. I’m with you!" :
+                        "Close your eyes and repeat: Tomorrow, I won’t vape before 1 PM. I’m with you!" :
                         "Cierra los ojos y repite: Mañana no vapearé antes de la 1PM. ¡Estoy contigo!";
                     await sendMessage(senderId, seventhMessage);
                     console.log(`Séptimo mensaje a usuario ${senderId}`);
@@ -179,7 +180,7 @@ const dia2 = async (senderId) => {
       };
 
        // Imprimir detalles de los trabajos programados
-    console.log(`Trabajos 2 programados para el usuario ${senderId}:`);
+    console.log(`Trabajos dia 2 programados para el usuario ${senderId}:`);
     Object.keys(scheduledJobs[senderId]).forEach(jobName => {
       const job = scheduledJobs[senderId][jobName];
       console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);

@@ -75,7 +75,8 @@ const dia6 = async (senderId) => {
             first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
                 console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
+                    
                     const firstMessage = idioma === 'ingles' ?
                         `Did you know that some vape liquids contain toxic chemicals like formaldehyde and acrolein 🧪🧪?` :
                         `¿Sabías que algunos líquidos de vapeo contienen sustancias químicas tóxicas como el formaldehído y el acroleína 🧪🧪?`;
@@ -89,9 +90,9 @@ const dia6 = async (senderId) => {
             second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
                 console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const secondMessage = idioma === 'ingles' ?
-                        `🗣️ Some vape flavors contain carcinogenic substances. Which ones? I don’t really know, but why take the risk?` :
+                        `🗣️ Some vape flavors contain carcinogenic. Which ones? I’m not sure, but why risk it?` :
                         `🗣️ Algunos sabores de vapeo contienen sustancias cancerígenas. ¿Cuáles? No sé la verdad, pero ¿para qué arriesgarse?`;
 
                     await sendMessage(senderId, secondMessage);
@@ -103,8 +104,8 @@ const dia6 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `Pssst Pssst! They’re giving away fresh waters at the plaza kiosk! They have Lemon, Horchata, Jamaica, Guava, and Watermelon. Yuuuuuuummm 😋\n\nBut they say if you vape, you don’t get any. Oh well... soon.` :
-                    `Pssst Pssst! Están regalando aguas frescas en el quiosco de la plaza! Tienen de Limón, Horchata, Jamaica, Guayaba, y Sandía. ¡Yuuuuuuummm 😋\n\nPero dicen que si vapeas no te toca. Ni modo... pronto.`;
+                    `Pssst Pssst! They’re giving away fresh aguas frescas at the plaza kiosk! They’ve got Lime, Horchata, Jamaica, Guava, and Watermelon. Yuuuuuuummm 😋\n\n 😋 NOT if your vaping though. Sorry!` :
+                    `Pssst Pssst! Están regalando aguas frescas en el quiosco de la plaza! Tienen de Limón, Horchata, Jamaica, Guayaba, y Sandía. ¡Yuuuuuuummm 😋\n\n Pero dicen que si vapeas no te toca. Ni modo... pronto.`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);
@@ -114,9 +115,10 @@ const dia6 = async (senderId) => {
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
                 console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
+
                     const fourthMessage = idioma === 'ingles' ?
-                        `Did you know that e-cigarette vapor can contain volatile organic compounds that are toxic ☠️?` :
+                        `Did you know that the vapor from e-cigarettes can contain toxic volatile organic compounds ☠️?` :
                         `¿Sabías que el vapor de los cigarrillos electrónicos puede contener compuestos orgánicos volátiles que son tóxicos ☠️?`;
 
                     await sendMessage(senderId, fourthMessage);
@@ -128,7 +130,7 @@ const dia6 = async (senderId) => {
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const fifthMessage = idioma === 'ingles' ?
                         `Did you know that vaping can cause nausea 🤢, vomiting 🤮, and abdominal pain in some users?` :
                         `¿Sabías que el vapeo puede causar náuseas 🤢, vómitos 🤮 y dolor abdominal en algunos usuarios?`;
@@ -157,7 +159,7 @@ const dia6 = async (senderId) => {
             seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
                 console.log(`Programado el séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const seventhMessage = idioma === 'ingles' ?
                         `Vaping affects your skin 🌟. You’ll face dermatological problems 🩹 and premature aging 👵.` :
                         `El vapeo afecta tu piel 🌟. Enfrentarás problemas dermatológicos 🩹 y envejecimiento prematuro 👵.`;
@@ -195,7 +197,7 @@ const dia6 = async (senderId) => {
         };
 
         // Imprimir detalles de los trabajos programados
-        console.log(`Trabajos 6 programados para el usuario ${senderId}:`);
+        console.log(`Trabajos dia 6 programados para el usuario ${senderId}:`);
         Object.keys(scheduledJobs[senderId]).forEach(jobName => {
             const job = scheduledJobs[senderId][jobName];
             console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);

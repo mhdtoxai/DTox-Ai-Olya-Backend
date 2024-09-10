@@ -145,11 +145,6 @@ const faqs = {
     "¿qué es olya y cómo funciona?": [
       "qué es olya",
       "cómo funciona olya",
-      "Cómo funciona olya",
-      "Cómo funciona",
-      "Cómo funciona?",
-      "cómo funciona",
-      "como funciona",
       "qué hace olya",
       "explicación de olya",
       "qué es y cómo funciona olya"

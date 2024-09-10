@@ -10,19 +10,22 @@ const handleQuestCompleted = async (senderId) => {
     const { idioma, estado, nombre } = await getUserInfo(senderId);
 
     const QuestComplete = idioma === 'ingles'
-      ? '✅ Well done! You have completed the questionnaire. '
+      ? '✅  Well done! You’ve completed the questionnaire.. '
       : '✅ ¡Bien hecho! Has completado el cuestionario.';
 
     // Mensajes según el idioma del usuario
     const plancomplete = idioma === 'ingles'
-      ? `Stopping Vaping with me costs you less than a vape! The cost is 199 MXN (or the equivalent in your local currency).`
+      ? `The full 20 day plan costs less than a vape! Only 10 USD (or the equivalent in your local currency).`
       : `¡El plan completo cuesta menos que un vape! Sólo 199 MXN (o el equivalente en tu moneda local).`;
 
     const questions = idioma === 'ingles'
       ? `If you have any questions, let me know.`
       : `Si tienes alguna duda, déjamelo saber.`;
 
-    const audioUrl = 'https://drive.google.com/uc?export=download&id=1mDnn80GHE2fSISIG1-DuSr34VajeSvZs';
+    // URL del audio según el idioma
+    const audioUrl = idioma === 'ingles'
+      ? 'https://drive.google.com/uc?export=download&id=1Fu6zCTGwwmEtvK8hbNZpW2tkSntjuSqW'
+      : 'https://drive.google.com/uc?export=download&id=1mDnn80GHE2fSISIG1-DuSr34VajeSvZs';
 
     await sendMessage(senderId, QuestComplete);
     await delay(2000);  // Espera 2 segundos

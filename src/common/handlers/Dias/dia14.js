@@ -69,14 +69,14 @@ const dia14 = async (senderId) => {
                 // Enviar el mensaje de plantilla de buenos días
                 await sendTemplateMessage(senderId, templateName, languageCode);
 
-                
+
             }),
             first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
                 console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const firstMessage = idioma === 'ingles' ?
-                        `Did you know that some studies have linked vaping to an increased risk of developing chronic bronchitis 🫁😷?` :
+                        `Did you know that some studies have linked vaping to a higher risk of developing chronic bronchitis 🫁😷?` :
                         `¿Sabías que algunos estudios han vinculado el vapeo con un mayor riesgo de desarrollar bronquitis crónica 🫁😷?`;
 
                     await sendMessage(senderId, firstMessage);
@@ -86,8 +86,8 @@ const dia14 = async (senderId) => {
 
             second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
                 console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
-
-                if (nivel === 'alto') {
+               
+                if (nivel === 'alto' || nivel === 'high') {
                     const secondMessage = idioma === 'ingles' ?
                         `🗣️ Vaping can increase the risk of respiratory infections.` :
                         `🗣️ El vapeo puede aumentar el riesgo de infecciones respiratorias.`;
@@ -101,7 +101,7 @@ const dia14 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `Midday motivation: 'Every great achievement begins with the decision to try.' – Gail Devers. Your effort counts!` :
+                    `Midday reminder: 'Every great achievement begins with the decision to try.' – Gail Devers. Your effort counts!` :
                     `"A la mitad del día: 'Cada gran logro comienza con la decisión de intentarlo.' – Gail Devers. ¡Tu esfuerzo cuenta!"`;
 
                 await sendMessage(senderId, thirdMessage);
@@ -112,9 +112,9 @@ const dia14 = async (senderId) => {
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
                 console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const fourthMessage = idioma === 'ingles' ?
-                        `Vaping makes you more prone to respiratory infections 🤧. You might end up hospitalized 🏥 and bedridden for weeks 🛌.` :
+                        `Vaping makes you more prone to respiratory infections 🤧. You could end up hospitalized 🏥 and bedridden for weeks 🛌.` :
                         `Vapear te hace más propenso a infecciones respiratorias 🤧. Podrías terminar hospitalizado 🏥 y en cama durante semanas 🛌.`;
 
                     await sendMessage(senderId, fourthMessage);
@@ -125,9 +125,9 @@ const dia14 = async (senderId) => {
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const fifthMessage = idioma === 'ingles' ?
-                        `Vaping can lead to cancer 🧬. The risk is high 🚫 and treatment can be painful 💊.` :
+                        `Vaping can lead to cancer 🧬. The risk is high 🚫, and the treatment can be painful 💊.` :
                         `Vapear puede llevarte a desarrollar cáncer 🧬. El riesgo es alto 🚫 y el tratamiento puede ser doloroso 💊.`;
 
                     await sendMessage(senderId, fifthMessage);
@@ -139,7 +139,7 @@ const dia14 = async (senderId) => {
                 console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
                 const sixthMessage = idioma === 'ingles' ?
-                    `Have a peaceful night. You are making an incredible effort and each day without vaping counts. Keep going!` :
+                    `Have a peaceful night. You’re making an incredible effort, and every day without vaping counts. Stay strong!` :
                     `Que tengas una noche tranquila. Estás haciendo un esfuerzo increíble y cada día sin vapeo cuenta. ¡Ánimo!`;
 
                 await sendMessage(senderId, sixthMessage);
@@ -149,9 +149,9 @@ const dia14 = async (senderId) => {
             seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
                 console.log(`Programado séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const seventhMessage = idioma === 'ingles' ?
-                        `Vaping can cause inflammatory diseases 🔥. You will experience constant pain and discomfort 😖.` :
+                        `Vaping can cause inflammatory diseases 🔥. You’ll suffer from continuous pain and discomfort 😖.` :
                         `El vapeo puede causar enfermedades inflamatorias 🔥. Sufrirás de dolor y malestar continuo 😖.`;
 
                     await sendMessage(senderId, seventhMessage);
@@ -186,7 +186,7 @@ const dia14 = async (senderId) => {
             })
         };
         // Imprimir detalles de los trabajos programados
-        console.log(`Trabajos 14 programados para el usuario ${senderId}:`);
+        console.log(`Trabajos dia 14 programados para el usuario ${senderId}:`);
         Object.keys(scheduledJobs[senderId]).forEach(jobName => {
             const job = scheduledJobs[senderId][jobName];
             console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);

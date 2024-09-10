@@ -10,11 +10,11 @@ const handlePaymentCompleted = async (senderId) => {
 
     // Enviar mensaje de confirmación
     const message1 = idioma === 'ingles'
-      ? `🥳 Congratulations. 🏆 You are officially awesome 🏆`
+      ? `🥳 Congratulations. 🏆 You’re officially awesome 🏆 🏆`
       : `🥳 Felicidades. 🏆 Eres oficialmente crack 🏆`;
 
     const message2 = idioma === 'ingles'
-      ? `Let's measure your lung capacity! This is a 1-minute breath-holding exercise.`
+      ? `I’ll be measuring your lung capacity. It’s a breath-holding exercise that takes 1 minute.`
       : `¡Haremos una medición de tu capacidad pulmonar! Este es un ejercicio de retención de aire que dura 1 minuto.`;
 
     await sendMessage(senderId, message1);

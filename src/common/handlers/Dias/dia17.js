@@ -75,9 +75,9 @@ const dia17 = async (senderId) => {
             first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
                 console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const firstMessage = idioma === 'ingles' ?
-                        `Did you know that vaping can increase the likelihood of developing lipoid pneumonia 🫀, a serious lung condition?` :
+                        `Did you know that vaping can increase the likelihood of developing lipoid pneumonia 🫀, a serious lung disease?` :
                         `¿Sabías que el vapeo puede aumentar la probabilidad de sufrir neumonía lipoidea 🫀, una enfermedad pulmonar grave?`;
 
                     await sendMessage(senderId, firstMessage);
@@ -88,7 +88,7 @@ const dia17 = async (senderId) => {
             second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
                 console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const secondMessage = idioma === 'ingles' ?
                         `🗣️ Vaping can cause chronic cough.` :
                         `🗣️ Vapear puede causar tos crónica.`;
@@ -102,7 +102,7 @@ const dia17 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `Before lunch, remember: 'Success is not final, failure is not fatal: It is the courage to continue that counts.' – Winston Churchill. Keep going with courage!` :
+                    `"Before eating, remember: 'Success is not final, failure is not fatal: it is the courage to continue that counts.' – Winston Churchill. Keep going with courage!"` :
                     `"Antes de comer, recuerda: 'El éxito no es definitivo, el fracaso no es fatal: lo que cuenta es el coraje para continuar.' – Winston Churchill. ¡Sigue con valentía!"`;
 
                 await sendMessage(senderId, thirdMessage);
@@ -113,7 +113,7 @@ const dia17 = async (senderId) => {
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
                 console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const fourthMessage = idioma === 'ingles' ?
                         `Vaping affects your mental health 🧠. You might feel more anxious 😟 and depressed 😞, impacting your overall well-being.` :
                         `Vapear afecta tu salud mental 🧠. Podrías sentirte más ansioso 😟 y deprimido 😞, afectando tu bienestar general.`;
@@ -126,9 +126,9 @@ const dia17 = async (senderId) => {
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const fifthMessage = idioma === 'ingles' ?
-                        `Vaping can cause sleep problems 🛏️. You might wake up feeling exhausted 🥱 and find it difficult to rest well 🌙.` :
+                        `Vaping can cause sleep problems 🛏️. You’ll wake up exhausted 🥱 and find it hard to get a good rest 🌙.` :
                         `El vapeo puede causar problemas de sueño 🛏️. Te despertarás agotado 🥱 y será difícil descansar bien 🌙.`;
 
                     await sendMessage(senderId, fifthMessage);
@@ -140,7 +140,7 @@ const dia17 = async (senderId) => {
                 console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
                 const sixthMessage = idioma === 'ingles' ?
-                    `Rest well tonight. Continue with confidence and determination. You’re doing a fantastic job!` :
+                    `Rest well tonight. Keep moving forward with confidence and determination. You’re doing a fantastic job!` :
                     `Que descanses bien esta noche. Sigue adelante con confianza y determinación. ¡Estás haciendo un trabajo fantástico!`;
 
                 await sendMessage(senderId, sixthMessage);
@@ -150,9 +150,9 @@ const dia17 = async (senderId) => {
             seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
                 console.log(`Programado séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const seventhMessage = idioma === 'ingles' ?
-                        `Vaping damages your immune system 🛡️. You’ll be more susceptible to illnesses 🤒 and will get sick more often 😷.` :
+                        `Vaping weakens your immune system 🛡️. You’ll be more vulnerable to illnesses 🤒 and get sick more often 😷.` :
                         `Vapear daña tu sistema inmunológico 🛡️. Serás más vulnerable a las enfermedades 🤒 y te enfermarás más a menudo 😷.`;
 
                     await sendMessage(senderId, seventhMessage);
@@ -188,7 +188,7 @@ const dia17 = async (senderId) => {
             })
         };
         // Imprimir detalles de los trabajos programados
-        console.log(`Trabajos 17 programados para el usuario ${senderId}:`);
+        console.log(`Trabajos dia 17 programados para el usuario ${senderId}:`);
         Object.keys(scheduledJobs[senderId]).forEach(jobName => {
             const job = scheduledJobs[senderId][jobName];
             console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);

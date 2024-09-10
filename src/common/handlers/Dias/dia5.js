@@ -79,10 +79,10 @@ const dia5 = async (senderId) => {
             first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
                 console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const firstMessage = idioma === 'ingles' ?
-                        `Did you know that some vape liquids contain toxic chemicals like formaldehyde and acrolein 🧪🧪?` :
-                        `¿Sabías que algunos líquidos de vapeo contienen sustancias químicas tóxicas como el formaldehído y el acroleína 🧪🧪?`;
+                        `Did you know that vaping can cause 🫁 severe lung damage and 😷 acute respiratory illnesses?` :
+                        `¿Sabías que el vapeo puede causar 🫁 daños pulmonares severos y 😷 enfermedades respiratorias agudas?`;
 
                     await sendMessage(senderId, firstMessage);
                     console.log(`Primer mensaje enviado a ${senderId}`);
@@ -92,9 +92,9 @@ const dia5 = async (senderId) => {
             second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
                 console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const secondMessage = idioma === 'ingles' ?
-                        `🗣️ Vaping is associated with an increased risk of heart attack` :
+                        `🗣️ Vaping is linked to a higher risk of heart attack` :
                         `🗣️ El vaping está relacionado con un mayor riesgo de ataque cardíaco`;
 
                     await sendMessage(senderId, secondMessage);
@@ -106,7 +106,7 @@ const dia5 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `🗯️ I may not have mentioned this, but having a hobby can distract you from vaping, and 72% of users report it has helped them. Have you thought about learning something new? Reading, painting, or even short walks in the afternoon can be great options.` :
+                    `🗯️ I may not have mentioned this, but having a hobby can distract you from vaping, and 72% of users report it has helped them. Have you thought about picking up something new? Reading, painting, or even taking short afternoon walks are great options.` :
                     `🗯️ No sé si te lo había dicho, pero tener un hobby puede distraerte del vapeo y el 72% de los usuarios reconocen que les ha ayudado. ¿Has pensado en aprender algo nuevo? La lectura, la pintura o incluso las caminatas cortas por la tarde pueden ser excelentes opciones.`;
 
                 await sendMessage(senderId, thirdMessage);
@@ -118,7 +118,7 @@ const dia5 = async (senderId) => {
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
                 console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const fourthMessage = idioma === 'ingles' ?
                         `Did you know that e-cigarettes can explode 💥, causing severe injuries to the face 😵 and hands?` :
                         `¿Sabías que los cigarrillos electrónicos pueden explotar 💥, causando lesiones graves en la cara 😵 y manos?`;
@@ -138,7 +138,7 @@ const dia5 = async (senderId) => {
 
                 // Enviar el mensaje con el enlace único
                 const urlMessage = idioma === 'ingles'
-                    ? `Click here to start your trial: ${uniqueUrl}`
+                    ? `💨 Time to test your lung capacity! Click here: ${uniqueUrl}`
                     : `💨 Hora de medir tu capacidad pulmonar! Da clic aquí: ${uniqueUrl}`;
                 await sendMessage(senderId, urlMessage);
                 console.log(`Mensaje URL prueba enviado a ${senderId}`);
@@ -148,9 +148,9 @@ const dia5 = async (senderId) => {
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const fifthMessage = idioma === 'ingles' ?
-                        `Did you know that vaping can trigger asthma symptoms in people who have never had the disease 🌬️?` :
+                        `Did you know that vaping can trigger asthma symptoms in people who have never had the condition 🌬️?` :
                         `¿Sabías que el vapeo puede provocar síntomas de asma en personas que nunca han tenido la enfermedad 🌬️?`;
 
                     await sendMessage(senderId, fifthMessage);
@@ -175,12 +175,12 @@ const dia5 = async (senderId) => {
 
                     if (!testId2Presente) {
                         // Genera la URL única con senderId, nombre y testId
-                        const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=2`;
+                        const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=2&language=${idioma}`;
                         console.log('URL única generada:', uniqueUrl);
 
                         // Enviar el mensaje con el enlace único
                         const urlMessage = idioma === 'ingles'
-                            ? `You still have your lung retention test pending!, Click here to start: ${uniqueUrl}`
+                            ? `💨 Your Lung Retention Test is still pending. Clic here to do it: ${uniqueUrl}`
                             : `💨 Aún tienes pendiente tu prueba de retención pulmonar! Da clic aquí : ${uniqueUrl}`;
                         await sendMessage(senderId, urlMessage);
                         console.log(`Mensaje URL RecUrl enviado a ${senderId}`);
@@ -210,9 +210,9 @@ const dia5 = async (senderId) => {
             seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
                 console.log(`Programado el séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const seventhMessage = idioma === 'ingles' ?
-                        `Vaping can cause chronic lung diseases 🫁. You’ll live with constant pain 😣 and require prolonged medical treatment 💊.` :
+                        `Vaping can lead to chronic lung diseases 🫁. You’ll live with constant pain 😣 and require prolonged medical treatment 💊.` :
                         `Vapear puede provocar enfermedades pulmonares crónicas 🫁. Vivirás con dolor constante 😣 y necesitarás tratamiento médico prolongado 💊.`;
 
                     await sendMessage(senderId, seventhMessage);
@@ -248,7 +248,7 @@ const dia5 = async (senderId) => {
         };
 
         // Imprimir detalles de los trabajos programados
-        console.log(`Trabajos 5 programados para el usuario ${senderId}:`);
+        console.log(`Trabajos dia 5 programados para el usuario ${senderId}:`);
         Object.keys(scheduledJobs[senderId]).forEach(jobName => {
             const job = scheduledJobs[senderId][jobName];
             console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);

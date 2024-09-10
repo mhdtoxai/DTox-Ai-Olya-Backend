@@ -26,11 +26,11 @@ const handleReportVape = async (senderId) => {
     const score = latestTest.score;
 
     const scoreMessage = idioma === 'ingles'
-      ? `📊 Your recorded score for this test is ${score}. In the coming days, we will be conducting additional tests.`
+      ? `📊 Your recorded score for this test is ${score}. In the coming days, we’ll be doing some additional tests..`
       : `📊 Tu score registrado para esta prueba es de ${score}. En los próximos días estaremos haciendo algunas pruebas adicionales.`;
 
     const supportCriteriaMessage = idioma === 'ingles'
-      ? `Now we will define the criteria with which I will be supporting you throughout the day:\n\n**High**: Many messages to remind you of your mission.\n**Medium**: Alerts at key moments of the day to help you stay strong.\n**Low**: I will remind you 3 or 4 times a day to keep you free from vaping.`
+      ? `Now, we’ll define the criteria with which I’ll be supporting you throughout the day:\n\n**High**: Many messages to remind you of your mission.\n**Medium**: Alerts at key moments of the day to help you stay strong.\n**Low**: I’ll remind you 3 or 4 times during the day about staying vape-free.`
       : `Ahora definiremos los criterios con que te estaré apoyando a través del día:\n\n**Alto**: Muchos mensajes para recordarte de tu misión.\n**Medio**: Alertas en momentos clave del día que te ayuden a mantenerte firme.\n**Bajo**: Te estaré recordando 3 o 4 veces durante el día sobre librarte del vaping.`;
 
     await sendMessage(senderId, scoreMessage);

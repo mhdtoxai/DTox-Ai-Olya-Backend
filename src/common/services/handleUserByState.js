@@ -13,7 +13,7 @@ const handleUserSelectionMode = require('../handlers/Onboarding/handleUserSelect
 const handleCompromise = require('../handlers/Onboarding/handleCompromise');
 const handleCompromiseConfirmation = require('../handlers/Onboarding/handleCompromiseConfirmation');
 // const dia1 = require('../handlers/Dias/dia1');
-// const dia2 = require('../handlers/Dias/dia2');
+// const dia20 = require('../handlers/Dias/dia20');
 
 const handleUserByState = async (senderId, receivedMessage) => {
   const userDoc = await userService.getUser(senderId);
@@ -22,7 +22,7 @@ const handleUserByState = async (senderId, receivedMessage) => {
     await userService.createUser(senderId);
     const buttons = [
       { id: 'espanol', title: 'Español' },
-      // { id: 'ingles', title: 'Inglés' }
+      { id: 'ingles', title: 'Inglés' }
     ];
     await sendMessageTarget(senderId, 'Hola. Por favor selecciona tu idioma | Please select your language.', buttons);
   } else {
@@ -65,8 +65,8 @@ const handleUserByState = async (senderId, receivedMessage) => {
       case 'compromisopendiente':
         await handleCompromiseConfirmation(senderId, receivedMessage);
         break;
-        // case 'dia1':
-        //   await dia1(senderId);
+        // case 'dia20':
+        //   await dia20(senderId);
         //   break;
         //   case 'dia2':
         //     await dia2(senderId);

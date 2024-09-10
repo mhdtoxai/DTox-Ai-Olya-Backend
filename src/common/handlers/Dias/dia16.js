@@ -77,9 +77,9 @@ const dia16 = async (senderId) => {
             first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
                 console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const firstMessage = idioma === 'ingles' ?
-                        `Did you know that vaping during pregnancy 🤰 can negatively affect fetal development 👶 and increase the risk of preterm birth?` :
+                        `Did you know that vaping during pregnancy 🤰 can negatively affect fetal development 👶 and increase the risk of premature birth?` :
                         `¿Sabías que el vapeo durante el embarazo 🤰 puede afectar negativamente el desarrollo del feto 👶 y aumentar el riesgo de parto prematuro?`;
 
                     await sendMessage(senderId, firstMessage);
@@ -90,7 +90,7 @@ const dia16 = async (senderId) => {
             second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
                 console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const secondMessage = idioma === 'ingles' ?
                         `🗣️ Vaping can negatively affect mental health.` :
                         `🗣️ El vapeo puede afectar negativamente la salud mental.`;
@@ -104,7 +104,7 @@ const dia16 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `At midday, remember: 'Strength does not come from physical capacity, but from an indomitable will.' – Mahatma Gandhi. You are strong!` :
+                    `Midday reminder: 'Strength doesn’t come from physical capacity, it comes from an indomitable will.' – Mahatma Gandhi. You are strong!` :
                     `A medio día, ten presente: 'La fuerza no proviene de la capacidad física, sino de una voluntad indomable.' – Mahatma Gandhi. ¡Tú eres fuerte!`;
 
                 await sendMessage(senderId, thirdMessage);
@@ -115,9 +115,10 @@ const dia16 = async (senderId) => {
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
                 console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+               
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const fourthMessage = idioma === 'ingles' ?
-                        `Vaping can affect your immune system 🛡️. You'll be more vulnerable to illnesses 🤒 and will get sick more often 😷.` :
+                        `Vaping can weaken your immune system 🛡️. You’ll be more vulnerable to illnesses 🤒 and get sick more often 😷.` :
                         `El vapeo puede afectar tu sistema inmunológico 🛡️. Serás más vulnerable a las enfermedades 🤒 y te enfermarás más a menudo 😷.`;
 
                     await sendMessage(senderId, fourthMessage);
@@ -128,9 +129,9 @@ const dia16 = async (senderId) => {
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const fifthMessage = idioma === 'ingles' ?
-                        `Vaping affects your blood circulation 💉. You'll feel cold in your extremities ❄️ and have less physical endurance 🏃.` :
+                        `Vaping affects your blood circulation 💉. You’ll feel cold in your extremities ❄️ and have less physical stamina 🏃.` :
                         `Vapear afecta tu circulación sanguínea 💉. Sentirás frío en las extremidades ❄️ y tendrás menos resistencia física 🏃.`;
 
                     await sendMessage(senderId, fifthMessage);
@@ -142,7 +143,7 @@ const dia16 = async (senderId) => {
                 console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
                 const sixthMessage = idioma === 'ingles' ?
-                    `Good night! Reflect on your achievements today and remember that each day without vaping is a step towards a healthier life.` :
+                    `Good night! Reflect on your achievements today and remember that each day without vaping is a step toward a healthier life.` :
                     `¡Buenas noches! Reflexiona sobre tus logros de hoy y recuerda que cada día sin vapeo es un paso hacia una vida más saludable.`;
 
                 await sendMessage(senderId, sixthMessage);
@@ -152,9 +153,9 @@ const dia16 = async (senderId) => {
             seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
                 console.log(`Programado séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const seventhMessage = idioma === 'ingles' ?
-                        `Vaping can lead to lung cancer 🧬. The risk is high 🚫 and the treatment can be painful 💊.` :
+                        `Vaping can lead to lung cancer 🧬. The risk is high 🚫, and the treatment can be painful 💊.` :
                         `El vapeo puede provocar cáncer de pulmón 🧬. El riesgo es alto 🚫 y el tratamiento puede ser doloroso 💊.`;
 
                     await sendMessage(senderId, seventhMessage);
@@ -191,7 +192,7 @@ const dia16 = async (senderId) => {
             })
         };
         // Imprimir detalles de los trabajos programados
-        console.log(`Trabajos 16 programados para el usuario ${senderId}:`);
+        console.log(`Trabajos dia 16 programados para el usuario ${senderId}:`);
         Object.keys(scheduledJobs[senderId]).forEach(jobName => {
             const job = scheduledJobs[senderId][jobName];
             console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);

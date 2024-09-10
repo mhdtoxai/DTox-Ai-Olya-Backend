@@ -34,7 +34,7 @@ const handleCompromiseConfirmation = async (senderId, userResponse) => {
                   ];
 
             const message = idioma === 'ingles'
-                ? 'Does everything make sense?'
+                ? 'Agreed?'
                 : '¿De acuerdo?';
 
             await sendMessageTarget(senderId, message, buttons);
@@ -52,7 +52,7 @@ const handleCompromiseConfirmation = async (senderId, userResponse) => {
 
          // Nuevo mensaje con la palabra "antojo" en negritas
          const reminderMessage = idioma === 'ingles'
-         ? 'Remember: I will be here for you. The keyword for when you have a craving to vape will be **CRAVING**.'
+         ? 'Remember: I’m here for you. The keyword for when you have a craving to vape will be **CRAVING**.'
          : 'Recuerda: aquí estaré para ti. La palabra clave para cuando tengas un antojo de vapear será **ANTOJO**.';
      await sendMessage(senderId, reminderMessage);
 

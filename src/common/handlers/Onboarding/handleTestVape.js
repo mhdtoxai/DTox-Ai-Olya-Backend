@@ -7,14 +7,16 @@ const handleTestVape = async (senderId) => {
         // Obtener la información del usuario incluyendo el nombre y idioma
         const { idioma, estado, nombre } = await getUserInfo(senderId);
 
-        // Generar la URL única con senderId, nombre y testId
-        const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=1`;
+        // Generar la URL única con senderId, nombre, testId e idioma
+        const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=1&language=${idioma}`;
+
+        // Construir el mensaje en función del idioma
+        const message = idioma === 'ingles'
+            ? `Click here to start your test: ${uniqueUrl}`
+            : `Da clic aquí para comenzar tu prueba: ${uniqueUrl}`;
 
         // Enviar el mensaje con el enlace único
-        const url = idioma === 'ingles'
-            ? `Click here to start your trial: ${uniqueUrl}`
-            : `Da clic aquí para comenzar tu prueba: ${uniqueUrl}`;
-        await sendMessage(senderId, url);
+        await sendMessage(senderId, message);
 
     } catch (error) {
         console.error('Error al manejar test completado:', error);

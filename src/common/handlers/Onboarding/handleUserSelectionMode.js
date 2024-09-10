@@ -53,23 +53,24 @@ const handleUserSelectionMode = async (senderId, selectedLevel) => {
 
         // Enviar un mensaje de confirmación al usuario
         const confirmationMessage = idioma === 'ingles'
-            ? `You have selected the ${lowerCaseLevel} level. Sounds good! Everything is set up for the moment.`
+            ? `You have selected the ${lowerCaseLevel} level. Sounds good! Everything is set up for now.`
             : `Has seleccionado el nivel ${lowerCaseLevel}. ¡Suena bien! Todo está configurado por el momento.`;
 
         const additionalMessage1 = idioma === 'ingles'
-            ? 'The method we will use is to reduce the consumption window. Tomorrow you will take the vape as late as you can.'
+            ? 'The method we’ll use is by reducing your consumption window. Tomorrow, you’ll use your vape as late as you can.'
             : 'El método que utilizaremos será reduciendo la ventana de consumo. Mañana tomarás el vape lo más tarde que puedas.';
 
         const additionalMessage2 = idioma === 'ingles'
-            ? 'Or at least, one hour later than you usually do. At the moment of your first craving of the day, follow these steps:\n\n1️⃣ Take your device and observe it.\n2️⃣ Let it know that even though it is there, you will not use it until in an hour.\n3️⃣ Do not hate or curse it, just say: see you soon.\n4️⃣ Leave it in the same place, do not take it with you or if you go out, store it somewhere (not in sight).'
+            ? 'Or at least, one hour later than you usually do. When you have your first craving of the day, follow these steps:\n\n1️⃣ Take your device and look at it. \n2️⃣ Let it know that even though it’s there, you won’t use it until an hour later.\n3️⃣ Don’t hate or curse it, simply say: see you soon.\n4️⃣ Leave it in the same place; don’t take it with you, or if you’re going out, store it somewhere out of sight.'
             : 'O por lo menos, una hora más tarde de lo que normalmente lo haces. Al momento de tu primer antojo del día, sigue los siguientes pasos:\n\n1️⃣ Toma tu dispositivo y obsérvalo.\n2️⃣ Hazle saber que aún estando ahí, no lo consumirás hasta dentro de una hora.\n3️⃣ No lo odies ni maldigas, simplemente dile: nos vemos pronto.\n4️⃣ Déjalo en ese mismo lugar, no lo lleves contigo o si vas a salir, guárdalo en cualquier lado (no a la vista).';
 
+
         const additionalMessage3 = idioma === 'ingles'
-            ? 'Does it all make sense? It’s very simple and will help you realize you can manage without it. Even having it within reach.'
+            ? 'Is that clear? It’s very simple and will help you realize that you can do without it, even when it’s within reach.'
             : '¿Queda claro lo que debes hacer? Es muy sencillo y te ayudará a darte cuenta que puedes sin él. Aún teniéndolo a tu alcance.';
 
         const additionalMessage4 = idioma === 'ingles'
-            ? 'I will support you, and tomorrow I will remind you of your commitment when you wake up.'
+            ? 'I’ll support you, and tomorrow I’ll remind you of your commitment when you wake up.'
             : 'Yo te apoyaré, mañana te recordaré sobre tu compromiso cuando despiertes.';
 
         await sendMessage(senderId, confirmationMessage);

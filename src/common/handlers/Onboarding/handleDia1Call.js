@@ -7,8 +7,8 @@ const scheduledJobs = {}; // Objeto para almacenar trabajos programados
 
 const handleDia1Call = async (senderId) => {
   try {
-     // Obtener la información del usuario
-     const { timezone } = await getUserInfo(senderId);
+    // Obtener la información del usuario
+    const { timezone } = await getUserInfo(senderId);
 
     // Validar que timezone sea una cadena válida
     if (typeof timezone !== 'string' || !moment.tz.names().includes(timezone)) {
@@ -44,9 +44,19 @@ const handleDia1Call = async (senderId) => {
 
     // Programar la llamada a la función dia1 para el final del día
     const dia1Job = schedule.scheduleJob(endOfDay.toDate(), async () => {
-      await dia1(senderId);
-      console.log(`*Función dia1 llamada al final del día para el usuario ${senderId}*`);
-      // No es necesario cancelar el trabajo ya que se ejecuta solo una vez
+      try {
+        // Actualizar el estado del usuario a 'dia1' antes de ejecutar la función dia1
+        await userService.updateUser(senderId, { estado: 'dia1' });
+        console.log(`Estado del usuario ${senderId} actualizado a 'dia1'`);
+
+        // Ejecutar la función dia1
+        await dia1(senderId);
+        console.log(`*Función dia1 llamada al final del día para el usuario ${senderId}*`);
+        
+      } catch (error) {
+        console.error(`Error al ejecutar la función dia1 o al actualizar el estado para el usuario ${senderId}:`, error);
+        // Aquí podrías agregar lógica para manejar el error, como reintentar o notificar al usuario/administrador.
+      }
     });
 
     // Almacenar el trabajo programado en scheduledJobs

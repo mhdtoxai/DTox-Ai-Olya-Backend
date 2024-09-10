@@ -5,9 +5,9 @@ const GRAPH_API_TOKEN = process.env.GRAPH_API_TOKEN;
 // Define el objeto de contacto fijo
 const contactData = {
 "name": {
-        "formatted_name": "Olya Ai",
-        "first_name": "Olya",
-        "last_name": "Ai"
+        "formatted_name": "Olya AI - Quit Vaping",
+        "first_name": "Olya AI - Quit Vaping",
+       
       },
       "org": {
         "company": "Empresa",

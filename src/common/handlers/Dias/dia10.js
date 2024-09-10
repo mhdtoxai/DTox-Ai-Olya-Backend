@@ -73,16 +73,16 @@ const dia10 = async (senderId) => {
                 // Enviar el mensaje de plantilla de buenos días
                 await sendTemplateMessage(senderId, templateName, languageCode);
 
-           
+
             }),
 
 
             first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
                 console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const firstMessage = idioma === 'ingles' ?
-                        `Did you know that teenagers who vape are more likely to start smoking conventional cigarettes later 📅📅?` :
+                        `Did you know that teens who vape are more likely to start smoking regular cigarettes later 📅📅?` :
                         `¿Sabías que los adolescentes que vapean tienen más probabilidades de comenzar a fumar cigarrillos convencionales más tarde 📅📅?`;
 
                     await sendMessage(senderId, firstMessage);
@@ -93,7 +93,7 @@ const dia10 = async (senderId) => {
             second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
                 console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const secondMessage = idioma === 'ingles' ?
                         `🗣️ Vaping can worsen asthma.` :
                         `🗣️ Vapear puede empeorar el asma.`;
@@ -107,7 +107,7 @@ const dia10 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `"Before eating, keep in mind: 'Perseverance is not a long race; it is many short races one after another.' – Walter Elliot. You can do it!"` :
+                    `"Before eating, remember: 'Perseverance is not a long race; it is many short races one after the other.' – Walter Elliot. You got this!"` :
                     `"Antes de comer, ten en mente: 'La perseverancia no es una carrera larga; son muchas carreras cortas una tras otra.' – Walter Elliot. ¡Tú puedes!"`;
 
                 await sendMessage(senderId, thirdMessage);
@@ -117,7 +117,7 @@ const dia10 = async (senderId) => {
             fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
                 console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
 
-                if (nivel === 'medio' || nivel === 'alto') {
+                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const fourthMessage = idioma === 'ingles' ?
                         `Did you know that vaping can reduce the body's ability to repair damaged DNA 🧫🧬?` :
                         `¿Sabías que el vapeo puede disminuir la capacidad del cuerpo para reparar el ADN dañado 🧫🧬?`;
@@ -131,12 +131,12 @@ const dia10 = async (senderId) => {
                 console.log(`Programado mensaje URL prueba ${senderId} a las ${serverTimes.testUrl.format()}`);
 
                 // Generar la URL única con senderId, nombre y testId
-                const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=3`;
+                const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=3&language=${idioma}`;
                 console.log('URL única generada:', uniqueUrl);
 
                 // Enviar el mensaje con el enlace único
                 const urlMessage = idioma === 'ingles'
-                    ? `Click here to start your trial: ${uniqueUrl}`
+                    ? `💨 Time to test your lung capacity! Click here: ${uniqueUrl}`
                     : `💨 Hora de medir tu capacidad pulmonar! Da clic aquí: ${uniqueUrl}`;
                 await sendMessage(senderId, urlMessage);
                 console.log(`Mensaje URL prueba enviado a ${senderId}`);
@@ -145,10 +145,10 @@ const dia10 = async (senderId) => {
 
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
-
-                if (nivel === 'alto') {
+             
+                if (nivel === 'alto' || nivel === 'high') {
                     const fifthMessage = idioma === 'ingles' ?
-                        `"If you vape, you are likely to be unable to exercise 🏋️‍♂️. You will gain weight 🍔, become ill 🤒, and possibly die prematurely."` :
+                        `"If you vape, you are likely to be unable to exercise 🏋️‍♂️. You will gain weight 🍔, get sick 🤒, and potentially face premature death."` :
                         `"Si vapeas, es probable que no puedas hacer ejercicio 🏋️‍♂️. Engordarás 🍔, podrás enfermarte 🤒 y morir prematuramente."`;
 
                     await sendMessage(senderId, fifthMessage);
@@ -177,7 +177,7 @@ const dia10 = async (senderId) => {
 
                         // Enviar el mensaje con el enlace único
                         const urlMessage = idioma === 'ingles'
-                            ? `You still have your lung retention test pending!, Click here to start: ${uniqueUrl}`
+                            ? `💨 Your Lung Retention Test is still pending. Clic here to do it ${uniqueUrl}`
                             : `💨 Aún tienes pendiente tu prueba de retención pulmonar! Da clic aquí : ${uniqueUrl}`;
                         await sendMessage(senderId, urlMessage);
                         console.log(`Mensaje URL RecUrl enviado a ${senderId}`);
@@ -204,7 +204,7 @@ const dia10 = async (senderId) => {
             seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
                 console.log(`Programado séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
 
-                if (nivel === 'alto') {
+                if (nivel === 'alto' || nivel === 'high') {
                     const seventhMessage = idioma === 'ingles' ?
                         `Vaping can cause infertility 🚫. Your ability to start a family 👪 could be compromised 🛑.` :
                         `El vapeo puede causar infertilidad 🚫. La posibilidad de formar una familia 👪 se verá comprometida 🛑.`;
@@ -244,7 +244,7 @@ const dia10 = async (senderId) => {
         };
 
         // Imprimir detalles de los trabajos programados
-        console.log(`Trabajos 10 programados para el usuario ${senderId}:`);
+        console.log(`Trabajos dia 10 programados para el usuario ${senderId}:`);
         Object.keys(scheduledJobs[senderId]).forEach(jobName => {
             const job = scheduledJobs[senderId][jobName];
             console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);

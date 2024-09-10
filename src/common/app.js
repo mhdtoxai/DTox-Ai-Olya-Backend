@@ -7,6 +7,8 @@ const userRoutes = require('./routes/userRoutes');
 const webhookStripe  = require('./routes/webhookStripe');
 const cuestionarioRoutes  = require('./routes/cuestionarioRoutes');
 const testrespiracionRoutes  = require('./routes/testrespiracionRoutes');
+const userBackupRoutes  = require('./routes/userBackupRoutes');
+
 
 
 const cors = require('cors');
@@ -32,6 +34,7 @@ app.use('/api', formRoutes);
 app.use('/api/meta/webhook', webhookRoutes);
 app.use('/api/user', cuestionarioRoutes);
 app.use('/api/test', testrespiracionRoutes);
+app.use('/api/backup', userBackupRoutes);
 
 
 module.exports = app;

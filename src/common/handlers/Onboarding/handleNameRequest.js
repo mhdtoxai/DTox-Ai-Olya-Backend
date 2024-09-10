@@ -29,11 +29,11 @@ const handleNameRequest = async (senderId, receivedMessage) => {
     await userService.updateUser(senderId, { nombre: userName });
 
     const congratulationsMessage = idioma === 'ingles'
-      ? `Congratulations ${userName}, you have taken the first step towards a healthier life.`
+      ? `Congratulations ${userName} You’ve taken the first step toward a healthier life..`
       : `Felicidades ${userName}, has dado el primer paso hacia una vida más saludable.`;
 
     const helpMessage = idioma === 'ingles'
-      ? `I need your help with a few questions (It will only take 2 minutes).`
+      ? `To create your personal plan, I need your help with a few questions (It will only take 2 minutes).`
       : `Necesito tu ayuda con unas pocas preguntas (Te tomará solo 2 minutos).`;
 
     await sendMessage(senderId, congratulationsMessage);

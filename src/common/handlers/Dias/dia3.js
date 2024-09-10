@@ -73,9 +73,9 @@ const dia3 = async (senderId) => {
       first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
         console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
 
-        if (nivel === 'medio' || nivel === 'alto') {
+        if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
           const firstMessage = idioma === 'ingles' ?
-            `No excuses, YOU CAN DO IT! If you have cravings, remember to say CRAVING and we'll beat it together.` :
+            `No excuses, YOU CAN DO IT! If cravings hit, remember to say CRAVING, and we’ll beat it together.` :
             `¡No hay pretextos, SI PUEDES! Si tienes antojos, recuerda decir ANTOJO y lo vencemos juntos.`;
 
           await sendMessage(senderId, firstMessage);
@@ -86,9 +86,9 @@ const dia3 = async (senderId) => {
       second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
         console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
 
-        if (nivel === 'alto') {
+        if (nivel === 'alto' || nivel === 'high') {
           const secondMessage = idioma === 'ingles' ?
-            `I just want to let you know that vaping can cause digestive problems 🤢🤮.` :
+            `Just a heads up: vaping can cause digestive problems 🤢🤮.` :
             `Sólo quiero decirte que el vaping puede causar problemas en el sistema digestivo 🤢🤮.`;
 
           await sendMessage(senderId, secondMessage);
@@ -101,8 +101,9 @@ const dia3 = async (senderId) => {
 
 
         const thirdMessage = idioma === 'ingles' ?
-          `I took a nap and dreamt that you quit vaping. I got excited and got hungry, so I came for a 🍕. \n\nI feel like you should also get yourself one to reward your effort. 😋` :
-          `Me tomé una siesta y soñé que dejabas de vapear. Me emocioné y me dio hambre, entonces vine por una 🍕.\n\nSiento que deberías pedirte tú también una para recompensar tu esfuerzo. 😋`;
+        `I took a nap and dreamed you quit vaping. I got so excited that I got hungry, so I grabbed a 🍕.\n\nI think you should treat yourself to one too as a reward for your effort. 😋` :
+        `Me tomé una siesta y soñé que dejabas de vapear. Me emocioné y me dio hambre, entonces vine por una 🍕.\n\nSiento que deberías pedirte tú también una para recompensar tu esfuerzo. 😋`;
+
 
         await sendMessage(senderId, thirdMessage);
         console.log(`Tercer mensaje enviado a usuario ${senderId}`);
@@ -113,7 +114,7 @@ const dia3 = async (senderId) => {
       fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
         console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
 
-        if (nivel === 'medio' || nivel === 'alto') {
+        if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
           const fourthMessage = idioma === 'ingles' ?
             `NO VAPE NO VAPE NO VAPE NO VAPE` :
             `NO VAPE NO VAPE NO VAPE NO VAPE`;
@@ -127,9 +128,9 @@ const dia3 = async (senderId) => {
       fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
         console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
 
-        if (nivel === 'alto') {
+        if (nivel === 'alto' || nivel === 'high') {
           const fifthMessage = idioma === 'ingles' ?
-            `👅👅Vaping can negatively affect oral health, causing dryness, cavities, and a burnt tongue👅👅. Who wants that?` :
+            `👅👅Vaping can negatively affect your oral health, causing dryness, cavities, and a burnt tongue 👅👅. Who wants that?` :
             `👅👅El vaping puede afectar negativamente la salud bucal, causando resequedad, caries y lengua escaldada👅👅. ¿Quién quiere eso?`;
 
           await sendMessage(senderId, fifthMessage);
@@ -142,8 +143,9 @@ const dia3 = async (senderId) => {
         console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
         const sixthMessage = idioma === 'ingles' ?
-          `I hope you did well with today's challenge. 95% of your challenge peers reported being able to hold off after 1 PM! 🥳🥳🥳🥳🥳\n\nRemember, if you have a craving to vape, just let me know and I'll help you.\n\nRest well!! 💤😴` :
-          `Espero que te haya ido bien en el reto de hoy. El 95% de tus compañeros de reto reportó haber podido aguantar después de la 1! 🥳🥳🥳🥳🥳\n\nRecuerda. ANTOJO cuando tengas ganas de vapear y te ayudo.\n\n¡Que descanses!! 💤😴`;
+        `I hope today’s challenge went well for you. 95% of your fellow challengers reported they were able to hold off until after 1 PM! 🥳🥳🥳🥳🥳\n\nRemember, say CRAVING when you have the urge to vape, and I’ll help you out.\n\nSleep Tight!! 💤😴` :
+        `Espero que te haya ido bien en el reto de hoy. El 95% de tus compañeros de reto reportó haber podido aguantar después de la 1! 🥳🥳🥳🥳🥳\n\nRecuerda. ANTOJO cuando tengas ganas de vapear y te ayudo.\n\n¡Que descanses!! 💤😴`;
+
         await sendMessage(senderId, sixthMessage);
         console.log(`Mensaje sexto de buenas noches enviado a usuario ${senderId}`);
       }),
@@ -151,7 +153,7 @@ const dia3 = async (senderId) => {
       seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
         console.log(`Programado el séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
 
-        if (nivel === 'alto') {
+        if (nivel === 'alto' || nivel === 'high') {
           const seventhMessage = idioma === 'ingles' ?
             `Vaping can cause digestive problems 🤢. You’ll suffer from nausea 🤮 and constant stomach discomfort 🤧.` :
             `Vapear puede causar problemas digestivos 🤢. Sufrirás de náuseas 🤮 y malestar estomacal constante 🤧.`;
@@ -190,7 +192,7 @@ const dia3 = async (senderId) => {
     };
 
     // Imprimir detalles de los trabajos programados
-    console.log(`Trabajos 3 programados para el usuario ${senderId}:`);
+    console.log(`Trabajos dia 3 programados para el usuario ${senderId}:`);
     Object.keys(scheduledJobs[senderId]).forEach(jobName => {
       const job = scheduledJobs[senderId][jobName];
       console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);

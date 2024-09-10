@@ -1,20 +1,27 @@
 const db = require('../database/firebaseConfig');
 const handleReportVape = require('../handlers/Onboarding/handleReportVape'); // Importar la función
+const scorehandle = require('../handlers/Dias/scorehandle'); // Importar la función
 
 const registerTest = async (req, res) => {
   try {
     const { userId, score, testId } = req.body;  
     const userRef = db.collection('usuarios').doc(userId).collection('testrespiracion').doc(testId);
+    
+    // Registrar el test en la base de datos
     await userRef.set({
       score,
       completado: true  
     });
 
-    // Llamar a la función handleTestVape solo si testId es 1
+    // Si testId es 1, llama a handleReportVape
     if (testId === "1") {
       await handleReportVape(userId);
+    } else {
+      // Si testId no es 1, llama a scorehandle
+      await scorehandle(userId);
     }
 
+    // Respuesta de éxito
     res.status(201).json({ message: 'Test registrado exitosamente' });
   } catch (error) {
     console.error('Error al registrar el test:', error);
