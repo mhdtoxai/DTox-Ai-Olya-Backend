@@ -56,7 +56,7 @@ const dia20 = async (senderId) => {
             testrep: moment.tz('17:00', 'HH:mm', timezone), // 5 PM
             fifth: moment.tz('20:00', 'HH:mm', timezone), // 10 PM
             sixth: moment.tz('20:00', 'HH:mm', timezone), // 8 PM
-            seventh: moment.tz('21:05', 'HH:mm', timezone) // 10 PM
+            seventh: moment.tz('22:00', 'HH:mm', timezone) // 10 PM
         };
 
 
@@ -97,8 +97,8 @@ const dia20 = async (senderId) => {
 
                 if (nivel === 'alto' || nivel === 'high') {
                     const secondMessage = idioma === 'ingles' ?
-                        `🗣️ Vaping can cause dizziness and nausea.` :
-                        `🗣️ El vapeo puede provocar mareos y náuseas.`;
+                        `Did you know that vaping exposes users to ultrafine particles that can penetrate deep into the lungs 🌫️🫁?` :
+                        `¿Sabías que el vapeo expone a los usuarios a partículas ultrafinas que pueden penetrar profundamente en los pulmones 🌫️🫁?`;
 
                     await sendMessage(senderId, secondMessage);
                     console.log(`Mensaje específico enviado para el usuario ${senderId}`);

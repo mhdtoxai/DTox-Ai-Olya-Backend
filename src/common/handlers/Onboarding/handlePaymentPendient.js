@@ -1,9 +1,24 @@
-const Stripe = require('stripe');
+const Stripe = require('stripe'); 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const userService = require('../../services/userService');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const getUserInfo = require('../../services/getUserInfo');
 const shortenUrl = require('../../api/shortenUrl'); // Ruta a tu función de acortar URL con TinyURL
+const axios = require('axios'); // Asegúrate de tener Axios instalado
+
+// Función para verificar el estado de la membresía
+const checkMembershipStatus = async (senderId) => {
+  try {
+    // Enviar el senderId como userId en el cuerpo de la solicitud
+    const response = await axios.post('https://jjhvjvui.top/api/user/get', {
+      userId: senderId
+    });
+    return response.data.membresia; // Devuelve el estado de membresía (activa o inactiva)
+  } catch (error) {
+    console.error('Error al verificar el estado de la membresía:', error.response ? error.response.data : error.message);
+    return null; // Si ocurre un error, devolvemos null
+  }
+};
 
 const handlePaymentPendient = async (senderId) => {
   try {
@@ -60,6 +75,20 @@ const handlePaymentPendient = async (senderId) => {
 
     // Actualizar el estado del usuario y el estado de membresía
     await userService.updateUser(senderId, { membresia: 'inactiva' });
+
+    // Verificación después de 30 segundos
+    setTimeout(async () => {
+      const membresiaStatus = await checkMembershipStatus(senderId);
+
+      // Si la membresía sigue inactiva, enviar recordatorio
+      if (membresiaStatus === 'inactiva') {
+        const reminderMessage = idioma === 'ingles'
+          ? `⏳ Hey! I'm waiting for you. Complete your signup to begin your devaping program. Let's do this! ${shortenedUrl}`
+          : `⏳ Hola! No te olvides de mi, completa tu registro para iniciar tu programa para dejar de vapear. ¡Te espero! ${shortenedUrl}`;
+
+        await sendMessage(senderId, reminderMessage);
+      }
+    }, 3600000); // Esperar 1 hora antes de verificar y enviar recordatorio
 
   } catch (error) {
     console.error('Error al manejar plan enviado:', error);

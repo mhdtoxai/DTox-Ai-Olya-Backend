@@ -193,17 +193,17 @@ const dia5 = async (senderId) => {
             }),
 
 
-
             sixth: schedule.scheduleJob(`MensajeSexto ${senderId}`, { hour: serverTimes.sixth.hours(), minute: serverTimes.sixth.minutes() }, async () => {
                 console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
-
+            
                 const sixthMessage = idioma === 'ingles' ?
-                    `Hey! I got a letter for you! Here it is...` :
-                    `¡Hey! ¡Me dieron una carta para ti! Aquí te la dejo...`;
-
+                    `Hey! I got a letter for you! Here it is...\n\nJust wanted to take a moment to say how awesome it is that you’ve made it to day 5 of the Olya program. I was right where you are not too long ago, and I totally get how tough those first few days can be. But honestly, they’re also the most important ones. Every little step you're taking is getting you closer to breaking free, and trust me, it’s so worth it.\n\nThis isn’t just about quitting vaping, it’s about taking back control of your life and feeling better overall. I finished the program, and I can’t even describe how great it feels on the other side. So whenever those cravings hit hard, take a deep breath and remind yourself of how far you’ve already come. You’re so much closer to the finish line than you think.\n\nKeep going—you’ve got this!\n\nMichael D. - Hershey, PA.` :
+                    `¡Hey! ¡Me dieron una carta para ti! Aquí te la dejo...\n\n¡Hola! Quiero decirte lo increíble que es que ya estés en el día 5 del programa de Olya. Yo estuve en tu lugar no hace mucho, y sé que los primeros días pueden ser desafiantes, pero también son los más importantes. Cada pequeño paso que das te acerca más a tu objetivo, y créeme, el esfuerzo que estás haciendo ahora te va a traer una libertad y una tranquilidad que no te imaginas.\n\nRecuerda que esto no es solo dejar de vapear, es recuperar el control sobre ti mismo y tu bienestar. Yo terminé el programa y te puedo decir que la sensación de haberlo logrado es indescriptible. Así que sigue fuerte, ten paciencia contigo mismo, y cuando sientas que las ganas son intensas, respira profundo y recuerda todo lo que has avanzado hasta ahora. ¡Estás más cerca de lo que crees!\n\nKarla G. - CDMX`;
+            
                 await sendMessage(senderId, sixthMessage);
                 console.log(`Mensaje sexto enviado a usuario ${senderId}`);
             }),
+            
 
 
 

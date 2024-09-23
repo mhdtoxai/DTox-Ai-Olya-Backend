@@ -1,4 +1,3 @@
-// faqData.js
 const faqs = {
     "¿qué es olya y cómo funciona?": "Olya es un asistente conversacional en WhatsApp que ayuda a dejar de vapear mediante un programa personalizado de 10 días.",
     "what is olya and how does it work?": "Olya is a WhatsApp conversational assistant that helps quit vaping through a personalized 10-day program.",
@@ -38,9 +37,6 @@ const faqs = {
   
     "¿cómo se maneja la privacidad de mis datos?": "Tomamos la privacidad de tus datos muy en serio y seguimos estrictas políticas de protección de datos. Consulta nuestra política de privacidad para más detalles.",
     "how is my data privacy managed?": "We take your data privacy very seriously and follow strict data protection policies. Check our privacy policy for more details.",
-  
-    "¿olya está disponible en otros idiomas?": "Actualmente, Olya está disponible en español. Consulta para futuras actualizaciones sobre otros idiomas.",
-    "is olya available in other languages?": "Currently, Olya is available in Spanish. Check for future updates on other languages.",
   
     "¿qué debo hacer si tengo un problema técnico con el servicio?": "Contacta a nuestro soporte técnico a través de WhatsApp o nuestro sitio web para asistencia.",
     "what should I do if I encounter a technical issue with the service?": "Contact our technical support via WhatsApp or our website for assistance.",
@@ -119,38 +115,6 @@ const faqs = {
   
     "¿qué sucede si tengo una emergencia de salud durante el programa?": "En caso de emergencia de salud, contacta a un profesional de la salud o a los servicios de emergencia locales de inmediato.",
     "what if I have a health emergency during the program?": "In case of a health emergency, contact a healthcare professional or local emergency services immediately."
-  };
-  
-  // Lista de palabras clave para detectar dudas generales
-  const generalDoubtKeywords = [
-    'duda', 'dudas', 'pregunta', 'preguntas'
-  ];
-  
-  // Sinónimos y variaciones de preguntas para mejorar la detección
-  const synonyms = {
-    "¿cuánto tiempo dura el programa?": [
-      "cuanto dura el programa",
-      "cuantos días dura el programa",
-      "duración del programa",
-      "tiempo del programa",
-      "cuánto dura el programa"
-    ],
-    "¿cuál es el costo del servicio?": [
-      "precio del servicio",
-      "costo del programa",
-      "cuanto cuesta el servicio",
-      "cuánto es el precio",
-      "cuánto cuesta el programa"
-    ],
-    "¿qué es olya y cómo funciona?": [
-      "qué es olya",
-      "cómo funciona olya",
-      "qué hace olya",
-      "explicación de olya",
-      "qué es y cómo funciona olya"
-    ]
-    // Agregar más sinónimos según sea necesario
-  };
-  
-  module.exports = { faqs, generalDoubtKeywords, synonyms };
+  };  
+  module.exports = { faqs };
   

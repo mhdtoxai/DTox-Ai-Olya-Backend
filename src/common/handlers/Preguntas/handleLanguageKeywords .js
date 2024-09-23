@@ -2,14 +2,10 @@ const userService = require('../../services/userService');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
 const getUserInfo = require('../../services/getUserInfo');
-const handleUserByState = require('../../services/handleUserByState');
 
 const handleLanguageKeywords = async (senderId, receivedMessage) => {
   try {
-    // Obtener la información del usuario incluyendo el nombre y el idioma actual
-    const { idioma, estado, nombre } = await getUserInfo(senderId);
-    // console.log(`Usuario ${senderId} tiene idioma: ${idioma}, estado: ${estado} y nombre: ${nombre}`);
-
+    // Palabras clave relacionadas con el idioma
     const keywords = ['idioma', 'lengua', 'lenguaje', 'dialecto', 'language', 'idiom', 'dialect'];
     const messageLowerCase = receivedMessage.toLowerCase();
 
@@ -28,6 +24,8 @@ const handleLanguageKeywords = async (senderId, receivedMessage) => {
     // Verificar si el mensaje es la selección de un idioma
     if (receivedMessage === 'espanol-001' || receivedMessage === 'ingles-002') {
       const language = receivedMessage === 'espanol-001' ? 'español' : 'ingles';
+
+      // Actualizar el idioma del usuario en la base de datos
       await userService.updateUser(senderId, { idioma: language });
 
       // Confirmar la selección de idioma al usuario
@@ -37,7 +35,8 @@ const handleLanguageKeywords = async (senderId, receivedMessage) => {
 
       await sendMessage(senderId, confirmationMessage);
 
-      // // Llamar a la función correspondiente al estado actual del usuario
+      // No se necesita obtener información del usuario aquí a menos que sea necesario por otra acción
+      // Por ejemplo, si deseas manejar un estado específico en función del idioma seleccionado, puedes hacerlo aquí
       // await handleUserByState(senderId, estado, receivedMessage);
 
       return true; // Indica que se manejó la selección de idioma
