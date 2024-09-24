@@ -19,11 +19,11 @@ const handleLanguageSelection = async (senderId, receivedMessage) => {
     console.log(`Información del usuario actualizada: idioma=${idioma}, estado=felicitaciones`);
 
     const welcomeMessage = idioma === 'ingles'
-      ? '👋 👋 Hi! I’m Olya AI, your personal assistant to help you quit vaping.\n\n😎 Save my contact for anything you need..'
-      : '👋 ¡Hola! Soy Olya Ai, tu asistente personal para dejar de vapear.\n\n😎 Guarda mi contacto por cualquier cosa.';
+      ? '👋  Hi! I’m Olya AI, your personal assistant to help you quit vaping..\n\n😎 😎 Save my contact and share it with whoever you know is looking to quit vaping.'
+      : '👋 ¡Hola! Soy Olya Ai, tu asistente personal para dejar de vapear.\n\n😎 😎 Guarda mi contacto y compártelo con quien conozcas que esté buscando dejar de vapear..';
 
     const instructionMessage = idioma === 'ingles'
-      ? `❓ How it works. It’s very simple. The program lasts 20 days, during which:\n
+      ? ` ❓ How does it work. It’s very simple. The program lasts 20 days, during which:\n
   \n1️⃣ I will learn your habits.
   \n2️⃣ I measure the progress of your lung capacity.
   \n3️⃣ I’ll support you to not vape during your most vulnerable hours.
@@ -66,7 +66,7 @@ const handleLanguageSelection = async (senderId, receivedMessage) => {
     // Si el idioma no es válido, pide al usuario que seleccione su idioma.
     const buttons = [
       { id: 'espanol', title: 'Español' },
-      { id: 'ingles', title: 'Inglés' }
+      { id: 'ingles', title: 'English' }
     ];
     await sendMessageTarget(senderId, 'Hola. Por favor selecciona tu idioma | Please select your language.', buttons);
   }

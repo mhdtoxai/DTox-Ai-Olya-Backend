@@ -13,7 +13,7 @@ const handleLanguageKeywords = async (senderId, receivedMessage) => {
     if (keywords.some(keyword => messageLowerCase.includes(keyword))) {
       const buttons = [
         { id: 'espanol-001', title: 'Español' },
-        { id: 'ingles-002', title: 'Inglés' }
+        { id: 'ingles-002', title: 'English' }
       ];
 
       const message = 'Hola. Por favor selecciona tu idioma | Please select your language.';

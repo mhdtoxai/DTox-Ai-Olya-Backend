@@ -6,7 +6,7 @@ const languageAbr = {
     'ing': 'ingles',
     'en': 'ingles',
     'spanish': 'español',
-    'english': 'ingles',
+    'English': 'ingles',
     'español': 'español',
     'ingles': 'ingles',
     'es': 'español',
@@ -17,6 +17,7 @@ const languageAbr = {
     'ingles': 'ingles',
     'espanol': 'español',
     'english': 'ingles',
+
     // Puedes seguir añadiendo más abreviaturas o variantes aquí
   };
   
