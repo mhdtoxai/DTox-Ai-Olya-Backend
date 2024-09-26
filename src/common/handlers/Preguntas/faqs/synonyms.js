@@ -291,3 +291,7 @@ const synonyms = {
     "¿qué hacer si enfrento una crisis médica durante el servicio?"
   ]
 };
+
+  
+  module.exports = { synonyms };
+  

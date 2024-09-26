@@ -12,7 +12,7 @@ const { faqs } = require('./faqs');
 
   // Palabras clave típicas de preguntas
 const questionKeywords = [
-  'que', 'como', 'cuanto', 'quien', 'cual', 'cuanto',  'hay', 'puedo', 
+  'que', 'como', 'cuanto', 'quien', 'cual', 'cuanto','hay', 'puedo', 
   'what', 'how', 'when', 'can', 'is', 'does', 'should'
 ];
 
