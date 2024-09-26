@@ -44,7 +44,31 @@ const resources = {
   }
 };
 
+// Función para verificar membresía
+const checkMembership = async (senderId) => {
+  try {
+    const userDoc = await userService.getUser(senderId);
+    if (userDoc.exists) {
+      const userData = userDoc.data();
+      if (userData.membresia === 'activa') {
+        return true;
+      }
+    }
+    return false;
+  } catch (error) {
+    console.error('Error al verificar membresía:', error);
+    return false;
+  }
+};
 
+// Función para enviar mensaje de error
+const sendMembershipErrorMessage = async (senderId, idioma) => {
+  const message = idioma === 'ingles'
+    ? 'Sorry, but you cannot access this feature. You need an active membership.'
+    : 'Lo siento, pero no puedes acceder a esta función. Es necesario que tengas una membresía activa.';
+
+  await sendMessage(senderId, message);
+};
 
 // Función para obtener un recurso aleatorio que no haya sido enviado
 const getRandomResource = async (category, language, senderId) => {
@@ -83,24 +107,6 @@ const getRandomResource = async (category, language, senderId) => {
   }
 };
 
-
-// Función para verificar membresía
-const checkMembership = async (senderId) => {
-  try {
-    const userDoc = await userService.getUser(senderId);
-    if (userDoc.exists) {
-      const userData = userDoc.data();
-      if (userData.membresia === 'activa') {
-        return true;
-      }
-    }
-    return false;
-  } catch (error) {
-    console.error('Error al verificar membresía:', error);
-    return false;
-  }
-};
-
 // Función para obtener un mensaje calmante aleatorio
 const getRandomCalmMessage = (language) => {
   const messages = language === 'ingles'
@@ -117,47 +123,24 @@ const getRandomCalmMessage = (language) => {
   return messages[randomIndex];
 };
 
-// Función para enviar mensaje de error
-const sendMembershipErrorMessage = async (senderId, idioma) => {
-  const message = idioma === 'ingles'
-    ? 'Sorry, but you cannot access this feature. You need an active membership.'
-    : 'Lo siento, pero no puedes acceder a esta función. Es necesario que tengas una membresía activa.';
-
-  await sendMessage(senderId, message);
-};
-
-
+// Función principal para manejar las palabras clave y opciones
 const handleOptionKeywords = async (senderId, receivedMessage) => {
   try {
-    // Convertir el mensaje a minúsculas
-    const messageLowerCase = receivedMessage.toLowerCase();
-
-    // Verificar si el mensaje contiene alguna palabra clave en inglés o español
-    const keywordListIngles = keywords['ingles'];
-    const keywordListEspanol = keywords['español'];
-
-    const containsKeyword = (keywordListIngles.some(keyword => messageLowerCase.includes(keyword)) ||
-                             keywordListEspanol.some(keyword => messageLowerCase.includes(keyword)));
-
-    // Si no contiene ninguna palabra clave, retornar false
-    if (!containsKeyword) {
-      return false;
-    }
-
-    // Obtener información del usuario solo si se encontró una palabra clave
+    // Primero, manejar las palabras clave
     const { estado, nombre, idioma } = await getUserInfo(senderId);
+    const keywordList = keywords[idioma];  // Obtener el array de keywords según el idioma
 
     // Verificar si el idioma tiene palabras clave definidas
-    const keywordList = keywords[idioma];
     if (!keywordList || keywordList.length === 0) {
       console.error(`No se encontraron palabras clave para el idioma: ${idioma}`);
       return false;  // Si no se encuentran palabras clave para el idioma, detener la función
     }
 
+    const messageLowerCase = receivedMessage.toLowerCase();
+
     // Verificar si el mensaje contiene alguna de las palabras clave
     if (keywordList.some(keyword => messageLowerCase.includes(keyword))) {
-      
-      // Verificar membresía antes de proceder
+      // Verificar membresía antes de enviar cualquier mensaje
       const isMembershipActive = await checkMembership(senderId);
       if (!isMembershipActive) {
         await sendMembershipErrorMessage(senderId, idioma);
@@ -169,7 +152,7 @@ const handleOptionKeywords = async (senderId, receivedMessage) => {
       await sendMessage(senderId, calmMessage);
 
 
-      // Enviar las tarjetas de opciones
+      // Enviar las tarjetas de opciones si la membresía está activa
       const buttons = [
         { id: 'resp-9f7d2b8c', title: idioma === 'ingles' ? 'Breathing' : 'Respiración' },
         { id: 'med-a3c8d9e2', title: idioma === 'ingles' ? 'Meditation' : 'Meditación' },
@@ -225,4 +208,3 @@ const handleOptionKeywords = async (senderId, receivedMessage) => {
 };
 
 module.exports = handleOptionKeywords;
-
