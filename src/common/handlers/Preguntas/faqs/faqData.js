@@ -12,10 +12,10 @@ const { faqs } = require('./faqs');
 
   // Palabras clave típicas de preguntas
 const questionKeywords = [
-  'que', 'como', 'cuanto', 'cuando', 'donde', 'por que', 'quien', 'cual', 'cuales', 
-  'quienes', 'cuantos', 'cuantas', 'hay', 'puedo', 'debo', 
-  'what', 'how', 'when', 'where', 'why', 'who', 'which', 'can', 'is', 'does', 'should'
+  'que', 'como', 'cuanto', 'quien', 'cual', 'cuanto',  'hay', 'puedo', 
+  'what', 'how', 'when', 'can', 'is', 'does', 'should'
 ];
+
 
 // Function to remove accents for consistent matching
 const removeAccents = (text) => {
