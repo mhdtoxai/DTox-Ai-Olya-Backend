@@ -11,7 +11,7 @@ const findBestMatch = (question, faqs) => {
   };
 
   const matches = fuzz.extract(question, Object.keys(faqs), options);
-  return matches.filter(match => match[1] > 60); // Ajustar el umbral según sea necesario
+  return matches.filter(match => match[1] > 75); // Ajustar el umbral según sea necesario
 };
 
 const handleFaq = async (senderId, question) => {
@@ -21,10 +21,12 @@ const handleFaq = async (senderId, question) => {
 
     const lowerQuestion = removeAccents(question.toLowerCase());
 
-    // Verificar si el mensaje parece una pregunta buscando palabras clave
-    const isQuestion = questionKeywords.some(keyword => lowerQuestion.includes(removeAccents(keyword)));
+    // Verificar si el mensaje parece una pregunta buscando palabras clave solo al inicio
+    const isQuestion = questionKeywords.some(keyword => 
+      lowerQuestion.startsWith(removeAccents(keyword))
+    );
 
-    // Detectar dudas generales buscando coincidencias parciales con las palabras clave
+    // Detectar dudas generales buscando coincidencias parciales (sin restricción de posición)
     const generalDoubtDetected = generalDoubtKeywords.some(keyword =>
       lowerQuestion.includes(removeAccents(keyword))
     );

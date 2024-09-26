@@ -21,7 +21,7 @@ const faqs = {
   "what do I need to use olya?": "Yes, the service is provided through WhatsApp.",
 
   "¿qué sucede si necesito más tiempo después de los 20 días?": "Puedes contactar a nuestro soporte para opciones adicionales o renovaciones del programa.",
-  "what happens if I need more time after the 20  days?": "You can contact our support for additional options or program renewals.",
+  "what happens if I need more time after the 20 days?": "You can contact our support for additional options or program renewals.",
 
   "¿qué edad debo tener para usar olya?": "El programa está diseñado principalmente para adultos. Consulta con un profesional de salud si tienes alguna duda.",
   "is olya suitable for all ages?": "The program is primarily designed for adults. Consult a healthcare professional if you have any concerns.",

@@ -1,6 +1,5 @@
 const synonyms = {
   "¿qué es olya y cómo funciona?": [
-    "¿qué hace olya?",
     "¿qué es olya?",
     "¿cómo funciona olya?",
     "¿cuáles son las funciones de olya?",
