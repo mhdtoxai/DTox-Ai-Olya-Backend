@@ -14,8 +14,7 @@ const { faqs } = require('./faqs');
 const questionKeywords = [
   'que', 'como', 'cuanto', 'cuando', 'donde', 'por que', 'quien', 'cual', 'cuales', 
   'quienes', 'cuantos', 'cuantas', 'hay', 'puedo', 'debo', 
-  'what', 'how', 'when', 'where', 'why', 'who', 'which', 'how much', 'how many', 
-  'can', 'is', 'does', 'should'
+  'what', 'how', 'when', 'where', 'why', 'who', 'which', 'can', 'is', 'does', 'should'
 ];
 
 // Function to remove accents for consistent matching

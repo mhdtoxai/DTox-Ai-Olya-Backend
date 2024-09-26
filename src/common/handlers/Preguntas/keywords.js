@@ -5,7 +5,7 @@ const keywords = {
       'craving'
     ],
     español: [
-      'antojo'
+      'antojo' 
     ]
   };
   
