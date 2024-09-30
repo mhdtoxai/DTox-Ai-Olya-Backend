@@ -35,14 +35,13 @@ const synonyms = {
     "¿qué elementos contiene el programa personalizado?",
     "¿qué recursos recibiré en el programa?",
     "¿qué recibiré en el programa personalizado?",
-    "¿cuáles son los componentes del programa?"
+
   ],
 
   "¿cómo ayuda olya a combatir los antojos y la ansiedad?": [
     "¿qué estrategias usa olya para combatir los antojos?",
     "¿cómo puede olya ayudar con la ansiedad?",
     "¿cómo ayuda olya a controlar los antojos?",
-    "¿qué soporte ofrece olya para manejar la ansiedad?",
     "¿cómo reduce olya los antojos y la ansiedad?"
   ],
 
