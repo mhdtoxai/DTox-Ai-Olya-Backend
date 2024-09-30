@@ -172,7 +172,7 @@ const dia10 = async (senderId) => {
 
                     if (!testId3Presente) {
                         // Genera la URL única con senderId, nombre y testId
-                        const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=3`;
+                        const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=3&language=${idioma}`;
                         console.log('URL única generada:', uniqueUrl);
 
                         // Enviar el mensaje con el enlace único
