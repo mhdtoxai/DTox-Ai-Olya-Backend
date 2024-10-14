@@ -4,8 +4,8 @@ const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget
 const sendTextWithPreview = require('../../services/Wp-Envio-Msj/sendTextWithPreview');
 const getUserInfo = require('../../services/getUserInfo');
 const sendAudioMessage = require('../../services/Wp-Envio-Msj/sendAudioMessage');
-const keywords = require('./keywords');  // Asegúrate de ajustar la ruta
 const admin = require('firebase-admin'); // Necesario para FieldValue
+const handleUserByState = require('../../services/handleUserByState');
 
 const resources = {
   ingles: {
@@ -123,23 +123,21 @@ const getRandomCalmMessage = (language) => {
   return messages[randomIndex];
 };
 
-// Función principal para manejar las palabras clave y opciones
 const handleOptionKeywords = async (senderId, receivedMessage) => {
   try {
     // Primero, manejar las palabras clave
     const { estado, nombre, idioma } = await getUserInfo(senderId);
-    const keywordList = keywords[idioma];  // Obtener el array de keywords según el idioma
 
-    // Verificar si el idioma tiene palabras clave definidas
-    if (!keywordList || keywordList.length === 0) {
-      console.error(`No se encontraron palabras clave para el idioma: ${idioma}`);
-      return false;  // Si no se encuentran palabras clave para el idioma, detener la función
-    }
+    // Definir las palabras clave esperadas para cada idioma
+    const keywordEspañol = "antojo"; // Palabra clave para español
+    const keywordIngles = "craving";  // Palabra clave para inglés
 
     const messageLowerCase = receivedMessage.toLowerCase();
 
-    // Verificar si el mensaje contiene alguna de las palabras clave
-    if (keywordList.some(keyword => messageLowerCase.includes(keyword))) {
+    // Verificar si el mensaje coincide con las palabras clave esperadas
+    if ((idioma === 'español' && messageLowerCase === keywordEspañol) ||
+        (idioma === 'ingles' && messageLowerCase === keywordIngles)) {
+      
       // Verificar membresía antes de enviar cualquier mensaje
       const isMembershipActive = await checkMembership(senderId);
       if (!isMembershipActive) {
@@ -198,6 +196,9 @@ const handleOptionKeywords = async (senderId, receivedMessage) => {
         : 'Espero con este ejercicio te sientas mejor.';
 
       await sendMessage(senderId, followUpMessage);
+      await delay(5000);  // Espera 3 segundos
+      await handleUserByState(senderId); // Llama a la función sin pasarle estado ni mensaje
+
     }
 
     return true;
@@ -206,5 +207,8 @@ const handleOptionKeywords = async (senderId, receivedMessage) => {
     return false;
   }
 };
+// Función de retraso
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 
 module.exports = handleOptionKeywords;

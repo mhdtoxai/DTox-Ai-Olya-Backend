@@ -27,8 +27,7 @@ const handleCompromise = async (senderId) => {
     } catch (error) {
         console.error('Error al enviar el mensaje de compromiso:', error);
     }
-    // Imprimir todo el contexto del usuario en la consola
-    console.log(`Contexto del usuario ${senderId} después de enviar el mensaje de compromiso:`, userContext[senderId]);
+  
 };
 
 module.exports = handleCompromise;

@@ -1,27 +1,29 @@
 const userService = require('../../services/userService');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
-const getUserInfo = require('../../services/getUserInfo');
+const handleUserByState = require('../../services/handleUserByState');
 
 const handleLanguageKeywords = async (senderId, receivedMessage) => {
   try {
-    // Palabras clave relacionadas con el idioma
-    const keywords = ['idioma', 'lengua', 'lenguaje', 'dialecto', 'language', 'idiom', 'dialect'];
+    // Palabras clave relacionadas con el idioma (sin combinaciones)
+    const keywords = ['idioma', 'language'];
     const messageLowerCase = receivedMessage.toLowerCase();
 
-    // Verificar si el mensaje contiene alguna palabra clave relacionada con el idioma
-    if (keywords.some(keyword => messageLowerCase.includes(keyword))) {
+    // 1. Verificar si el mensaje es exactamente alguna de las palabras clave
+    const isKeywordMatch = keywords.some(keyword => messageLowerCase === keyword);
+
+    if (isKeywordMatch) {
       const buttons = [
         { id: 'espanol-001', title: 'Español' },
         { id: 'ingles-002', title: 'English' }
       ];
 
-      const message = 'Hola. Por favor selecciona tu idioma | Please select your language.';
+      const message = 'Por favor selecciona tu idioma | Please select your language.';
       await sendMessageTarget(senderId, message, buttons);
       return true; // Indica que se manejó una palabra clave de idioma
     }
 
-    // Verificar si el mensaje es la selección de un idioma
+    // 2. Verificar si el mensaje es la selección de un idioma
     if (receivedMessage === 'espanol-001' || receivedMessage === 'ingles-002') {
       const language = receivedMessage === 'espanol-001' ? 'español' : 'ingles';
 
@@ -34,11 +36,9 @@ const handleLanguageKeywords = async (senderId, receivedMessage) => {
         : 'Has seleccionado Español como tu idioma preferido.';
 
       await sendMessage(senderId, confirmationMessage);
-
-      // No se necesita obtener información del usuario aquí a menos que sea necesario por otra acción
-      // Por ejemplo, si deseas manejar un estado específico en función del idioma seleccionado, puedes hacerlo aquí
-      // await handleUserByState(senderId, estado, receivedMessage);
-
+      // Llamar a handleUserByState sin pasarle parámetros
+      await handleUserByState(senderId); // Llama a la función sin pasarle estado ni mensaje
+      
       return true; // Indica que se manejó la selección de idioma
     }
 

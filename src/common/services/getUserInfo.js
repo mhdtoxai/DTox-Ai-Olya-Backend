@@ -5,6 +5,19 @@ const getUserInfo = async (senderId) => {
   try {
     // Obtener datos del usuario desde la base de datos
     const userData = await userService.getUser(senderId);
+
+    // Comprobar si userData es válido
+    if (!userData || !userData._fieldsProto) {
+      console.warn(`No se encontraron datos para el usuario ${senderId}.`);
+      return { 
+        idioma: '', // Retorna un objeto con valores vacíos
+        estado: '', 
+        nombre: '', 
+        nivel: '', 
+        timezone: '' 
+      };
+    }
+
     const userDataFields = userData._fieldsProto;
 
     // Verificar que las claves existen antes de acceder a sus valores
@@ -26,7 +39,14 @@ const getUserInfo = async (senderId) => {
     return { idioma, estado, nombre, nivel, timezone };
   } catch (error) {
     console.error(`Error al obtener información del usuario ${senderId}:`, error);
-    throw error; // Propagar el error para manejarlo en un nivel superior
+    // En lugar de propagar el error, retorna un objeto con valores vacíos
+    return { 
+      idioma: '', 
+      estado: '', 
+      nombre: '', 
+      nivel: '', 
+      timezone: '' 
+    }; 
   }
 };
 
