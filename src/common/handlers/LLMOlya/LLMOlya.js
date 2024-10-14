@@ -24,15 +24,9 @@ const LLMOlya = async (senderId, receivedMessage) => {
     'compromisopendiente'
   ];
 
- 
-  
-  // Si el estado está en la lista de estados excluidos o el mensaje contiene "antojo" o "craving", no ejecutamos la API
-  if (
-    estadosExcluidos.includes(estadoUsuario) || 
-    receivedMessage.toLowerCase().includes('antojo') || 
-    receivedMessage.toLowerCase().includes('craving')
-  ) {
-    console.log(`Estado actual ${estadoUsuario} excluido o las palabras "antojo" o "craving" detectadas. No se ejecutará LLMOlya.`);
+  // Si el estado está en la lista de estados excluidos, no ejecutamos la API
+  if (estadosExcluidos.includes(estadoUsuario)) {
+    console.log(`Estado ${estadoUsuario} excluido. No se ejecutará LLMOlya.`);
     return false;
   }
 
