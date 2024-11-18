@@ -1,5 +1,5 @@
 const db = require('../database/firebaseConfig');
-const  handleQuestCompleted  = require('../handlers/Onboarding/handleQuestCompleted');
+const handleQuestCompleted = require('../handlers/Onboarding/handleQuestCompleted');
 // Función para guardar el formulario en la base de datos
 const saveForm = async (req, res) => {
   const { formId, idioma, preguntas } = req.body;
@@ -96,14 +96,14 @@ const saveResponses = async (req, res) => {
     await questionnaireRef.set({
       respuestas: respuestas,
       completado: true },
-      { merge: true }); 
-
-
-    // Llamar a la función handleQuestionnaireCompleted después de guardar las respuestas
-    await handleQuestCompleted(userId);
+      { merge: true });
 
     // Enviar una respuesta de éxito al cliente
     res.status(200).send('Respuestas del cuestionario guardadas con éxito!');
+    // Llamar a la función handleQuestionnaireCompleted después de guardar las respuestas
+    await handleQuestCompleted(userId);
+
+
   } catch (error) {
     console.error('Error guardando respuestas del cuestionario:', error); // Registrar el error en la consola
 
