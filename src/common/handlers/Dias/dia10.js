@@ -131,7 +131,7 @@ const dia10 = async (senderId) => {
                 console.log(`Programado mensaje URL prueba ${senderId} a las ${serverTimes.testUrl.format()}`);
 
                 // Generar la URL única con senderId, nombre y testId
-                const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=3&language=${idioma}`;
+                const uniqueUrl = `https://olya.club/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=3&language=${idioma}`;
                 console.log('URL única generada:', uniqueUrl);
 
                 // Enviar el mensaje con el enlace único
@@ -161,7 +161,7 @@ const dia10 = async (senderId) => {
 
                 try {
                     // Realiza la solicitud POST a la API para obtener los resultados
-                    const response = await axios.post('https://jjhvjvui.top/api/test/testrespiracion/obtenerpruebas', {
+                    const response = await axios.post('https://olya.club/api/test/testrespiracion/obtenerpruebas', {
                         userId: senderId
                     });
 
@@ -172,7 +172,7 @@ const dia10 = async (senderId) => {
 
                     if (!testId3Presente) {
                         // Genera la URL única con senderId, nombre y testId
-                        const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=3&language=${idioma}`;
+                        const uniqueUrl = `https://olya.club/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=3&language=${idioma}`;
                         console.log('URL única generada:', uniqueUrl);
 
                         // Enviar el mensaje con el enlace único

@@ -10,7 +10,7 @@ const axios = require('axios'); // Asegúrate de tener Axios instalado
 const checkMembershipStatus = async (senderId) => {
   try {
     // Enviar el senderId como userId en el cuerpo de la solicitud
-    const response = await axios.post('https://jjhvjvui.top/api/user/get', {
+    const response = await axios.post('https://olya.club/api/user/get', {
       userId: senderId
     });
     return response.data.membresia; // Devuelve el estado de membresía (activa o inactiva)

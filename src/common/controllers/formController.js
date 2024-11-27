@@ -100,6 +100,8 @@ const saveResponses = async (req, res) => {
 
     // Enviar una respuesta de éxito al cliente
     res.status(200).send('Respuestas del cuestionario guardadas con éxito!');
+
+    
     // Llamar a la función handleQuestionnaireCompleted después de guardar las respuestas
     await handleQuestCompleted(userId);
 

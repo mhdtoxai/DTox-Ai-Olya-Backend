@@ -9,7 +9,7 @@ const handleSendQuestionnaire = async (senderId) => {
     const { idioma, estado, nombre } = userInfo;
 
     // Generar la URL única con senderId, nombre e idioma
-    const uniqueUrl = `https://jjhvjvui.top/Onboarding?id=${senderId}&name=${encodeURIComponent(nombre)}&language=${idioma}`;
+    const uniqueUrl = `https://olya.club/Onboarding?id=${senderId}&name=${encodeURIComponent(nombre)}&language=${idioma}`;
 
     // Enviar el mensaje con el enlace único
     const url = idioma === 'ingles'

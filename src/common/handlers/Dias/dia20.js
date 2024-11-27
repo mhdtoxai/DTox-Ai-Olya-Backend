@@ -135,7 +135,7 @@ const dia20 = async (senderId) => {
 
                 try {
                     // Realiza la solicitud POST a la API para obtener los resultados
-                    const response = await axios.post('https://jjhvjvui.top/api/test/testrespiracion/obtenerpruebas', {
+                    const response = await axios.post('https://olya.club/api/test/testrespiracion/obtenerpruebas', {
                         userId: senderId
                     });
 
@@ -256,7 +256,7 @@ const dia20 = async (senderId) => {
 
                 // Hacer la llamada a la API para realizar el backup y eliminar el usuario
 try {
-    const response = await fetch('https://jjhvjvui.top/api/backup/user', {
+    const response = await fetch('https://olya.club/api/backup/user', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

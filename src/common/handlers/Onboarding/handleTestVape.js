@@ -8,7 +8,7 @@ const handleTestVape = async (senderId) => {
         const { idioma, estado, nombre } = await getUserInfo(senderId);
 
         // Generar la URL única con senderId, nombre, testId e idioma
-        const uniqueUrl = `https://jjhvjvui.top/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=1&language=${idioma}`;
+        const uniqueUrl = `https://olya.club/Pruebarespirar?id=${senderId}&name=${encodeURIComponent(nombre)}&testId=1&language=${idioma}`;
 
         // Construir el mensaje en función del idioma
         const message = idioma === 'ingles'
