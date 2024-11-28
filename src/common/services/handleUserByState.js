@@ -65,12 +65,9 @@ const handleUserByState = async (senderId, receivedMessage) => {
       case 'compromisopendiente':
         await handleCompromiseConfirmation(senderId, receivedMessage);
         break;
-        // case 'dia20':
-        //   await dia20(senderId);
-        //   break;
-        //   case 'dia2':
-        //     await dia2(senderId);
-        //     break;
+          // case 'dia1':
+          //   await dia1(senderId);
+          //   break;
       default:
         console.log(`Estado no reconocido: ${estado}. No se realizará ninguna acción adicional.`);
         break;

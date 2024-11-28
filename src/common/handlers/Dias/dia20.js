@@ -1,7 +1,7 @@
 const getUserInfo = require('../../services/getUserInfo');
 const schedule = require('node-schedule');
 const sendTemplateMessage = require('../../services/Wp-Envio-Msj/sendTemplateMessage');
-const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
+const sendImageMessage = require('../../services/Wp-Envio-Msj/sendImageMessage');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone');
 const axios = require('axios');
@@ -54,7 +54,7 @@ const dia20 = async (senderId) => {
             third: moment.tz('14:00', 'HH:mm', timezone), // 2 PM
             fourth: moment.tz('16:00', 'HH:mm', timezone), // 4 PM
             testrep: moment.tz('17:00', 'HH:mm', timezone), // 5 PM
-            fifth: moment.tz('20:00', 'HH:mm', timezone), // 10 PM
+            fifth: moment.tz('18:00', 'HH:mm', timezone), // 10 PM
             sixth: moment.tz('20:00', 'HH:mm', timezone), // 8 PM
             seventh: moment.tz('22:00', 'HH:mm', timezone) // 10 PM
         };
@@ -210,7 +210,13 @@ const dia20 = async (senderId) => {
                     `Congratulations, you've reached the end of our program.\n\nIf you're ready to say good bye we salute you! If not, remember next time will be easier and so on...\n\nThe key is to NEVER QUIT QUITTING.\n\nHere's a 50% off discount for your next 20 day program: DDN50Xz\n\nIf you don't need it, send it to someone who could use the help.` :
                     `Felicidades, has llegado al final de nuestro programa.\n\nSi estás listo para decir adiós, ¡te saludamos! Si no, recuerda que la próxima vez será más fácil y así sucesivamente...\n\nLa clave es NUNCA DEJAR DE DEJARLO.\n\nAquí tienes un 50% de descuento para tu próximo programa de 20 días: DDN50Xz\n\nSi no lo necesitas, envíalo a alguien que pueda necesitar ayuda.`;
 
+                const imageUrl = idioma === 'ingles' ?
+                    'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Ingles%2FMedal6_Eng.png?alt=media&token=01c4cbcc-519a-4c04-a348-5d8218c234c7' : // Reemplaza con el enlace de la imagen en inglés
+                    'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FMedalla6_Esp.png?alt=media&token=8f1584ff-778c-4fc4-bad9-37a8a9c58db5'; // Reemplaza con el enlace de la imagen en español
+
                 await sendMessage(senderId, sixthMessage);
+                await sendImageMessage(senderId, imageUrl);
+
                 console.log(`Sexto mensaje enviado a usuario ${senderId}`);
             }),
 
@@ -255,24 +261,24 @@ const dia20 = async (senderId) => {
                 await userService.updateUser(senderId, { estado: 'programafinalizado' });
 
                 // Hacer la llamada a la API para realizar el backup y eliminar el usuario
-try {
-    const response = await fetch('https://olya.club/api/backup/user', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ senderId })
-    });
+                try {
+                    const response = await fetch('https://olya.club/api/backup/user', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ senderId })
+                    });
 
-    if (response.ok) {
-        const data = await response.json();
-        console.log(`Respuesta de la API: ${data.mensaje}`);
-    } else {
-        console.error('Error al realizar el backup y eliminar el usuario');
-    }
-} catch (error) {
-    console.error('Error en la solicitud a la API:', error);
-}
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(`Respuesta de la API: ${data.mensaje}`);
+                    } else {
+                        console.error('Error al realizar el backup y eliminar el usuario');
+                    }
+                } catch (error) {
+                    console.error('Error en la solicitud a la API:', error);
+                }
 
             })
         };

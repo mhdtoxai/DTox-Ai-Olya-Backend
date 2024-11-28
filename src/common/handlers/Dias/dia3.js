@@ -1,7 +1,7 @@
 const getUserInfo = require('../../services/getUserInfo');
 const schedule = require('node-schedule');
 const sendTemplateMessage = require('../../services/Wp-Envio-Msj/sendTemplateMessage');
-const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
+const sendImageMessage = require('../../services/Wp-Envio-Msj/sendImageMessage');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
 const dia4 = require('./dia4'); // Asegúrate de ajustar la ruta según tu estructura de archivos
@@ -101,8 +101,8 @@ const dia3 = async (senderId) => {
 
 
         const thirdMessage = idioma === 'ingles' ?
-        `I took a nap and dreamed you quit vaping. I got so excited that I got hungry, so I grabbed a 🍕.\n\nI think you should treat yourself to one too as a reward for your effort. 😋` :
-        `Me tomé una siesta y soñé que dejabas de vapear. Me emocioné y me dio hambre, entonces vine por una 🍕.\n\nSiento que deberías pedirte tú también una para recompensar tu esfuerzo. 😋`;
+          `I took a nap and dreamed you quit vaping. I got so excited that I got hungry, so I grabbed a 🍕.\n\nI think you should treat yourself to one too as a reward for your effort. 😋` :
+          `Me tomé una siesta y soñé que dejabas de vapear. Me emocioné y me dio hambre, entonces vine por una 🍕.\n\nSiento que deberías pedirte tú también una para recompensar tu esfuerzo. 😋`;
 
 
         await sendMessage(senderId, thirdMessage);
@@ -143,11 +143,17 @@ const dia3 = async (senderId) => {
         console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
         const sixthMessage = idioma === 'ingles' ?
-        `I hope today’s challenge went well for you. 95% of your fellow challengers reported they were able to hold off until after 1 PM! 🥳🥳🥳🥳🥳\n\nRemember, say CRAVING when you have the urge to vape, and I’ll help you out.\n\nSleep Tight!! 💤😴` :
-        `Espero que te haya ido bien en el reto de hoy. El 95% de tus compañeros de reto reportó haber podido aguantar después de la 1! 🥳🥳🥳🥳🥳\n\nRecuerda. ANTOJO cuando tengas ganas de vapear y te ayudo.\n\n¡Que descanses!! 💤😴`;
+          `Time to rest! You’ve unlocked a new achievement. Keep it up!` :
+          `¡A descansar! Tienes un nuevo logro desbloqueado. Sigue así!`;
+
+        const imageUrl = idioma === 'ingles' ?
+          'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Ingles%2FMedal2_Eng.png?alt=media&token=d2a12a1d-6345-4692-a784-e09c2143ada9' : // Reemplaza con el enlace de la imagen en inglés
+          'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FMedalla2_Esp.png?alt=media&token=73c0b2bd-1a1b-49a9-87f9-2d2479d35d92'; // Reemplaza con el enlace de la imagen en español
 
         await sendMessage(senderId, sixthMessage);
+        await sendImageMessage(senderId, imageUrl);
         console.log(`Mensaje sexto de buenas noches enviado a usuario ${senderId}`);
+
       }),
 
       seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
@@ -184,8 +190,8 @@ const dia3 = async (senderId) => {
           console.log(`No se encontraron trabajos programados para cancelar.`);
         }
 
-          // Actualizar el estado
-          await userService.updateUser(senderId, { estado: 'dia4' });
+        // Actualizar el estado
+        await userService.updateUser(senderId, { estado: 'dia4' });
         // Llamar a dia 4 después de cancelar todos los trabajos
         await dia4(senderId);
       })

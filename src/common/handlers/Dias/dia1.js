@@ -1,7 +1,7 @@
 const getUserInfo = require('../../services/getUserInfo');
 const schedule = require('node-schedule');
 const sendTemplateMessage = require('../../services/Wp-Envio-Msj/sendTemplateMessage');
-const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
+const sendImageMessage = require('../../services/Wp-Envio-Msj/sendImageMessage');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
 const dia2 = require('./dia2'); // Asegúrate de ajustar la ruta según tu estructura de archivos
@@ -133,10 +133,18 @@ const dia1 = async (senderId) => {
         console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
         const sixthMessage = idioma === 'ingles' ?
-          `Good night, ${nombre}! Remember to get a good night’s sleep because, besides being amazing, it has so many health benefits: \n\n💪 Strengthens your immune system\n📈 Repairs tissues and releases growth hormone\n🧘 Helps you regain emotional balance\n😩 Builds resilience to stress\n❤️ Reduces the risk of heart disease` :
-          `¡Buenas noches ${nombre}! Recuerda dormir bien, porque además de ser delicioso tiene muchos beneficios en tu salud: \n\n💪 Fortalece tu sistema inmune\n📈 Reparas tejidos y liberas hormona del crecimiento\n🧘 Recuperas tu estabilidad emocional\n😩 Desarrollas resiliencia al estrés\n❤️ Reduces el riesgo de enfermedades del corazón`;
+          `Good night, ${nombre}! Here’s a new recognition just for you! Congratulations on completing your first day of the program.` :
+          `¡Buenas noches ${nombre}! Aquí tienes un nuevo reconocimiento sólo para tí! Felicidades por cumplir con tu primer día del programa.`;
+
+        const imageUrl = idioma === 'ingles' ?
+          'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Ingles%2FMedal1_Eng.png?alt=media&token=5a4280c0-8870-491a-bfc2-9cb2ae647a51' : // Reemplaza con el enlace de la imagen en inglés
+          'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FMedalla1_Esp.png?alt=media&token=beed2d31-3ace-40d6-8b8b-bb6793666dd4'; // Reemplaza con el enlace de la imagen en español
+
+          
         await sendMessage(senderId, sixthMessage);
+        await sendImageMessage(senderId, imageUrl);
         console.log(`Mensaje sexto de buenas noches enviado a usuario ${senderId}`);
+
       }),
 
       seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {

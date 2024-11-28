@@ -1,7 +1,7 @@
 const getUserInfo = require('../../services/getUserInfo');
 const schedule = require('node-schedule');
 const sendTemplateMessage = require('../../services/Wp-Envio-Msj/sendTemplateMessage');
-const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
+const sendImageMessage = require('../../services/Wp-Envio-Msj/sendImageMessage');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
 const dia11 = require('./dia11'); // Asegúrate de ajustar la ruta según tu estructura de archivos
@@ -51,7 +51,7 @@ const dia10 = async (senderId) => {
             testUrl: moment.tz('17:00', 'HH:mm', timezone), // 5 PM
             fifth: moment.tz('18:00', 'HH:mm', timezone), // 6 PM
             RecUrl: moment.tz('19:00', 'HH:mm', timezone), // 7 PM
-            sixth: moment.tz('20:00', 'HH:mm', timezone), // 8 PM
+            sixth: moment.tz('22:00', 'HH:mm', timezone), // 8 PM
             seventh: moment.tz('22:00', 'HH:mm', timezone) // 10 PM
         };
 
@@ -145,7 +145,7 @@ const dia10 = async (senderId) => {
 
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
-             
+
                 if (nivel === 'alto' || nivel === 'high') {
                     const fifthMessage = idioma === 'ingles' ?
                         `"If you vape, you are likely to be unable to exercise 🏋️‍♂️. You will gain weight 🍔, get sick 🤒, and potentially face premature death."` :
@@ -194,10 +194,15 @@ const dia10 = async (senderId) => {
                 console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
                 const sixthMessage = idioma === 'ingles' ?
-                    `Have a great night. Remember that each day without vaping is a victory. Keep it up!` :
-                    `Que tengas una excelente noche. Recuerda que cada día sin vapeo es una victoria. ¡Sigue así!`;
+                    `Have a great night. Remember that each day without vaping is a victory. Here’s the Willpower Trophy for you!` :
+                    `Que tengas una excelente noche. Recuerda que cada día sin vapeo es una victoria. ¡Te presentamos el Trofeo de Voluntad!`;
+
+                const imageUrl = idioma === 'ingles' ?
+                    'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Ingles%2FMedal4_Eng.png?alt=media&token=7d92fa37-3b4b-48e7-805f-26de99ca987d' : // Reemplaza con el enlace de la imagen en inglés
+                    'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FMedalla4_Esp.png?alt=media&token=c53a9734-431b-4caa-9d47-a402f373b48e'; // Reemplaza con el enlace de la imagen en español
 
                 await sendMessage(senderId, sixthMessage);
+                await sendImageMessage(senderId, imageUrl);
                 console.log(`Mensaje sexto enviado a usuario ${senderId}`);
             }),
 

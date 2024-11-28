@@ -1,7 +1,7 @@
 const getUserInfo = require('../../services/getUserInfo');
 const schedule = require('node-schedule');
 const sendTemplateMessage = require('../../services/Wp-Envio-Msj/sendTemplateMessage');
-const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
+const sendImageMessage = require('../../services/Wp-Envio-Msj/sendImageMessage');
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
 const dia16 = require('./dia16'); // Asegúrate de ajustar la ruta según tu estructura de archivos
@@ -73,7 +73,7 @@ const dia15 = async (senderId) => {
                 // Enviar el mensaje de plantilla de buenos días
                 await sendTemplateMessage(senderId, templateName, languageCode);
 
-               
+
             }),
 
             first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
@@ -193,10 +193,15 @@ const dia15 = async (senderId) => {
                 console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
                 const sixthMessage = idioma === 'ingles' ?
-                    `Have a peaceful night. You’re making an incredible effort, and every day without vaping counts. Stay strong!` :
-                    `Que tengas una noche tranquila. Estás haciendo un esfuerzo increíble y cada día sin vapeo cuenta. ¡Ánimo!`;
+                    `Have a peaceful night. You’re making an incredible effort, and every day without vaping counts. Courage Badge unlocked!` :
+                    `¡Solo los valientes llegan a este punto del viaje! Insignia de Coraje desbloqueada.`;
+
+                const imageUrl = idioma === 'ingles' ?
+                    'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Ingles%2FMedal5_Eng.png?alt=media&token=c9b0dc02-a590-40e6-99da-099a6b665d07' : // Reemplaza con el enlace de la imagen en inglés
+                    'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FMedalla5_Esp.png?alt=media&token=60f2c9b6-8da7-451e-a2b3-63e854d0bdc3'; // Reemplaza con el enlace de la imagen en español
 
                 await sendMessage(senderId, sixthMessage);
+                await sendImageMessage(senderId, imageUrl);
                 console.log(`Mensaje sexto enviado a usuario ${senderId}`);
             }),
 
