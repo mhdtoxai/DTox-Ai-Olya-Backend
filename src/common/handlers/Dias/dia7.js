@@ -104,8 +104,8 @@ const dia7 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `😵‍💫 The hospital called me this morning... They asked if they should hold a spot for you in case you get chronic bronchitis. I told them no because you’re already quitting vaping. Don’t worry 🤝` :
-                    `😵‍💫 Me hablaron del hospital esta mañana... Me dijeron que si te mantienen el lugar por si te da una bronquitis crónica. Les dije que no porque ya estás dejando de vapear. Tú tranqui 🤝`;
+                    `${nombre}, 😵‍💫 The hospital called me this morning... They asked if they should hold a spot for you in case you get chronic bronchitis. I told them no because you’re already quitting vaping. Don’t worry 🤝` :
+                    `${nombre}, 😵‍💫 Me hablaron del hospital esta mañana... Me dijeron que si te mantienen el lugar por si te da una bronquitis crónica. Les dije que no porque ya estás dejando de vapear. Tú tranqui 🤝`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);

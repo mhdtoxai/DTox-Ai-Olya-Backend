@@ -103,8 +103,8 @@ const dia18 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `Midday motivation: 'It’s not about being the best. It’s about being better than you were yesterday.' – Anonymous. Every day counts!` :
-                    `Mediodía motivacional: 'No se trata de ser el mejor. Se trata de ser mejor de lo que eras ayer.' – Anónimo. ¡Cada día cuenta!`;
+                    `Motivational noon for you ${nombre} 'It’s not about being the best. It’s about being better than you were yesterday.' – Anonymous. Every day counts!` :
+                    `Mediodía motivacional para tí ${nombre} 'No se trata de ser el mejor. Se trata de ser mejor de lo que eras ayer.' – Anónimo. ¡Cada día cuenta!`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);

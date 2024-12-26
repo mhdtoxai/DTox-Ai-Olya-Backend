@@ -5,6 +5,7 @@ const sendImageMessage = require('../../services/Wp-Envio-Msj/sendImageMessage')
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
 const dia4 = require('./dia4'); // Asegúrate de ajustar la ruta según tu estructura de archivos
+const sendContactMessage = require('../../services/Wp-Envio-Msj/sendContactMessage');
 const userService = require('../../services/userService');
 const scheduledJobs = {}; // Objeto para almacenar trabajos programados
 
@@ -101,11 +102,18 @@ const dia3 = async (senderId) => {
 
 
         const thirdMessage = idioma === 'ingles' ?
-          `I took a nap and dreamed you quit vaping. I got so excited that I got hungry, so I grabbed a 🍕.\n\nI think you should treat yourself to one too as a reward for your effort. 😋` :
-          `Me tomé una siesta y soñé que dejabas de vapear. Me emocioné y me dio hambre, entonces vine por una 🍕.\n\nSiento que deberías pedirte tú también una para recompensar tu esfuerzo. 😋`;
+          `Hi ${nombre}. 🗣️🗣️ Spread the word and earn $1 for each referral. You just need to share your unique code. Forward the following to anyone you can help improve their health:` :
+          `Hola ${nombre}. 🗣️🗣️ Corre la voz y gana 1USD por cada referido. Únicamente deberás compartirle tu código único. Reenvía lo siguiente a quien puedes ayudar a mejorar su salud:`;
+
+        const thirdMessageCode = idioma === 'ingles' ?
+          `Hey! I already quit vaping, what about you? What are you waiting for?\nThe full program costs $10, and with my code, you get a 15% discount.\n\nDiscount code: [CODE]\n\nWith Olya, freedom is possible.` :
+          `¡Hola! Yo ya dejé de vapear, ¿y tú? ¿Qué esperas?\nEl programa completo cuesta 10USD y con mi código recibes un descuento del 15%.\n\nCódigo de descuento: [CODE]\n\nCon Olya, es posible ser libre.`;
+
 
 
         await sendMessage(senderId, thirdMessage);
+        await sendMessage(senderId, thirdMessageCode);
+        await sendContactMessage(senderId);
         console.log(`Tercer mensaje enviado a usuario ${senderId}`);
 
       }),

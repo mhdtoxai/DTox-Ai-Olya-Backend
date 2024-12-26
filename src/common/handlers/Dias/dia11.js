@@ -106,8 +106,8 @@ const dia11 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `Hi there! 'The key to success is to focus on goals, not obstacles.' – Arthur Ashe. Keep focusing on your goal to quit vaping.` :
-                    `¡Hola! 'La clave para el éxito es centrarse en metas, no en obstáculos.' – Arthur Ashe. Sigue enfocándote en tu objetivo de dejar de vapear.`;
+                    `Hi ${nombre}! 'The key to success is to focus on goals, not obstacles.' – Arthur Ashe. Keep focusing on your goal to quit vaping.` :
+                    `¡Hola ${nombre}! 'La clave para el éxito es centrarse en metas, no en obstáculos.' – Arthur Ashe. Sigue enfocándote en tu objetivo de dejar de vapear.`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);
@@ -144,8 +144,8 @@ const dia11 = async (senderId) => {
                 console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
 
                 const sixthMessage = idioma === 'ingles' ?
-                    `Good night. Each day without vaping brings you closer to your goal. You’re doing an amazing job.` :
-                    `Buenas noches. Cada día sin vapear te acerca más a tu meta. Estás haciendo un gran trabajo.`;
+                    `LET'S GIVE IT! Today was a great day. You're doing a great job. If you could last until 8:15 that would be great. Just to show you that YOU are in control. COME ON!` :
+                    `A DARLE! Hoy fué un gran día. Estás haciendo un gran trabajo. Si pudieras aguantar hasta las 8:15 sería genial. Sólo para demostrarte que TU tienes el control. VAMOS!`;
 
                 await sendMessage(senderId, sixthMessage);
                 console.log(`Mensaje sexto enviado a usuario ${senderId}`);

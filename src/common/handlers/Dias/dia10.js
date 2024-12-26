@@ -107,8 +107,8 @@ const dia10 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `"Before eating, remember: 'Perseverance is not a long race; it is many short races one after the other.' – Walter Elliot. You got this!"` :
-                    `"Antes de comer, ten en mente: 'La perseverancia no es una carrera larga; son muchas carreras cortas una tras otra.' – Walter Elliot. ¡Tú puedes!"`;
+                    `"${nombre}, before eating, remember: 'Perseverance is not a long race; it is many short races one after the other.' – Walter Elliot. You got this!"` :
+                    `"${nombre}, antes de comer, ten en mente: 'La perseverancia no es una carrera larga; son muchas carreras cortas una tras otra.' – Walter Elliot. ¡Tú puedes!"`;
 
                 await sendMessage(senderId, thirdMessage);
 

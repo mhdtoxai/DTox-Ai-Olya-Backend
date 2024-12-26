@@ -108,8 +108,8 @@ const dia19 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
             
                 const thirdMessage = idioma === 'ingles' ?
-                    `One more day to go. You got this!` :
-                    `¡Sólo falta un día! ¡Qué emoción! Ánimo que estás a punto de terminar!`;
+                    `What do you think ${nombre} One more day to go. You got this!` :
+                    `Que crees ${nombre}? ¡Sólo falta un día! ¡Qué emoción! Ánimo que estás a punto de terminar!`;
             
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);

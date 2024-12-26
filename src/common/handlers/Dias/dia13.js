@@ -103,8 +103,8 @@ const dia13 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `"Before eating, remember: 'Success is the ability to go from one failure to another with no loss of enthusiasm.' – Winston Churchill. Don’t give up!"` :
-                    `"Antes de comer, recuerda: 'El éxito es la capacidad de ir de fracaso en fracaso sin perder el entusiasmo.' – Winston Churchill. ¡No te rindas!"`;
+                    `"${nombre}!, before eating, remember: 'Success is the ability to go from one failure to another with no loss of enthusiasm.' – Winston Churchill. Don’t give up!"` :
+                    `"${nombre}!, antes de comer, recuerda: 'El éxito es la capacidad de ir de fracaso en fracaso sin perder el entusiasmo.' – Winston Churchill. ¡No te rindas!"`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);

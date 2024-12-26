@@ -15,9 +15,9 @@ const contactData = {
       },
       "phones": [
         {
-          "phone": "+524871956877",
+          "phone": "+5214871956877",
           "type": "CELL",
-          "wa_id": "524871956877"
+          "wa_id": "5214871956877"
         }
       ],
       "emails": [

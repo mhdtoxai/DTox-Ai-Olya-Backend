@@ -97,8 +97,8 @@ const dia20 = async (senderId) => {
 
                 if (nivel === 'alto' || nivel === 'high') {
                     const secondMessage = idioma === 'ingles' ?
-                        `Did you know that vaping exposes users to ultrafine particles that can penetrate deep into the lungs 🌫️🫁?` :
-                        `¿Sabías que el vapeo expone a los usuarios a partículas ultrafinas que pueden penetrar profundamente en los pulmones 🌫️🫁?`;
+                        `🗣️ Vaping can cause dizziness and nausea` :
+                        `🗣️El vapeo puede provocar mareos y náuseas.`;
 
                     await sendMessage(senderId, secondMessage);
                     console.log(`Mensaje específico enviado para el usuario ${senderId}`);
@@ -109,8 +109,8 @@ const dia20 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `🗣️ Vaping can cause dizziness and nausea` :
-                    `🗣️El vapeo puede provocar mareos y náuseas.`;
+                    `${nombre}, enjoy this special meal! You absolutely deserve it!` :
+                    `${nombre}, ¡disfruta de esta comida especial! ¡Te la mereces absolutamente!`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);
@@ -122,8 +122,8 @@ const dia20 = async (senderId) => {
 
                 if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
                     const fourthMessage = idioma === 'ingles' ?
-                        `Enjoy this special meal! You absolutely deserve it!` :
-                        `¡Disfruta de esta comida especial! ¡Te la mereces absolutamente!`;
+                        `No need to keep stating the obvious. Vaping has nothing good about it.` :
+                        `No hay necesidad de seguir diciendo lo obvio. Vapear no tiene nada bueno.`;
 
                     await sendMessage(senderId, fourthMessage);
                     console.log(`Mensaje sobre piel enviado para el usuario ${senderId}`);

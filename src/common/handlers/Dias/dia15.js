@@ -106,8 +106,8 @@ const dia15 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `Before lunch: 'It doesn’t matter how slow you go, as long as you don’t stop.' – Confucius. Keep moving forward!` :
-                    `Antes del almuerzo: 'No importa cuán despacio vayas, siempre y cuando no te detengas.' – Confucio. ¡Sigue avanzando!`;
+                    `${nombre}!, before lunch: 'It doesn’t matter how slow you go, as long as you don’t stop.' – Confucius. Keep moving forward!` :
+                    `${nombre}!, antes del almuerzo: 'No importa cuán despacio vayas, siempre y cuando no te detengas.' – Confucio. ¡Sigue avanzando!`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);

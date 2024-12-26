@@ -104,8 +104,8 @@ const dia6 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `Pssst Pssst! They’re giving away fresh aguas frescas at the plaza kiosk! They’ve got Lime, Horchata, Jamaica, Guava, and Watermelon. Yuuuuuuummm 😋\n\n 😋 NOT if your vaping though. Sorry!` :
-                    `Pssst Pssst! Están regalando aguas frescas en el quiosco de la plaza! Tienen de Limón, Horchata, Jamaica, Guayaba, y Sandía. ¡Yuuuuuuummm 😋\n\n Pero dicen que si vapeas no te toca. Ni modo... pronto.`;
+                    `Pssst Pssst! ${nombre}, They’re giving away fresh aguas frescas at the plaza kiosk! They’ve got Lime, Horchata, Jamaica, Guava, and Watermelon. Yuuuuuuummm 😋\n\n 😋 NOT if your vaping though. Sorry!` :
+                    `Pssst Pssst! ${nombre}, Están regalando aguas frescas en el quiosco de la plaza! Tienen de Limón, Horchata, Jamaica, Guayaba, y Sandía. ¡Yuuuuuuummm 😋\n\n Pero dicen que si vapeas no te toca. Ni modo... pronto.`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);

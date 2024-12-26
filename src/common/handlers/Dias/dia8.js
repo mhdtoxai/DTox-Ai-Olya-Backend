@@ -103,8 +103,8 @@ const dia8 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `Look... You’ve decided to quit. You and I both know it brings you nothing good. It has no health benefits. So why keep going, right?` :
-                    `A ver... Ya decidiste dejarlo. Tú y yo sabemos que no te trae nada bueno. No tiene beneficio alguno para tu salud. Entonces... ¿Para qué seguir, no crees?`;
+                    `Look ${nombre}... You’ve decided to quit. You and I both know it brings you nothing good. It has no health benefits. So why keep going, right?` :
+                    `A ver ${nombre}... Ya decidiste dejarlo. Tú y yo sabemos que no te trae nada bueno. No tiene beneficio alguno para tu salud. Entonces... ¿Para qué seguir, no crees?`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);

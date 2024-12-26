@@ -106,8 +106,8 @@ const dia5 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `🗯️ I may not have mentioned this, but having a hobby can distract you from vaping, and 72% of users report it has helped them. Have you thought about picking up something new? Reading, painting, or even taking short afternoon walks are great options.` :
-                    `🗯️ No sé si te lo había dicho, pero tener un hobby puede distraerte del vapeo y el 72% de los usuarios reconocen que les ha ayudado. ¿Has pensado en aprender algo nuevo? La lectura, la pintura o incluso las caminatas cortas por la tarde pueden ser excelentes opciones.`;
+                    `🗯️ ${nombre} - I may not have mentioned this, but having a hobby can distract you from vaping, and 72% of users report it has helped them. Have you thought about picking up something new? Reading, painting, or even taking short afternoon walks are great options.` :
+                    `🗯️ ${nombre} - No sé si te lo había dicho, pero tener un hobby puede distraerte del vapeo y el 72% de los usuarios reconocen que les ha ayudado. ¿Has pensado en aprender algo nuevo? La lectura, la pintura o incluso las caminatas cortas por la tarde pueden ser excelentes opciones.`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);

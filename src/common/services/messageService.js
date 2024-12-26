@@ -1,6 +1,7 @@
 const handleLanguageKeywords = require('../handlers/LLMOlya/handleLanguageKeywords ');
 const handleUserByState = require('./handleUserByState');
 const handleCravingKeywords = require('../handlers/LLMOlya/handleCravingKeywords'); // Nuevo módulo para manejar "antojo"
+const handleIntensityKeywords = require('../handlers/LLMOlya/handleIntensityKeywords');
 const LLMOlya = require('../handlers/LLMOlya/LLMOlya'); // Asegúrate de importar tu nueva función
 
 exports.processMessage = async (body) => {
@@ -18,6 +19,11 @@ exports.processMessage = async (body) => {
     // Manejar palabras clave relacionadas con antojos
     const cravingHandled = await handleCravingKeywords(senderId, receivedMessage);
     if (cravingHandled) return;
+
+    // Manejar palabras clave relacionadas con antojos
+    const intensityHandled = await handleIntensityKeywords(senderId, receivedMessage);
+    if (intensityHandled) return;
+
 
     // Manejar consultas generales que no están relacionadas
     await LLMOlya(senderId, receivedMessage); // Usar la nueva función LLMOlya

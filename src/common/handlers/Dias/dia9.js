@@ -106,8 +106,8 @@ const dia9 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `"Midday reminder: 'Success is the sum of small efforts repeated day in and day out.' – Robert Collier. Keep going!"` :
-                    `"A mitad del día, recuerda: 'El éxito es la suma de pequeños esfuerzos repetidos día tras día.' – Robert Collier. ¡Sigue adelante!"`;
+                    `"${nombre}, midday reminder: 'Success is the sum of small efforts repeated day in and day out.' – Robert Collier. Keep going!"` :
+                    `"${nombre}, a mitad del día, recuerda: 'El éxito es la suma de pequeños esfuerzos repetidos día tras día.' – Robert Collier. ¡Sigue adelante!"`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);

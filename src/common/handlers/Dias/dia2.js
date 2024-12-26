@@ -98,11 +98,16 @@ const dia2 = async (senderId) => {
 
             third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
-                // Definir la URL del mensaje en función del idioma del usuario
-                const thirdMessage = idioma === 'ingles'? 
-                'https://drive.google.com/uc?export=download&id=1r9u5OdFrAQGN7MeyKjvU09MteR1RZ_g5' :
-                'https://drive.google.com/uc?export=download&id=1ONRFS3ofK7UsoB3w_2N4dXFy8N7EEu4w'; 
-                await sendAudioMessage(senderId, thirdMessage);
+                // Enviar un mensaje personalizado antes del audio
+                const thirdMessage = idioma === 'ingles' ?
+                 `Hey ${nombre}, how's it going?` :
+                 `Que onda ${nombre}? Cómo vas?`;
+                await sendMessage(senderId, thirdMessage);
+
+                const thirdMessageAudio = idioma === 'ingles' ?
+                    'https://drive.google.com/uc?export=download&id=1r9u5OdFrAQGN7MeyKjvU09MteR1RZ_g5' :
+                    'https://drive.google.com/uc?export=download&id=1ONRFS3ofK7UsoB3w_2N4dXFy8N7EEu4w';
+                await sendAudioMessage(senderId, thirdMessageAudio);
                 console.log(`Tercer mensaje tardes, enviado a usuario ${senderId}`);
 
             }),

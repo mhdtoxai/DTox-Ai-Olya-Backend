@@ -101,8 +101,8 @@ const dia14 = async (senderId) => {
                 console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
 
                 const thirdMessage = idioma === 'ingles' ?
-                    `Midday reminder: 'Every great achievement begins with the decision to try.' – Gail Devers. Your effort counts!` :
-                    `"A la mitad del día: 'Cada gran logro comienza con la decisión de intentarlo.' – Gail Devers. ¡Tu esfuerzo cuenta!"`;
+                    `${nombre}! midday reminder: 'Every great achievement begins with the decision to try.' – Gail Devers. Your effort counts!` :
+                    `${nombre}!, a la mitad del día: 'Cada gran logro comienza con la decisión de intentarlo.' – Gail Devers. ¡Tu esfuerzo cuenta!"`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);
