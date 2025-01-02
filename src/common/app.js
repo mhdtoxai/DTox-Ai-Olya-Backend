@@ -8,6 +8,7 @@ const webhookStripe  = require('./routes/webhookStripe');
 const cuestionarioRoutes  = require('./routes/cuestionarioRoutes');
 const testrespiracionRoutes  = require('./routes/testrespiracionRoutes');
 const userBackupRoutes  = require('./routes/userBackupRoutes');
+const opinionesRoutes  = require('./routes/opinionesRoutes');
 
 
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/user', userRoutes);
 app.use('/api', formRoutes);
+app.use('/api', opinionesRoutes);
 app.use('/api/meta/webhook', webhookRoutes);
 app.use('/api/user', cuestionarioRoutes);
 app.use('/api/test', testrespiracionRoutes);
