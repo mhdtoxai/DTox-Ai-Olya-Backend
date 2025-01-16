@@ -7,7 +7,7 @@ async function createStripeCoupon(code, userId) {
     // Primero, crea el cupón en Stripe
     const coupon = await stripe.coupons.create({
       id: code, // Usa el código del cupón como el ID
-      percent_off: 100,
+      percent_off: 15,
       duration: 'forever', // Permite que el cupón no tenga fecha de vencimiento
       metadata: { userId: userId },
       name:code,
