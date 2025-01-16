@@ -34,7 +34,7 @@ const dia3 = async (senderId) => {
       console.log(`No se encontraron trabajos anteriores para el usuario ${senderId}.`);
     }
     // Obtener la información del usuario incluyendo el nivel y la zona horaria
-    const { idioma, nombre, nivel, timezone } = await getUserInfo(senderId);
+    const { idioma, nombre, nivel, timezone ,codigo } = await getUserInfo(senderId);
 
     // Definir el código de idioma y el nombre de la plantilla
     const languageCode = idioma === 'ingles' ? 'en_US' : 'es_MX';
@@ -106,8 +106,8 @@ const dia3 = async (senderId) => {
           `Hola ${nombre}. 🗣️🗣️ Corre la voz y gana 1USD por cada referido. Únicamente deberás compartirle tu código único. Reenvía lo siguiente a quien puedes ayudar a mejorar su salud:`;
 
         const thirdMessageCode = idioma === 'ingles' ?
-          `Hey! I already quit vaping, what about you? What are you waiting for?\nThe full program costs $10, and with my code, you get a 15% discount.\n\nDiscount code: [CODE]\n\nWith Olya, freedom is possible.` :
-          `¡Hola! Yo ya dejé de vapear, ¿y tú? ¿Qué esperas?\nEl programa completo cuesta 10USD y con mi código recibes un descuento del 15%.\n\nCódigo de descuento: [CODE]\n\nCon Olya, es posible ser libre.`;
+          `Hey! I already quit vaping, what about you? What are you waiting for?\nThe full program costs $10, and with my code, you get a 15% discount.\n\nDiscount code: ${codigo}\n\nWith Olya, freedom is possible.` :
+          `¡Hola! Yo ya dejé de vapear, ¿y tú? ¿Qué esperas?\nEl programa completo cuesta 10USD y con mi código recibes un descuento del 15%.\n\nCódigo de descuento: ${codigo}\n\nCon Olya, es posible ser libre.`;
 
 
 

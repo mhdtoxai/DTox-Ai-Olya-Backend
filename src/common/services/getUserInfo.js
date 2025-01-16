@@ -14,7 +14,8 @@ const getUserInfo = async (senderId) => {
         estado: '', 
         nombre: '', 
         nivel: '', 
-        timezone: '' 
+        timezone: '',
+        codigo: '' 
       };
     }
 
@@ -26,6 +27,7 @@ const getUserInfo = async (senderId) => {
     const nombre = userDataFields.nombre?.stringValue || '';
     const timezone = userDataFields.timezone?.stringValue || '';
     const nivel = userDataFields.nivel?.stringValue || '';
+    const codigo = userDataFields.codigo?.stringValue || '';
 
     // Mostrar toda la información del usuario en la consola
     console.log(`Información del usuario ${senderId}:`);
@@ -34,9 +36,9 @@ const getUserInfo = async (senderId) => {
     console.log(`Nombre: ${nombre}`);
     console.log(`Timezone: ${timezone}`);
     console.log(`Nivel: ${nivel}`);
-
+    console.log(`Codigo: ${codigo}`);
     // Retornar la información del usuario
-    return { idioma, estado, nombre, nivel, timezone };
+    return { idioma, estado, nombre, nivel, timezone, codigo };
   } catch (error) {
     console.error(`Error al obtener información del usuario ${senderId}:`, error);
     // En lugar de propagar el error, retorna un objeto con valores vacíos
@@ -45,7 +47,8 @@ const getUserInfo = async (senderId) => {
       estado: '', 
       nombre: '', 
       nivel: '', 
-      timezone: '' 
+      timezone: '',
+      codigo: '' 
     }; 
   }
 };

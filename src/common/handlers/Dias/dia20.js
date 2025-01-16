@@ -6,6 +6,7 @@ const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone');
 const axios = require('axios');
 const scheduledJobs = {}; // Objeto para almacenar trabajos programados
+const dia21 = require('./dia21'); 
 const userService = require('../../services/userService');
 
 // Función para cancelar trabajos programados
@@ -132,40 +133,51 @@ const dia20 = async (senderId) => {
 
             testrep: schedule.scheduleJob(`MensajeTestRep ${senderId}`, { hour: serverTimes.testrep.hours(), minute: serverTimes.testrep.minutes() }, async () => {
                 console.log(`Programado mensaje de retención pulmonar ${senderId} a las ${serverTimes.testrep.format()}`);
-
+            
                 try {
                     // Realiza la solicitud POST a la API para obtener los resultados
                     const response = await axios.post('https://olya.club/api/test/testrespiracion/obtenerpruebas', {
                         userId: senderId
                     });
-
+            
                     // Extrae los datos recibidos de la API
                     const results = response.data;
-
-                    // Encuentra los scores de los resultados con id 1 y el primer id disponible desde 5 hacia abajo
-                    const score1 = results.find(result => result.id === "1").score;
-
-                    let score5;
-                    for (let id = 5; id >= 1; id--) {
-                        const result = results.find(result => result.id === id.toString());
-                        if (result) {
-                            score5 = result.score;
-                            break;
+            
+                    // Encontrar el primer score válido (no 0)
+                    let score1;
+                    for (let id = 1; id <= 5; id++) {
+                        const result = results.find(r => r.id === id.toString());
+                        if (result && result.score !== 0) {
+                            score1 = result.score;
+                            console.log(`Score1 encontrado en id ${id}: ${score1}`);
+                            break;  // Sale del bucle una vez que encuentra un score válido
                         }
                     }
-
-                    if (score5 === undefined) {
-                        throw new Error("No se encontró un resultado válido para el id 5 o menor.");
+            
+                    if (score1 === undefined) {
+                        throw new Error("No se encontró un score válido que no sea 0.");
                     }
-
-                    // Calcula el porcentaje de cambio respecto al score del primer resultado
+            
+                    // Buscar el último score disponible si el score 5 no está
+                    let score5 = results.find(r => r.id === "5");
+                    if (!score5) {
+                        score5 = results[results.length - 1];  // Toma el último valor disponible
+                    }
+            
+                    if (!score5 || score5.score === undefined) {
+                        throw new Error("No se encontró un score válido para el id 5 o el último disponible.");
+                    }
+            
+                    score5 = score5.score;
+            
+                    // Calcula el porcentaje de cambio respecto al primer resultado válido
                     const difference = score5 - score1;
                     const percentageChange = ((difference / score1) * 100).toFixed(2);
-
+            
                     // Determina el status y el emoji correspondiente
                     let status;
                     let emoji;
-
+            
                     if (percentageChange > 0) {
                         status = 'mejoró';
                         emoji = '💪🤟';
@@ -176,12 +188,12 @@ const dia20 = async (senderId) => {
                         status = 'no mejoró ni empeoró';
                         emoji = '🙏';
                     }
-
+            
                     // Construye el mensaje basado en el idioma
                     const historyMessage = idioma === 'ingles' ?
-                        `Your lung retention test report: ${status} with a [${Math.abs(percentageChange)}%] retention rate ${emoji} .Quitting vaping will gradually increase it. I recommend following these exercises to help clear your lungs."` :
+                        `Your lung retention test report: ${status} with a [${Math.abs(percentageChange)}%] retention rate ${emoji}. Quitting vaping will gradually increase it. I recommend following these exercises to help clear your lungs.` :
                         `Tu informe de pruebas de retención pulmonar: ${status} en [${Math.abs(percentageChange)}%] tu retención. ${emoji}. Dejar de vapear la incrementará paulatinamente. Te recomiendo seguir estos ejercicios para limpiar tus pulmones.`;
-
+            
                     // Envía el mensaje al usuario
                     await sendMessage(senderId, historyMessage);
                     console.log(`Mensaje resultado prueba enviado para el usuario ${senderId} con el informe de retención pulmonar.`);
@@ -189,6 +201,7 @@ const dia20 = async (senderId) => {
                     console.error(`Error al obtener las pruebas para el usuario ${senderId}:`, error);
                 }
             }),
+            
 
             fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
                 console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
@@ -255,31 +268,10 @@ const dia20 = async (senderId) => {
                 } else {
                     console.log(`No se encontraron trabajos programados para cancelar.`);
                 }
-
-
                 // Actualizar el estado
-                await userService.updateUser(senderId, { estado: 'programafinalizado' });
-
-                // Hacer la llamada a la API para realizar el backup y eliminar el usuario
-                try {
-                    const response = await fetch('https://olya.club/api/backup/user', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ senderId })
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log(`Respuesta de la API: ${data.mensaje}`);
-                    } else {
-                        console.error('Error al realizar el backup y eliminar el usuario');
-                    }
-                } catch (error) {
-                    console.error('Error en la solicitud a la API:', error);
-                }
-
+                await userService.updateUser(senderId, { estado: 'dia21' });
+                // Llamar a dia 21 después de cancelar todos los trabajos
+                await dia21(senderId);
             })
         };
 

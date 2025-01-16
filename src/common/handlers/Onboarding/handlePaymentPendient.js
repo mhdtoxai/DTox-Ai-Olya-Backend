@@ -76,7 +76,6 @@ const handlePaymentPendient = async (senderId) => {
     // Actualizar el estado del usuario y el estado de membresía
     await userService.updateUser(senderId, { membresia: 'inactiva' });
 
-    // Verificación después de 30 segundos
     setTimeout(async () => {
       const membresiaStatus = await checkMembershipStatus(senderId);
 

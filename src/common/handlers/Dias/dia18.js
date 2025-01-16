@@ -5,6 +5,7 @@ const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget
 const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
 const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
 const dia19 = require('./dia19'); // Asegúrate de ajustar la ruta según tu estructura de archivos
+const userService = require('../../services/userService');
 
 const scheduledJobs = {}; // Objeto para almacenar trabajos programados
 
@@ -181,6 +182,8 @@ const dia18 = async (senderId) => {
                 } else {
                     console.log(`No se encontraron trabajos programados para cancelar.`);
                 }
+
+                await userService.updateUser(senderId, { estado: 'dia19' });
 
                 // Llamar a dia 19 después de cancelar todos los trabajos
                 await dia19(senderId);

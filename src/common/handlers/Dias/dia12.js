@@ -103,7 +103,7 @@ const dia12 = async (senderId) => {
 
                 const thirdMessage = idioma === 'ingles' ?
                     ` ${nombre}! lunchtime motivation: 'You don’t have to be perfect to achieve it, just persistent.' – Anonymous. Keep it up!"` :
-                    ` ${nombre}! It's time for a motivational lunch: 'No tienes que ser perfecto para lograrlo, solo persistente.' – Anónimo. ¡Sigue así!"`;
+                    ` ${nombre}! Es hora de un almuerzo motivacional: 'No tienes que ser perfecto para lograrlo, solo persistente.' – Anónimo. ¡Sigue así!"`;
 
                 await sendMessage(senderId, thirdMessage);
                 console.log(`Tercer mensaje enviado a usuario ${senderId}`);

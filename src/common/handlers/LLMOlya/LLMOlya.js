@@ -13,6 +13,8 @@ const LLMOlya = async (senderId, receivedMessage) => {
 
   const userData = userDoc.data();
   const estadoUsuario = userData.estado;
+  const idiomaUsuario = userData.idioma; // Extraer el idioma del usuario
+
 
   // Lista de estados excluidos
   const estadosExcluidos = [
@@ -36,6 +38,8 @@ const LLMOlya = async (senderId, receivedMessage) => {
   const body = {
     from: senderId,
     query: receivedMessage,
+    idioma: idiomaUsuario // Incluir el idioma en el cuerpo de la solicitud
+
   };
 
   try {
