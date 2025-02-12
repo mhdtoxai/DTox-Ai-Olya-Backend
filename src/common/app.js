@@ -9,7 +9,8 @@ const cuestionarioRoutes  = require('./routes/cuestionarioRoutes');
 const testrespiracionRoutes  = require('./routes/testrespiracionRoutes');
 const userBackupRoutes  = require('./routes/userBackupRoutes');
 const opinionesRoutes  = require('./routes/opinionesRoutes');
-
+const taskRoutes = require('./routes/taskRoutes');
+const estadoRoutes = require('./routes/estadoRoutes');
 
 
 const cors = require('cors');
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configura la carpeta pública para servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
+  
 app.use('/api/user', userRoutes);
 app.use('/api', formRoutes);
 app.use('/api', opinionesRoutes);
@@ -37,7 +39,8 @@ app.use('/api/meta/webhook', webhookRoutes);
 app.use('/api/user', cuestionarioRoutes);
 app.use('/api/test', testrespiracionRoutes);
 app.use('/api/backup', userBackupRoutes);
-
+app.use('/api', taskRoutes);
+app.use('/api', estadoRoutes);
 
 module.exports = app;
 

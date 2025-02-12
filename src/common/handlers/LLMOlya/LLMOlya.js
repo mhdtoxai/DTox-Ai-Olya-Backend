@@ -14,8 +14,25 @@ const LLMOlya = async (senderId, receivedMessage) => {
   const userData = userDoc.data();
   const estadoUsuario = userData.estado;
   const idiomaUsuario = userData.idioma; // Extraer el idioma del usuario
+  let plantilla = userData.plantilla;  // Recuperamos el contenido de la plantilla guardada
+
+  // Variable para almacenar la respuesta
+  let respuesta = '';
+
+  // Si hay una plantilla, concatenamos el mensaje del usuario con la plantilla
+  if (plantilla) {
+    respuesta = `${plantilla} El usuario respondió: "${receivedMessage}"`;
+
+    // Eliminar la plantilla después de haberla usado
+    await userService.updateUser(senderId, { plantilla: "" });  // Suprime la plantilla de la base de datos
+  } else {
+    // Si no hay plantilla, solo usamos el mensaje del usuario
+    respuesta = receivedMessage;
+  }
 
 
+    // Ver en consola la respuesta que se va a enviar
+    console.log('Mensaje del Usuario al => LLM => ', respuesta);
   // Lista de estados excluidos
   const estadosExcluidos = [
     'idiomaseleccionado',
@@ -33,13 +50,12 @@ const LLMOlya = async (senderId, receivedMessage) => {
   }
 
   const url = 'https://api-olya.saptiva.com/olya';
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyNzk5MTEwMSwiaWF0IjoxNzI3OTkxMTAxfQ.qtTiySvK_DB1xVfWrGztWPHrlzRoD2xVe9JRnDSTrqk'; 
+  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyNzk5MTEwMSwiaWF0IjoxNzI3OTkxMTAxfQ.qtTiySvK_DB1xVfWrGztWPHrlzRoD2xVe9JRnDSTrqk';
 
   const body = {
     from: senderId,
-    query: receivedMessage,
+    query: respuesta, // Enviar el mensaje con el contexto concatenado
     idioma: idiomaUsuario // Incluir el idioma en el cuerpo de la solicitud
-
   };
 
   try {
@@ -64,4 +80,3 @@ const LLMOlya = async (senderId, receivedMessage) => {
 };
 
 module.exports = LLMOlya;
-

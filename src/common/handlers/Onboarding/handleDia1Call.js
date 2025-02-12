@@ -1,74 +1,69 @@
-const schedule = require('node-schedule');
-const userService = require('../../services/userService');
-const moment = require('moment-timezone');
-const dia1 = require('../Dias/dia1'); // Ajusta la ruta según tu estructura de archivos
+const scheduleTask = require('../../services/cloudTasksService'); // Asegúrate de tener esta función de Cloud Tasks
 const getUserInfo = require('../../services/getUserInfo');
-const scheduledJobs = {}; // Objeto para almacenar trabajos programados
+const moment = require('moment-timezone');
 
 const handleDia1Call = async (senderId) => {
   try {
-    // Obtener la información del usuario
-    const { timezone } = await getUserInfo(senderId);
+    // Obtener información del usuario (incluyendo zona horaria e idioma)
+    const { timezone, idioma } = await getUserInfo(senderId);
 
-    // Validar que timezone sea una cadena válida
-    if (typeof timezone !== 'string' || !moment.tz.names().includes(timezone)) {
-      throw new Error(`Zona horaria no válida: ${timezone}`);
-    }
+    // Determinar la plantilla según el idioma del usuario
+    const plantilla = idioma === 'ingles'
+      ? `☀️Good morning! Today is your first day of the program 😎. At Olya AI we are very proud that you have decided to embark on this path. Your task today is very simple. Hold off the urge to vape as late as possible. When you can't stand it anymore, relax and enjoy what you have stood. Even if it's an hour, it doesn't matter`
+      : `☀️¡Buenos días! Hoy es tu primer día del programa 😎. En Olya AI nos sentimos muy orgullosos de que hayas decidido embarcarte en este camino. Tu tarea de hoy es muy sencilla. Aguanta las ganas de vapear lo más tarde que puedas. Cuando ya no aguantes, relájate y disfruta lo que hayas aguantado. Así sea una hora, no importa`;
 
-    console.log(`Programando la llamada a dia1 para el usuario ${senderId} al final del día en su zona horaria`);
 
-    // Verificar y cancelar trabajos existentes al inicio
-    if (scheduledJobs[senderId] && scheduledJobs[senderId].dia1Call) {
-      console.log(`Cancelando trabajos anteriores de dia1 para el usuario ${senderId}`);
-      const job = scheduledJobs[senderId].dia1Call;
-      console.log(`Cancelando trabajo: dia1Call programado para ${job.nextInvocation().toString()}`);
-      const wasCancelled = job.cancel(); // Intentar cancelar el trabajo
-      if (wasCancelled) {
-        console.log(`Trabajo dia1Call fue cancelado con éxito.`);
+    console.log(`🌍 Zona horaria del usuario: ${timezone}`);
+    // Función para convertir la hora local del usuario a UTC
+    const convertToUTC = (time) => {
+      const localTime = moment.tz(time, 'HH:mm', timezone).set({
+        year: moment().tz(timezone).year(),
+        month: moment().tz(timezone).month(),
+        date: moment().tz(timezone).date(),
+      });
+
+      const utcTime = localTime.clone().utc();
+
+      return utcTime;
+    };
+    // Definir los horarios en UTC
+    const times = {
+
+      dia1Transition: convertToUTC('00:00'), 
+    };
+
+    // Obtener la hora actual en UTC
+    const nowUTC = moment().utc();
+
+    const scheduleMessage = async (message, scheduledTime, eventName) => {
+      // Usar scheduledTime directamente
+      if (scheduledTime.isBefore(nowUTC)) {
+        console.log(`⚠️ La hora programada (${scheduledTime.format('YYYY-MM-DD HH:mm:ss')} UTC) ya pasó. Se programará para el día siguiente.`);
+        scheduledTime.add(1, 'day'); // Mover al día siguiente
       } else {
-        console.log(`No se pudo cancelar el trabajo dia1Call.`);
+        console.log(`🕒 Hora en UTC: ${scheduledTime.format('YYYY-MM-DD HH:mm:ss')} UTC`);
       }
-      delete scheduledJobs[senderId];
-    }
+    
+      console.log(`🌍 Equivalente en ${timezone}: ${scheduledTime.clone().tz(timezone).format('YYYY-MM-DD HH:mm:ss')}`);
+    
+      const timestamp = Date.now(); // Obtener timestamp actual
+      message.taskName = `${message.senderId}_${eventName}_${timestamp}`;
+    
+      await scheduleTask(message, scheduledTime.toDate());
+      console.log(`✅ Tarea programada para: ${scheduledTime.format('YYYY-MM-DD HH:mm:ss')} UTC`);
+    };
+    
+    await scheduleMessage({
+      senderId,
+      type: 'estado',
+      estado: 'dia1', // 🔥 Cambia al siguiente día
+      plantilla: plantilla,
+    }, times.dia1Transition, 'dia1_transition');
 
-    // Calcular el final del día en la zona horaria del usuario
-    const userTime = moment().tz(timezone); // Hora actual en la zona horaria del usuario
-    const endOfDay = userTime.clone().endOf('day'); // Final del día en la zona horaria del usuario
-
-    // Mostrar el tiempo restante hasta el final del día
-    const timeRemaining = endOfDay.diff(userTime); // Diferencia en milisegundos
-    console.log(`*Tiempo restante hasta el final del día para el usuario ${senderId}: ${moment.duration(timeRemaining).humanize()}*`);
-
-    // Mostrar la hora exacta en la que se programará la llamada a dia1
-    console.log(`*La llamada a la función dia1 se programará para: ${endOfDay.format('YYYY-MM-DD HH:mm:ss')} en la zona horaria del usuario (${timezone})*`);
-
-    // Programar la llamada a la función dia1 para el final del día
-    const dia1Job = schedule.scheduleJob(endOfDay.toDate(), async () => {
-      try {
-        // Actualizar el estado del usuario a 'dia1' antes de ejecutar la función dia1
-        await userService.updateUser(senderId, { estado: 'dia1' });
-        console.log(`Estado del usuario ${senderId} actualizado a 'dia1'`);
-
-        // Ejecutar la función dia1
-        await dia1(senderId);
-        console.log(`*Función dia1 llamada al final del día para el usuario ${senderId}*`);
-        
-      } catch (error) {
-        console.error(`Error al ejecutar la función dia1 o al actualizar el estado para el usuario ${senderId}:`, error);
-        // Aquí podrías agregar lógica para manejar el error, como reintentar o notificar al usuario/administrador.
-      }
-    });
-
-    // Almacenar el trabajo programado en scheduledJobs
-    if (!scheduledJobs[senderId]) {
-      scheduledJobs[senderId] = {}; // Inicializar objeto si no existe
-    }
-    scheduledJobs[senderId].dia1Call = dia1Job;
-
-    console.log(`*Función dia1 programada para llamarse al final del día*`);
+    console.log(`📅 Mensajes programados para el usuario ${senderId} para ejecutar dia1`);
 
   } catch (error) {
-    console.error(`Error al programar la llamada a dia1 para el usuario ${senderId}:`, error);
+    console.error(`❌ Error al programar la llamada a dia1 para el usuario ${senderId}:`, error);
   }
 };
 
