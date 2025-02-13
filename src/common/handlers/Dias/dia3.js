@@ -12,10 +12,10 @@ const dia3 = async (senderId) => {
     'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Ingles%2FMedal2_Eng.png?alt=media&token=d2a12a1d-6345-4692-a784-e09c2143ada9' : // Reemplaza con el enlace de la imagen en inglés
     'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FMedalla2_Esp.png?alt=media&token=73c0b2bd-1a1b-49a9-87f9-2d2479d35d92'; // Reemplaza con el enlace de la imagen en español
 
-    const plantilla = idioma === 'ingles'
-      ? `🏃🏃‍♀️🏃‍♂️💨 🏃🏃‍♀️🏃‍♂️💨 🏃🏃‍♀️🏃‍♂️ Wow! A group of people running! How inspiring. Soon, you’ll be able to join them! Let’s go! Have an awesome day! Today, no vaping until 2️⃣ PM. Yay!`
-      : `🏃🏃‍♀️🏃‍♂️💨 🏃🏃‍♀️🏃‍♂️💨 🏃🏃‍♀️🏃‍♂️ Woow!, Un grupo de personas corriendo! Que inspirador ¡Pronto podrás unirte a su grupo! Vamos!! Que tengas excelente día! Hoy no hay vape hasta las 2️⃣PM. Yei!`
-
+    
+      const plantilla = idioma === 'ingles'
+      ? `Today is the day! What day? Day 3️⃣ of the program. Get ready, you’ve already seen that you can do this! Let’s hold out until 1 PM without vaping 💪💪💪💪💪.\n\nYou’re not alone! Today, 6️⃣,2️⃣2️⃣8️⃣ other people are also on Day 3. It’s a great challenge, and remember, when a craving hits, just say CRAVING and we’ll get through it together. LET’S GO! 🚀`
+      : `¡Es hoy es hoy! ¿Qué es hoy? El día 3️⃣ del programa. ¡Ármate de valor, ya viste que sí puedes! Aguantemos hasta la 1PM sin vape 💪💪💪💪💪.\n\n¡No estás solo! El día de hoy 6️⃣,2️⃣2️⃣8️⃣ personas más están también en el día 3. Es un buen reto, recuerda que cuando tengas un antojo solo deberás decir ANTOJO y lo superamos juntos. ¡VAMOS! 🚀`;
 
     console.log(`🌍 Zona horaria del usuario: ${timezone}`);
     // Función para convertir la hora local del usuario a UTC
@@ -75,6 +75,7 @@ const dia3 = async (senderId) => {
       languageCode: idioma === 'ingles'
         ? 'en_US'
         : 'es_MX',
+      plantilla: plantilla,
     }, times.morning, 'morning');
 
 
@@ -176,7 +177,6 @@ const dia3 = async (senderId) => {
       senderId,
       type: 'estado',
       estado: 'dia4', // 🔥 Cambia al siguiente día
-      plantilla: plantilla,
     }, times.dia4Transition, 'dia4_transition');
 
     console.log(`📅 Mensajes programados para el usuario ${senderId}`);

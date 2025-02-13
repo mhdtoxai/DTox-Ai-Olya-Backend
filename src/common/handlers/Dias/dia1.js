@@ -12,10 +12,11 @@ const dia1 = async (senderId) => {
       ? 'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Ingles%2FMedal1_Eng.png?alt=media&token=5a4280c0-8870-491a-bfc2-9cb2ae647a51'
       : 'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FMedalla1_Esp.png?alt=media&token=beed2d31-3ace-40d6-8b8b-bb6793666dd4';
 
+  
+    // Determinar la plantilla según el idioma del usuario
     const plantilla = idioma === 'ingles'
-      ? `Once upon a time 🌟, there was an extraordinary being 👑 who realized 🧠 that health 🏥 is the most important thing. Without it, nothing is possible 🚫. That extraordinary being 🌟 is YOU! 👈\n\nDay 2... Cut down your vaping time by just one minute ⏱️ compared to yesterday. If you can do more ⏳, even better 👍\n\nActually… I dare you 🤜 not to vape 🚭 in the AM 🌅, only in the PM 🌜. Today's challenge: vape as much as you want 😈 from 12 PM 🕛 to 11:59 PM 🕛, or until you go to bed 🛏️. LET’S GO! 🚀`
-      : `Érase una vez 🌟 un ser extraordinario 👑 que se dio cuenta 🧠 de que la salud 🏥 es lo más importante. Sin ella, nada será posible 🚫. Ese ser extraordinario 🌟 ¡eres tú! 👈\n\nDía 2... Reduce un minuto ⏱️ tu consumo en comparación con ayer. Si puedes más ⏳, ¡pues qué mejor! 👍\n\nEs más... Te reto 🤜 a que no vapees 🚭 en horarios AM 🌅, solo PM 🌜. El reto de hoy: vapea lo que quieras 😈 de 12 PM 🕛 a 11:59 PM 🕛, o hasta la hora en que te duermas 🛏️. ¡VAMOS! 🚀`;
-
+      ? `☀️Good morning! Today is your first day of the program 😎. At Olya AI we are very proud that you have decided to embark on this path. Your task today is very simple. Hold off the urge to vape as late as possible. When you can't stand it anymore, relax and enjoy what you have stood. Even if it's an hour, it doesn't matter`
+      : `☀️¡Buenos días! Hoy es tu primer día del programa 😎. En Olya AI nos sentimos muy orgullosos de que hayas decidido embarcarte en este camino. Tu tarea de hoy es muy sencilla. Aguanta las ganas de vapear lo más tarde que puedas. Cuando ya no aguantes, relájate y disfruta lo que hayas aguantado. Así sea una hora, no importa`;
 
     console.log(`🌍 Zona horaria del usuario: ${timezone}`);
     // Función para convertir la hora local del usuario a UTC
@@ -75,6 +76,7 @@ const dia1 = async (senderId) => {
       languageCode: idioma === 'ingles'
         ? 'en_US'
         : 'es_MX',
+      plantilla: plantilla,
     }, times.morning, 'morning');
 
 
@@ -158,7 +160,6 @@ const dia1 = async (senderId) => {
       senderId,
       type: 'estado',
       estado: 'dia2', // 🔥 Cambia al siguiente día
-      plantilla: plantilla,
     }, times.dia2Transition, 'dia2_transition');
 
     console.log(`📅 Mensajes programados para el usuario ${senderId}`);

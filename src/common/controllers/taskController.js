@@ -5,10 +5,11 @@ const userService = require('../services/userService'); // Asegúrate de que est
 const diasRoutes = require('../handlers/Dias/diasRoutes'); // Ajusta esta ruta según sea necesario
 const sendAudioMessage = require('../services/Wp-Envio-Msj/sendAudioMessage');
 const sendContactMessage = require('../services/Wp-Envio-Msj/sendContactMessage');
+const RecUrl = require('../handlers/Dias/RecUrl'); // Ajusta esta ruta según sea necesario
 
 const runTask = async (req, res) => {
   try {
-    const { senderId, type, message, templateName, languageCode, imageUrl, estado, plantilla, audioUrl } = req.body;
+    const { senderId, type, message, templateName, languageCode, imageUrl, estado, plantilla, audioUrl, testId } = req.body;
 
     // console.log("🔍 Datos recibidos en runTask:", req.body);
 
@@ -16,6 +17,11 @@ const runTask = async (req, res) => {
       await sendMessage(senderId, message);
     }
     else if (type === 'template') {
+      // Actualizar la plantilla en la base de datos
+      if (plantilla) {
+        await userService.updateUser(senderId, { plantilla });
+      }
+      // Enviar el mensaje de plantilla
       await sendTemplateMessage(senderId, templateName, languageCode);
     }
     else if (type === 'image') {
@@ -27,14 +33,13 @@ const runTask = async (req, res) => {
     else if (type === 'contactcard') {
       await sendContactMessage(senderId);
     }
+    else if (type === 'checktest') {
+      await RecUrl(senderId,message,testId);
+    }
+    
     else if (type === 'estado') {
-
-      console.log(`🔄 Actualizando estado del usuario ${senderId} a: ${estado}`);
-
-      const updateData = { estado };
-      if (plantilla) updateData.plantilla = plantilla;
-
-      await userService.updateUser(senderId, updateData);
+      // Solo actualizamos el estado, sin tocar la plantilla
+      await userService.updateUser(senderId, { estado });
 
       if (diasRoutes[estado]) {
         console.log(`🔄 Ejecutando la función para el estado ${estado}`);
@@ -54,6 +59,5 @@ const runTask = async (req, res) => {
     res.status(500).send({ success: false, error: error.message });
   }
 };
-
 
 module.exports = runTask;

@@ -5,12 +5,7 @@ const moment = require('moment-timezone');
 const handleDia1Call = async (senderId) => {
   try {
     // Obtener información del usuario (incluyendo zona horaria e idioma)
-    const { timezone, idioma } = await getUserInfo(senderId);
-
-    // Determinar la plantilla según el idioma del usuario
-    const plantilla = idioma === 'ingles'
-      ? `☀️Good morning! Today is your first day of the program 😎. At Olya AI we are very proud that you have decided to embark on this path. Your task today is very simple. Hold off the urge to vape as late as possible. When you can't stand it anymore, relax and enjoy what you have stood. Even if it's an hour, it doesn't matter`
-      : `☀️¡Buenos días! Hoy es tu primer día del programa 😎. En Olya AI nos sentimos muy orgullosos de que hayas decidido embarcarte en este camino. Tu tarea de hoy es muy sencilla. Aguanta las ganas de vapear lo más tarde que puedas. Cuando ya no aguantes, relájate y disfruta lo que hayas aguantado. Así sea una hora, no importa`;
+    const { timezone } = await getUserInfo(senderId);
 
 
     console.log(`🌍 Zona horaria del usuario: ${timezone}`);
@@ -57,7 +52,6 @@ const handleDia1Call = async (senderId) => {
       senderId,
       type: 'estado',
       estado: 'dia1', // 🔥 Cambia al siguiente día
-      plantilla: plantilla,
     }, times.dia1Transition, 'dia1_transition');
 
     console.log(`📅 Mensajes programados para el usuario ${senderId} para ejecutar dia1`);

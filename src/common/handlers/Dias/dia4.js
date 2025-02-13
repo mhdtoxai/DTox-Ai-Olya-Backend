@@ -8,10 +8,10 @@ const dia4 = async (senderId) => {
     // Obtener información del usuario
     const { idioma, nombre, nivel, timezone } = await getUserInfo(senderId);
 
- 
-    const plantilla = idioma === 'ingles'
-      ? `Good morning, 🌅 Today is a new day full of opportunities. Remember, every little victory counts. Start your day with a deep, fresh breath! Today’s challenge? Don’t reach for your vape before 3️⃣ PM. YOU GOT THIS!`
-      : `Buenos días, 🌅 Hoy es un nuevo día lleno de oportunidades. Recuerda, cada pequeña victoria cuenta. ¡Empieza tu día con una respiración profunda y fresca! ¿El reto de hoy? No tomes tu vape antes de las 3️⃣PM. ¡TU PUEDES!`
+
+      const plantilla = idioma === 'ingles'
+      ? `🏃🏃‍♀️🏃‍♂️💨 🏃🏃‍♀️🏃‍♂️💨 🏃🏃‍♀️🏃‍♂️ Wow! A group of people running! How inspiring. Soon, you’ll be able to join them! Let’s go! Have an awesome day! Today, no vaping until 2️⃣ PM. Yay!`
+      : `🏃🏃‍♀️🏃‍♂️💨 🏃🏃‍♀️🏃‍♂️💨 🏃🏃‍♀️🏃‍♂️ Woow!, Un grupo de personas corriendo! Que inspirador ¡Pronto podrás unirte a su grupo! Vamos!! Que tengas excelente día! Hoy no hay vape hasta las 2️⃣PM. Yei!`
 
 
     console.log(`🌍 Zona horaria del usuario: ${timezone}`);
@@ -72,6 +72,7 @@ const dia4 = async (senderId) => {
       languageCode: idioma === 'ingles'
         ? 'en_US'
         : 'es_MX',
+      plantilla: plantilla,
     }, times.morning, 'morning');
 
 
@@ -149,7 +150,6 @@ const dia4 = async (senderId) => {
       senderId,
       type: 'estado',
       estado: 'dia5', // 🔥 Cambia al siguiente día
-      plantilla: plantilla,
     }, times.dia5Transition, 'dia5_transition');
 
     console.log(`📅 Mensajes programados para el usuario ${senderId}`);

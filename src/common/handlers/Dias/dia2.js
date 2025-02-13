@@ -12,10 +12,11 @@ const dia2 = async (senderId) => {
             ? 'https://drive.google.com/uc?export=download&id=1r9u5OdFrAQGN7MeyKjvU09MteR1RZ_g5'
             : 'https://drive.google.com/uc?export=download&id=1ONRFS3ofK7UsoB3w_2N4dXFy8N7EEu4w';
 
-        const plantilla = idioma === 'ingles'
-            ? `Today is the day! What day? Day 3️⃣ of the program. Get ready, you’ve already seen that you can do this! Let’s hold out until 1 PM without vaping 💪💪💪💪💪.\n\nYou’re not alone! Today, 6️⃣,2️⃣2️⃣8️⃣ other people are also on Day 3. It’s a great challenge, and remember, when a craving hits, just say CRAVING and we’ll get through it together. LET’S GO! 🚀`
-            : `¡Es hoy es hoy! ¿Qué es hoy? El día 3️⃣ del programa. ¡Ármate de valor, ya viste que sí puedes! Aguantemos hasta la 1PM sin vape 💪💪💪💪💪.\n\n¡No estás solo! El día de hoy 6️⃣,2️⃣2️⃣8️⃣ personas más están también en el día 3. Es un buen reto, recuerda que cuando tengas un antojo solo deberás decir ANTOJO y lo superamos juntos. ¡VAMOS! 🚀`;
-
+      
+            const plantilla = idioma === 'ingles'
+            ? `Once upon a time 🌟, there was an extraordinary being 👑 who realized 🧠 that health 🏥 is the most important thing. Without it, nothing is possible 🚫. That extraordinary being 🌟 is YOU! 👈\n\nDay 2... Cut down your vaping time by just one minute ⏱️ compared to yesterday. If you can do more ⏳, even better 👍\n\nActually… I dare you 🤜 not to vape 🚭 in the AM 🌅, only in the PM 🌜. Today's challenge: vape as much as you want 😈 from 12 PM 🕛 to 11:59 PM 🕛, or until you go to bed 🛏️. LET’S GO! 🚀`
+            : `Érase una vez 🌟 un ser extraordinario 👑 que se dio cuenta 🧠 de que la salud 🏥 es lo más importante. Sin ella, nada será posible 🚫. Ese ser extraordinario 🌟 ¡eres tú! 👈\n\nDía 2... Reduce un minuto ⏱️ tu consumo en comparación con ayer. Si puedes más ⏳, ¡pues qué mejor! 👍\n\nEs más... Te reto 🤜 a que no vapees 🚭 en horarios AM 🌅, solo PM 🌜. El reto de hoy: vapea lo que quieras 😈 de 12 PM 🕛 a 11:59 PM 🕛, o hasta la hora en que te duermas 🛏️. ¡VAMOS! 🚀`;
+      
 
         console.log(`🌍 Zona horaria del usuario: ${timezone}`);
         // Función para convertir la hora local del usuario a UTC
@@ -51,21 +52,21 @@ const dia2 = async (senderId) => {
         const scheduleMessage = async (message, scheduledTime, eventName) => {
             // Usar scheduledTime directamente
             if (scheduledTime.isBefore(nowUTC)) {
-              console.log(`⚠️ La hora programada (${scheduledTime.format('YYYY-MM-DD HH:mm:ss')} UTC) ya pasó. Se programará para el día siguiente.`);
-              scheduledTime.add(1, 'day'); // Mover al día siguiente
+                console.log(`⚠️ La hora programada (${scheduledTime.format('YYYY-MM-DD HH:mm:ss')} UTC) ya pasó. Se programará para el día siguiente.`);
+                scheduledTime.add(1, 'day'); // Mover al día siguiente
             } else {
-              console.log(`🕒 Hora en UTC: ${scheduledTime.format('YYYY-MM-DD HH:mm:ss')} UTC`);
+                console.log(`🕒 Hora en UTC: ${scheduledTime.format('YYYY-MM-DD HH:mm:ss')} UTC`);
             }
-          
+
             console.log(`🌍 Equivalente en ${timezone}: ${scheduledTime.clone().tz(timezone).format('YYYY-MM-DD HH:mm:ss')}`);
-          
+
             const timestamp = Date.now(); // Obtener timestamp actual
             message.taskName = `${message.senderId}_dia2_${eventName}_${timestamp}`;
-          
+
             await scheduleTask(message, scheduledTime.toDate());
             console.log(`✅ Tarea programada para: ${scheduledTime.format('YYYY-MM-DD HH:mm:ss')} UTC`);
-          };
-          
+        };
+
 
 
         await scheduleMessage({
@@ -75,6 +76,7 @@ const dia2 = async (senderId) => {
             languageCode: idioma === 'ingles'
                 ? 'en_US'
                 : 'es_MX',
+            plantilla: plantilla,
         }, times.morning, 'morning');
 
 
@@ -162,7 +164,6 @@ const dia2 = async (senderId) => {
             senderId,
             type: 'estado',
             estado: 'dia3', // 🔥 Cambia al siguiente día
-            plantilla: plantilla,
         }, times.dia3Transition, 'dia3_transition');
 
         console.log(`📅 Mensajes programados para el usuario ${senderId}`);
