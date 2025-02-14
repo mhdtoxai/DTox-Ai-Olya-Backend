@@ -147,8 +147,8 @@ const dia5 = async (senderId) => {
             type: 'checktest',
             testId:'2',
             message: idioma === 'ingles'
-                ? `💨 Time to test your lung capacity! Click here: ${testUrl}`
-                : `💨 Hora de medir tu capacidad pulmonar! Da clic aquí: ${testUrl}`
+                ? `💨 Your Lung Retention Test is still pending. Clic here to do it:: ${testUrl}`
+                : `💨 Aún tienes pendiente tu prueba de retención pulmonar! Da clic aquí: ${testUrl}`
         }, times.RecUrl, 'RecUrl');
 
 
