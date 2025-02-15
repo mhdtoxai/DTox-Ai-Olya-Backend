@@ -113,13 +113,6 @@ const dia5 = async (senderId) => {
 
         }, times.third, 'third');
 
-        await scheduleMessage({
-            senderId,
-            type: 'text',
-            message: idioma === 'ingles'
-                ? `💨 Time to test your lung capacity! Click here: ${testUrl}`
-                : `💨 Hora de medir tu capacidad pulmonar! Da clic aquí: ${testUrl}`
-        }, times.testUrl, 'test_url');
 
 
         if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
@@ -131,6 +124,15 @@ const dia5 = async (senderId) => {
                     : "¿Sabías que los cigarrillos electrónicos pueden explotar 💥, causando lesiones graves en la cara 😵 y manos?"
             }, times.fourth, 'fourth');
         }
+
+        
+        await scheduleMessage({
+            senderId,
+            type: 'text',
+            message: idioma === 'ingles'
+                ? `💨 Time to test your lung capacity! Click here: ${testUrl}`
+                : `💨 Hora de medir tu capacidad pulmonar! Da clic aquí: ${testUrl}`
+        }, times.testUrl, 'test_url');
 
         if (nivel === 'alto' || nivel === 'high') {
             await scheduleMessage({
