@@ -1,207 +1,160 @@
+const moment = require('moment-timezone');
+const scheduleTask = require('../../services/cloudTasksService');
 const getUserInfo = require('../../services/getUserInfo');
-const schedule = require('node-schedule');
-const sendTemplateMessage = require('../../services/Wp-Envio-Msj/sendTemplateMessage');
-const sendMessageTarget = require('../../services/Wp-Envio-Msj/sendMessageTarget');
-const sendMessage = require('../../services/Wp-Envio-Msj/sendMessage');
-const moment = require('moment-timezone'); // Asegúrate de tener instalada esta biblioteca
-const dia10 = require('./dia10'); // Asegúrate de ajustar la ruta según tu estructura de archivos
-const userService = require('../../services/userService');
-const scheduledJobs = {}; // Objeto para almacenar trabajos programados
 
 const dia9 = async (senderId) => {
-    try {
-        console.log(`Iniciando programación de mensajes para el usuario ${senderId}`);
+  try {
 
-        // Verificar y cancelar trabajos existentes al inicio
-        if (scheduledJobs[senderId]) {
-            console.log(`Cancelando trabajos anteriores para el usuario ${senderId}`);
-            const userJobs = scheduledJobs[senderId];
-            for (const jobName in userJobs) {
-                if (userJobs.hasOwnProperty(jobName)) {
-                    console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
-                    const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
-                    if (wasCancelled) {
-                        console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
-                    } else {
-                        console.log(`No se pudo cancelar el trabajo ${jobName}.`);
-                    }
-                }
-            }
-            delete scheduledJobs[senderId];
-            console.log(`Todos los trabajos anteriores para el usuario ${senderId} han sido cancelados y eliminados.`);
-        } else {
-            console.log(`No se encontraron trabajos anteriores para el usuario ${senderId}.`);
-        }
+    // Obtener información del usuario
+    const { idioma, nombre, nivel, timezone } = await getUserInfo(senderId);
 
 
-        // Obtener la información del usuario incluyendo el nivel y la zona horaria
-        const { idioma, nombre, nivel, timezone } = await getUserInfo(senderId);
-        console.log(`Usuario ${senderId} tiene idioma: ${idioma}, nombre: ${nombre}, nivel: ${nivel}, timezone: ${timezone}`);
-
-        // Definir el código de idioma y el nombre de la plantilla
-        const languageCode = idioma === 'ingles' ? 'en_US' : 'es_MX';
-        const templateName = 'morning_day9'; // Nombre de la plantilla
-
-        // Crear objetos de fecha y hora en la zona horaria del usuario para cada mensaje
-        const times = {
-            morning: moment.tz('07:00', 'HH:mm', timezone), // 7 AM - Plantilla
-            first: moment.tz('10:00', 'HH:mm', timezone), // 10 AM
-            second: moment.tz('12:00:', 'HH:mm', timezone), // 12 PM
-            third: moment.tz('14:00', 'HH:mm', timezone), // 2 PM
-            fourth: moment.tz('16:00', 'HH:mm', timezone), // 4 PM
-            fifth: moment.tz('18:00', 'HH:mm', timezone), // 6 PM
-            sixth: moment.tz('20:00', 'HH:mm', timezone), // 8 PM
-            seventh: moment.tz('22:00', 'HH:mm', timezone) // 10 PM
-        };
+      const plantilla = idioma === 'ingles'
+      ? `✋🏻Good morning 🌅Today's challenges:1️⃣ Hold on to the urge not to vape until 6:30PM 2️⃣ ✍️ Write down on paper the 5 reasons why you DO vape. If you have more, the better. Fold the paper and carry it with you all day in the bag. At the end of the day I will tell you what to do.`
+      : `✋🏻Buenos días 🌅 Retos de hoy:1️⃣ Aguanta las ganas de no vapear hasta las 6:30PM 2️⃣ ✍️ Anota en un papel las 5 razones por las que SI vapeas. Si tienes más, mejor. Dobla el papel y tráelo contigo todo el día en la bolsa. Al final del día te diré que hacer.`
 
 
+    console.log(`🌍 Zona horaria del usuario: ${timezone}`);
+    // Función para convertir la hora local del usuario a UTC
+    const convertToUTC = (time) => {
+      const localTime = moment.tz(time, 'HH:mm', timezone).set({
+        year: moment().tz(timezone).year(),
+        month: moment().tz(timezone).month(),
+        date: moment().tz(timezone).date(),
+      });
+
+      const utcTime = localTime.clone().utc();
+
+      return utcTime;
+    };
+
+    // Definir los horarios en UTC
+    const times = {
+      morning: convertToUTC('07:00'), // todos los niveles
+      first: convertToUTC('10:00'),   // medio y alto
+      second: convertToUTC('12:00'),  // alto 
+      third: convertToUTC('14:00'),   // todos los niveles
+      fourth: convertToUTC('16:00'),  // medio y alto
+      fifth: convertToUTC('18:00'),   // alto
+      sixth: convertToUTC('20:00'),   // todos los niveles 
+      seventh: convertToUTC('22:00'), // alto 
+      dia10Transition: convertToUTC('22:05'), // todos los niveles  🔹 Transición a Día 2
+
+    };
+
+    // Obtener la hora actual en UTC
+    const nowUTC = moment().utc();
+
+    const scheduleMessage = async (message, scheduledTime, eventName) => {
+      // Usar scheduledTime directamente
+      if (scheduledTime.isBefore(nowUTC)) {
+        console.log(`⚠️ La hora programada (${scheduledTime.format('YYYY-MM-DD HH:mm:ss')} UTC) ya pasó. Se programará para el día siguiente.`);
+        scheduledTime.add(1, 'day'); // Mover al día siguiente
+      } else {
+        console.log(`🕒 Hora en UTC: ${scheduledTime.format('YYYY-MM-DD HH:mm:ss')} UTC`);
+      }
+
+      console.log(`🌍 Equivalente en ${timezone}: ${scheduledTime.clone().tz(timezone).format('YYYY-MM-DD HH:mm:ss')}`);
+
+      const timestamp = Date.now(); // Obtener timestamp actual
+      message.taskName = `${message.senderId}_dia9_${eventName}_${timestamp}`;
+
+      await scheduleTask(message, scheduledTime.toDate());
+      console.log(`✅ Tarea programada para: ${scheduledTime.format('YYYY-MM-DD HH:mm:ss')} UTC`);
+    };
 
 
-        // Convertir las horas del usuario a la hora del servidor
-        const serverTimes = {};
-        Object.keys(times).forEach(key => {
-            serverTimes[key] = times[key].clone().tz(moment.tz.guess());
-            // console.log(`Hora convertida servidor (${key}): ${serverTimes[key].format('YYYY-MM-DD HH:mm:ss')}`);
-        });
 
-        // Programar cada mensaje
-        scheduledJobs[senderId] = {
-            morning: schedule.scheduleJob(`MensajeBuenosDias ${senderId}`, { hour: serverTimes.morning.hours(), minute: serverTimes.morning.minutes() }, async () => {
-                console.log(`Programado msj buenos días ${senderId} a las ${serverTimes.morning.format()}`);
-
-                // Enviar el mensaje de plantilla de buenos días
-                await sendTemplateMessage(senderId, templateName, languageCode);
-
-          
-            }),
+    await scheduleMessage({
+      senderId,
+      type: 'template',
+      templateName: 'morning_day9',
+      languageCode: idioma === 'ingles'
+        ? 'en_US'
+        : 'es_MX',
+      plantilla: plantilla,
+    }, times.morning, 'morning');
 
 
-            first: schedule.scheduleJob(`MensajePrimero ${senderId}`, { hour: serverTimes.first.hours(), minute: serverTimes.first.minutes() }, async () => {
-                console.log(`Programado primer mensaje ${senderId} a las ${serverTimes.first.format()}`);
-
-                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
-                    const firstMessage = idioma === 'ingles' ?
-                        `Did you know that vaping can lead to a nicotine addiction equal to or even greater 🚬 than smoking traditional cigarettes?` :
-                        `¿Sabías que el vapeo puede llevar a una dependencia de la nicotina igual o incluso mayor 🚬 que fumar cigarrillos tradicionales?`;
-
-                    await sendMessage(senderId, firstMessage);
-                    console.log(`Primer mensaje enviado a ${senderId}`);
-                }
-            }),
-
-            second: schedule.scheduleJob(`MensajeSegundo ${senderId}`, { hour: serverTimes.second.hours(), minute: serverTimes.second.minutes() }, async () => {
-                console.log(`Programado segundo mensaje ${senderId} a las ${serverTimes.second.format()}`);
-
-                if (nivel === 'alto' || nivel === 'high') {
-                    const secondMessage = idioma === 'ingles' ?
-                        `🗣️ Vaping can cause high blood pressure.` :
-                        `🗣️ Vapear puede provocar hipertensión arterial.`;
-
-                    await sendMessage(senderId, secondMessage);
-                    console.log(`Mensaje específico enviado para el usuario ${senderId}`);
-                }
-            }),
-
-            third: schedule.scheduleJob(`MensajeTercero ${senderId}`, { hour: serverTimes.third.hours(), minute: serverTimes.third.minutes() }, async () => {
-                console.log(`Programado tercer mensaje ${senderId} a las ${serverTimes.third.format()}`);
-
-                const thirdMessage = idioma === 'ingles' ?
-                    `"${nombre}, midday reminder: 'Success is the sum of small efforts repeated day in and day out.' – Robert Collier. Keep going!"` :
-                    `"${nombre}, a mitad del día, recuerda: 'El éxito es la suma de pequeños esfuerzos repetidos día tras día.' – Robert Collier. ¡Sigue adelante!"`;
-
-                await sendMessage(senderId, thirdMessage);
-                console.log(`Tercer mensaje enviado a usuario ${senderId}`);
-
-            }),
-
-            fourth: schedule.scheduleJob(`MensajeCuarto ${senderId}`, { hour: serverTimes.fourth.hours(), minute: serverTimes.fourth.minutes() }, async () => {
-                console.log(`Programado cuarto mensaje ${senderId} a las ${serverTimes.fourth.format()}`);
-
-                if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
-                    const fourthMessage = idioma === 'ingles' ?
-                        `Did you know that vape liquids can contain carcinogenic substances like tobacco-specific nitrosamines 🧬🧬?` :
-                        `¿Sabías que los líquidos de vapeo pueden contener sustancias cancerígenas como las nitrosaminas específicas del tabaco 🧬🧬?`;
-
-                    await sendMessage(senderId, fourthMessage);
-                    console.log(`Mensaje sobre sustancias cancerígenas enviado para el usuario ${senderId}`);
-                }
-            }),
-
-            fifth: schedule.scheduleJob(`MensajeQuinto ${senderId}`, { hour: serverTimes.fifth.hours(), minute: serverTimes.fifth.minutes() }, async () => {
-                console.log(`Programado quinto mensaje ${senderId} a las ${serverTimes.fifth.format()}`);
-
-                if (nivel === 'alto' || nivel === 'high') {
-                    const fifthMessage = idioma === 'ingles' ?
-                        `Did you know that vaping can cause oxidative damage to body tissues, contributing to premature aging 🕰️👵?` :
-                        `¿Sabías que el vapeo puede causar daño oxidativo en los tejidos del cuerpo, lo que contribuye al envejecimiento prematuro 🕰️👵?`;
-
-                    await sendMessage(senderId, fifthMessage);
-                    console.log(`Quinto mensaje enviado a ${senderId}`);
-                }
-            }),
-
-            sixth: schedule.scheduleJob(`MensajeSexto ${senderId}`, { hour: serverTimes.sixth.hours(), minute: serverTimes.sixth.minutes() }, async () => {
-                console.log(`Programado sexto mensaje ${senderId} a las ${serverTimes.sixth.format()}`);
-
-                const sixthMessage = idioma === 'ingles' ?
-                `Congratulations! You’ve completed day 9 of your program.\n\nHere’s what you should do now:\n1.- Take out the paper where you wrote your reasons this morning.\n2.- Realize that you carried those reasons all day.\n3.- They didn’t help you, in fact, they probably were a hindrance.\n4.- Similarly, vaping is a habit that serves no purpose.\n5.- Rip the paper into as many pieces as you can and throw it in the trash.\n6.- As you do this, thank yourself for the huge step you’re taking.\n\nCongratulations! Now it’s time to have dinner and get some sleep :)` :
-                `¡Felicidades! Has pasado el día 9 de tu programa.\n\nLo que deberás hacer ahora es sacar el papel donde anotaste esta mañana.\n1.- Lee las razones que anotaste.\n2.- Date cuenta que todo el día estuviste cargando con esas razones.\n3.- No te aportaron nada, de hecho seguramente te estuvieron estorbando.\n4.- De la misma manera, vapear es un hábito que no te sirve de nada.\n5.- Rompe el papel en tantos pedazos como puedas y tíralo a la basura.\n6.- Mientras lo haces, agradécete a ti mismo por el gran paso que estás dando.\n\n¡Felicidades! A cenar y a dormir :)`;
-
-                await sendMessage(senderId, sixthMessage);
-                console.log(`Mensaje sexto enviado a usuario ${senderId}`);
-            }),
-
-
-            seventh: schedule.scheduleJob(`MensajeSeptimo ${senderId}`, { hour: serverTimes.seventh.hours(), minute: serverTimes.seventh.minutes() }, async () => {
-                console.log(`Programado séptimo mensaje ${senderId} a las ${serverTimes.seventh.format()}`);
-
-                if (nivel === 'alto' || nivel === 'high') {
-                    const seventhMessage = idioma === 'ingles' ?
-                        `Vaping can harm your heart ❤️. You could develop arrhythmias ⚠️ and suffer a heart attack 💔 at any moment.` :
-                        `Vapear afecta tu corazón ❤️. Podrías desarrollar arritmias ⚠️ y sufrir un infarto 💔 en cualquier momento.`;
-
-                    await sendMessage(senderId, seventhMessage);
-                    console.log(`Séptimo mensaje enviado a usuario ${senderId}`);
-                }
-
-
-                // Esperar a que el mensaje 7 se haya enviado antes de cancelar los trabajos
-                if (scheduledJobs[senderId]) {
-                    console.log(`Cancelando todos los trabajos programados al finalizar para el usuario ${senderId}`);
-                    const userJobs = scheduledJobs[senderId];
-                    for (const jobName in userJobs) {
-                        if (userJobs.hasOwnProperty(jobName)) {
-                            console.log(`Cancelando trabajo: ${jobName} programado para ${userJobs[jobName].nextInvocation().toString()}`);
-                            const wasCancelled = userJobs[jobName].cancel(); // Intentar cancelar el trabajo
-                            if (wasCancelled) {
-                                console.log(`Trabajo ${jobName} fue cancelado con éxito.`);
-                            } else {
-                                console.log(`No se pudo cancelar el trabajo ${jobName}.`);
-                            }
-                        }
-                    }
-                    delete scheduledJobs[senderId];
-                    console.log(`Todos los trabajos anteriores para el usuario ${senderId} han sido cancelados y eliminados.`);
-                } else {
-                    console.log(`No se encontraron trabajos programados para cancelar.`);
-                }
-
-
-                // Actualizar el estado
-                await userService.updateUser(senderId, { estado: 'dia10' });
-                // Llamar a dia 10 después de cancelar todos los trabajos
-                await dia10(senderId);
-            })
-        };
-        // Imprimir detalles de los trabajos programados
-        console.log(`Trabajos dia 9 programados para el usuario ${senderId}:`);
-        Object.keys(scheduledJobs[senderId]).forEach(jobName => {
-            const job = scheduledJobs[senderId][jobName];
-            console.log(`Trabajo: ${jobName}, Próxima invocación: ${job.nextInvocation().toString()}`);
-        });
-    } catch (error) {
-        console.error(`Error al programar los mensajes para el usuario ${senderId}:`, error);
+    // Mensajes dependiendo del nivel
+    if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
+      await scheduleMessage({
+        senderId,
+        type: 'text',
+        message: idioma === 'ingles'
+          ? "Did you know that vaping can lead to a nicotine addiction equal to or even greater 🚬 than smoking traditional cigarettes?"
+          : "¿Sabías que el vapeo puede llevar a una dependencia de la nicotina igual o incluso mayor 🚬 que fumar cigarrillos tradicionales?"
+      }, times.first, 'first');
     }
+
+    if (nivel === 'alto' || nivel === 'high') {
+      await scheduleMessage({
+        senderId,
+        type: 'text',
+        message: idioma === 'ingles'
+        ?"🗣️ Vaping can cause high blood pressure."
+        :"🗣️ Vapear puede provocar hipertensión arterial."
+      }, times.second, 'second');
+    }
+
+    await scheduleMessage({
+      senderId,
+      type: 'text',
+      message: idioma === 'ingles'
+      ?`${nombre}, midday reminder: 'Success is the sum of small efforts repeated day in and day out.' – Robert Collier. Keep going!`
+      :`${nombre}, a mitad del día, recuerda: 'El éxito es la suma de pequeños esfuerzos repetidos día tras día.' – Robert Collier. ¡Sigue adelante!`
+    }, times.third, 'third');
+
+
+    if ((nivel === 'medio' || nivel === 'alto') || (nivel === 'medium' || nivel === 'high')) {
+      await scheduleMessage({
+        senderId,
+        type: 'text',
+        message: idioma === 'ingles'
+          ? "Did you know that vape liquids can contain carcinogenic substances like tobacco-specific nitrosamines 🧬🧬?"
+          : "¿Sabías que los líquidos de vapeo pueden contener sustancias cancerígenas como las nitrosaminas específicas del tabaco 🧬🧬?"
+      }, times.fourth, 'fourth');
+    }
+
+    if (nivel === 'alto' || nivel === 'high') {
+      await scheduleMessage({
+        senderId,
+        type: 'text',
+        message: idioma === 'ingles'
+        ? "Did you know that vaping can cause oxidative damage to body tissues, contributing to premature aging 🕰️👵?"
+        : "¿Sabías que el vapeo puede causar daño oxidativo en los tejidos del cuerpo, lo que contribuye al envejecimiento prematuro 🕰️👵?"
+      }, times.fifth, 'fifth');
+    }
+
+    await scheduleMessage({
+      senderId,
+      type: 'text',
+      message: idioma === 'ingles'
+        ?"Congratulations! You’ve completed day 9 of your program.\n\nHere’s what you should do now:\n1.- Take out the paper where you wrote your reasons this morning.\n2.- Realize that you carried those reasons all day.\n3.- They didn’t help you, in fact, they probably were a hindrance.\n4.- Similarly, vaping is a habit that serves no purpose.\n5.- Rip the paper into as many pieces as you can and throw it in the trash.\n6.- As you do this, thank yourself for the huge step you’re taking.\n\nCongratulations! Now it’s time to have dinner and get some sleep :)"
+        :"¡Felicidades! Has pasado el día 9 de tu programa.\n\nLo que deberás hacer ahora es sacar el papel donde anotaste esta mañana.\n1.- Lee las razones que anotaste.\n2.- Date cuenta que todo el día estuviste cargando con esas razones.\n3.- No te aportaron nada, de hecho seguramente te estuvieron estorbando.\n4.- De la misma manera, vapear es un hábito que no te sirve de nada.\n5.- Rompe el papel en tantos pedazos como puedas y tíralo a la basura.\n6.- Mientras lo haces, agradécete a ti mismo por el gran paso que estás dando.\n\n¡Felicidades! A cenar y a dormir :)"
+    }, times.sixth, 'sixth');
+
+    if (nivel === 'alto' || nivel === 'high') {
+      await scheduleMessage({
+        senderId,
+        type: 'text',
+        message: idioma === 'ingles'
+          ?"Vaping can harm your heart ❤️. You could develop arrhythmias ⚠️ and suffer a heart attack 💔 at any moment."
+          :"Vapear afecta tu corazón ❤️. Podrías desarrollar arritmias ⚠️ y sufrir un infarto 💔 en cualquier momento."
+      }, times.seventh, 'seventh');
+
+    }
+
+    await scheduleMessage({
+      senderId,
+      type: 'estado',
+      estado: 'dia10', // 🔥 Cambia al siguiente día
+    }, times.dia10Transition, 'dia10_transition');
+
+    console.log(`📅 Mensajes programados para el usuario ${senderId}`);
+  } catch (error) {
+    console.error(`❌ Error al programar el día 9 para ${senderId}:`, error);
+  }
 };
 
 module.exports = dia9;
