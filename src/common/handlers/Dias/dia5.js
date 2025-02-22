@@ -10,7 +10,7 @@ const dia5 = async (senderId) => {
 
         const imageUrl = idioma === 'ingles' ?
             'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Ingles%2FMedal3_Eng.png?alt=media&token=11a21866-1082-45eb-b68d-02554440e3a7' : // Reemplaza con el enlace de la imagen en inglés
-            'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FMedalla3_Esp.png?alt=media&token=186ab764-9fa5-4245-87a5-022214fa7bd6'; // Reemplaza con el enlace de la imagen en español
+            'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FINSIGNIAS_03_Esp.png?alt=media&token=02201577-6f2e-4788-8bd2-8859e30c5a29'; // Reemplaza con el enlace de la imagen en español
 
         const plantilla = idioma === 'ingles'
             ? `Good morning, 🌅 Today is a new day full of opportunities. Remember, every little victory counts. Start your day with a deep, fresh breath! Today’s challenge? Don’t reach for your vape before 3️⃣ PM. YOU GOT THIS!`

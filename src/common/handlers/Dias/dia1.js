@@ -10,7 +10,7 @@ const dia1 = async (senderId) => {
 
     const imageUrl = idioma === 'ingles'
       ? 'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Ingles%2FMedal1_Eng.png?alt=media&token=5a4280c0-8870-491a-bfc2-9cb2ae647a51'
-      : 'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FMedalla1_Esp.png?alt=media&token=beed2d31-3ace-40d6-8b8b-bb6793666dd4';
+      : 'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FINSIGNIAS_01_Esp.png?alt=media&token=ffda63e5-266e-4cc6-bf9a-42702f8fbf0c';
 
   
     // Determinar la plantilla según el idioma del usuario

@@ -6,10 +6,11 @@ const diasRoutes = require('../handlers/Dias/diasRoutes'); // Ajusta esta ruta s
 const sendAudioMessage = require('../services/Wp-Envio-Msj/sendAudioMessage');
 const sendContactMessage = require('../services/Wp-Envio-Msj/sendContactMessage');
 const RecUrl = require('../handlers/Dias/RecUrl'); // Ajusta esta ruta según sea necesario
+const testrep = require('../handlers/Dias/testrep'); // Ajusta esta ruta según sea necesario
 
 const runTask = async (req, res) => {
   try {
-    const { senderId, type, message, templateName, languageCode, imageUrl, estado, plantilla, audioUrl, testId } = req.body;
+    const { senderId, type ,idioma, message, templateName, languageCode, imageUrl, estado, plantilla, audioUrl, testId } = req.body;
 
     // console.log("🔍 Datos recibidos en runTask:", req.body);
 
@@ -35,6 +36,10 @@ const runTask = async (req, res) => {
     }
     else if (type === 'checktest') {
       await RecUrl(senderId,message,testId);
+    }
+
+    else if (type === 'testrep') {
+      await testrep(senderId,idioma);
     }
     
     else if (type === 'estado') {

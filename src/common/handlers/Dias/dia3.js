@@ -10,7 +10,7 @@ const dia3 = async (senderId) => {
 
     const imageUrl = idioma === 'ingles' ?
     'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Ingles%2FMedal2_Eng.png?alt=media&token=d2a12a1d-6345-4692-a784-e09c2143ada9' : // Reemplaza con el enlace de la imagen en inglés
-    'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FMedalla2_Esp.png?alt=media&token=73c0b2bd-1a1b-49a9-87f9-2d2479d35d92'; // Reemplaza con el enlace de la imagen en español
+    'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FINSIGNIAS_02_Esp.png?alt=media&token=8f4c61e6-8093-42d7-85ae-5f83b153fb68'; // Reemplaza con el enlace de la imagen en español
 
     
       const plantilla = idioma === 'ingles'

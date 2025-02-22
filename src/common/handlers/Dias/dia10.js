@@ -9,8 +9,8 @@ const dia10 = async (senderId) => {
         const { idioma, nombre, nivel, timezone } = await getUserInfo(senderId);
 
         const imageUrl = idioma === 'ingles' ?
-            'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Ingles%2FMedal3_Eng.png?alt=media&token=11a21866-1082-45eb-b68d-02554440e3a7' : // Reemplaza con el enlace de la imagen en inglés
-            'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FMedalla3_Esp.png?alt=media&token=186ab764-9fa5-4245-87a5-022214fa7bd6'; // Reemplaza con el enlace de la imagen en español
+            'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Ingles%2FMedal4_Eng.png?alt=media&token=7d92fa37-3b4b-48e7-805f-26de99ca987d' : // Reemplaza con el enlace de la imagen en inglés
+            'https://firebasestorage.googleapis.com/v0/b/dtox-ai-a6f48.appspot.com/o/Medallas%20Espa%C3%B1ol%2FINSIGNIAS_04_Esp.png?alt=media&token=0b1af581-f261-45d1-a100-e8464cd7cec7'; // Reemplaza con el enlace de la imagen en español
 
         const plantilla = idioma === 'ingles'
             ? `Good morning! ☀️ Remember that every day without vaping 🚭 is an achievement 🏅. Keep it up, you can do it! 💪😊 Today the possibility opens AFTER 7️⃣ PM. Don't forget it!`
