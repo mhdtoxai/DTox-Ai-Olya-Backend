@@ -36,9 +36,11 @@ const handlePaymentCompleted = async (senderId) => {
     await delay(3000);  // Espera 3 segundos
     await sendMessage(senderId, message3);
     await delay(3000);  // Espera 3 segundos
-    await sendMessage(senderId, message4);
-    await delay(3000);  // Espera 3 segundos
     await sendContactMessage(senderId);
+    await delay(3000);  // Espera 3 segundos
+    await sendMessage(senderId, message4);
+
+
 
     // Actualizar el estado del usuario
     await userService.updateUser(senderId, { estado: 'primertest', membresia: 'activa' });

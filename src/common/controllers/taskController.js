@@ -7,10 +7,13 @@ const sendAudioMessage = require('../services/Wp-Envio-Msj/sendAudioMessage');
 const sendContactMessage = require('../services/Wp-Envio-Msj/sendContactMessage');
 const RecUrl = require('../handlers/Dias/RecUrl'); // Ajusta esta ruta según sea necesario
 const testrep = require('../handlers/Dias/testrep'); // Ajusta esta ruta según sea necesario
+const sendTemplateMessageVariable = require('../services/Wp-Envio-Msj/sendTemplateMessageVariable');
+const FinBackUp = require('../handlers/Dias/FinBackUp'); // Ajusta esta ruta según sea necesario
+
 
 const runTask = async (req, res) => {
   try {
-    const { senderId, type ,idioma, message, templateName, languageCode, imageUrl, estado, plantilla, audioUrl, testId } = req.body;
+    const { senderId, type, idioma, message, templateName, languageCode, imageUrl, estado, plantilla, audioUrl, testId, parameters } = req.body;
 
     // console.log("🔍 Datos recibidos en runTask:", req.body);
 
@@ -25,6 +28,14 @@ const runTask = async (req, res) => {
       // Enviar el mensaje de plantilla
       await sendTemplateMessage(senderId, templateName, languageCode);
     }
+    else if (type === 'templatedynamic') {
+      // Actualizar la plantilla 
+      if (plantilla) {
+        await userService.updateUser(senderId, { plantilla });
+      }
+      // Enviar el mensaje de plantilla dinamica
+      await sendTemplateMessageVariable(senderId, templateName, languageCode, parameters);
+    }
     else if (type === 'image') {
       await sendImageMessage(senderId, imageUrl);
     }
@@ -35,13 +46,17 @@ const runTask = async (req, res) => {
       await sendContactMessage(senderId);
     }
     else if (type === 'checktest') {
-      await RecUrl(senderId,message,testId);
+      await RecUrl(senderId, message, testId);
     }
 
     else if (type === 'testrep') {
-      await testrep(senderId,idioma);
+      await testrep(senderId, idioma);
     }
-    
+
+    else if (type === 'finBackUp') {
+      await FinBackUp(senderId);
+    }
+
     else if (type === 'estado') {
       // Solo actualizamos el estado, sin tocar la plantilla
       await userService.updateUser(senderId, { estado });
